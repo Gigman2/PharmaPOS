@@ -1,3 +1,4 @@
+import dotenv from 'dotenv'
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
@@ -23,7 +24,9 @@ if(localStorage.getItem('access_token') != ''){
   isLoggedIn = store.getters['ISLOGGED'] 
 }
 
-Vue.http.options.root = 'https://posback.herokuapp.com/api/';
+console.log(process.env.SERVER)
+
+Vue.http.options.root = 'http://localhost:4000/api/';
 Vue.http.interceptors.push((request, next) => {
   request.headers.set('Authorization', store.getters['TOKEN'])
   next(res => {                                                                                                                                                                                                                                                                                                                    

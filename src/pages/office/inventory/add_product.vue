@@ -10,7 +10,7 @@
             <div class="form-box">
                 <el-row>
                     <el-col :span="13">
-                        <div class="form-title mb-40">Drug Information</div>
+                        <div class="form-title mb-40">Product Information</div>
                         <el-row :gutter="20">
                             <el-col :span="24">
                                 <div class="input-error-box" v-if="error">
@@ -21,7 +21,7 @@
                             <el-col :span="24">
                                 <div class="input-box" :class="{ 'input-box--error': $v.firstname.$error }">
                                     <i class="fe-file-plus"></i>
-                                    <input type="text" placeholder="Drug name here ..." v-model.trim.lazy="$v.firstname.$model">
+                                    <input type="text" placeholder="Product name here ..." v-model.trim.lazy="$v.firstname.$model">
                                 </div>
                             </el-col>
                             <el-col :span="10">
@@ -37,114 +37,67 @@
                                     </el-select>
                                 </div>
                             </el-col>
-                            <el-col :span="14">
+                            <el-col :span="7">
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-tag"></i>
-                                    <input type="email" placeholder="Drug Generics" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="email" placeholder="Barcode ID" v-model.trim.lazy="$v.mail.$model">
+                                </div>
+                            </el-col>
+                            <el-col :span="7">
+                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                    <i class="fe-tag"></i>
+                                    <input type="email" placeholder="SKU" v-model.trim.lazy="$v.mail.$model">
                                 </div>
                             </el-col>
                         </el-row>
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
-                            <el-col :span="14">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-square"></i>
-                                    <input type="email" placeholder="Manufacturer" v-model.trim.lazy="$v.mail.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="10   ">
+                             <el-col :span="12">
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-square"></i>
                                     <input type="email" placeholder="Supplier" v-model.trim.lazy="$v.mail.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="12">
+                             <el-col :span="12">
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-bold"></i>
-                                    <input type="email" placeholder="Batch No" v-model.trim.lazy="$v.mail.$model">
+                                    <i class="fe-square"></i>
+                                    <input type="email" placeholder="Manufacturer" v-model.trim.lazy="$v.mail.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="8">
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-clock"></i>
-                                    <input type="email" placeholder="Expiry" v-model.trim.lazy="$v.mail.$model">
-                                </div>
-                            </el-col>
-                        </el-row>
-                        <div class="hoz-line dark"></div>
-                        <el-row :gutter="20" class="mt-20">
-                            <el-col :span="10">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-package"></i>
-                                    <input type="email" placeholder="Quantity e.g 25" v-model.trim.lazy="$v.mail.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="6"  offset="5">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-dollar-sign"></i>
+                                    <i class="fe-square"></i>
                                     <input type="email" placeholder="Price" v-model.trim.lazy="$v.mail.$model">
                                 </div>
                             </el-col>
-                        </el-row>
-                        <el-row :gutter="20" class="mt-20">
-                            <el-col :span="10" >
+                            <el-col :span="8">
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-server"></i>
-                                    <input type="email" placeholder="Loose Quanity " v-model.trim.lazy="$v.mail.$model">
-                                    <i class="input-suffix">pcs</i>
+                                    <i class="fe-square"></i>
+                                    <input type="email" placeholder="Quantity" v-model.trim.lazy="$v.mail.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="6" offset="5">
+                             <el-col :span="8">
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="email" placeholder="Loose Price" v-model.trim.lazy="$v.mail.$model">
+                                    <i class="fe-square"></i>
+                                    <input type="email" placeholder="Shelf ID" v-model.trim.lazy="$v.mail.$model">
                                 </div>
                             </el-col>
                         </el-row>
-
-                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Add user</div>
+            
+                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Add Product</div>
                         <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-                        <div class="btn btn-primary" @click="submit" v-else>Add Drug</div>
+                        <div class="btn btn-primary" @click="submit" v-else>Add Product</div>
                     </el-col>
                     <el-col :span="10">
-                        <div class="form-title mb-40">Drug Overview</div>
-                        <div class="product-overview">
-                            <div class="product-overview--name">Artemether / lumefantrine</div>
-                            <div class="product-overview--double mt-40">
-                                <div class="product--sub">
-                                    <span class="product--sub--caption">Manufacturer</span>
-                                    <span class="product--sub--name">Kinapharma</span>
+                        <div class="form-title mb-40">Product Image</div>
+                        <div class="preview">
+                            <label for="avatar">
+                                <div class="preview-box">
+                                    <img :src="avatarImage" alt="">
                                 </div>
-                                <div class="product--sub">
-                                    <span class="product--sub--caption">Category</span>
-                                    <span class="product--sub--name">Herbal</span>
-                                </div>
-                            </div>
-                            <div class="product-overview--double mt-20">
-                                <div class="product--sub">
-                                    <span class="product--sub--caption">Dispensation</span>
-                                    <span class="product--sub--name">Strip</span>
-                                </div>
-                                <div class="product--sub">
-                                    <span class="product--sub--caption">Product Type</span>
-                                    <span class="product--sub--name">Capsule</span>
-                                </div>
-                            </div>
-                            <div class="product-overview--double mt-20">
-                                <div class="product--sub">
-                                    <span class="product--sub--caption">Quantity</span>
-                                    <span class="product--sub--name">102</span>
-                                </div>
-                                <div class="product--sub">
-                                    <span class="product--sub--caption">Restock at</span>
-                                    <span class="product--sub--name">21</span>
-                                </div>
-                            </div>
-                            <div class="product-overview--tags mt-20">
-                                <el-tag effect="plain">Paracetamol</el-tag>
-                                <el-tag effect="plain">Pain Killers</el-tag>
-                            </div>
-                            <div class="product-overview--price mt-30">Ghc 0.7 per strip</div>
+                                <el-link class="mt-10" >Upload Image</el-link>
+                            </label>
+                            <input type="file" accept="image/x-png,image/gif,image/jpeg" id="avatar" class="input-file" @change="uploadAvatar">
                         </div>
                     </el-col>
                 </el-row>
@@ -262,6 +215,25 @@
     }
     .hoz-line{
         margin-top: 0;
+    }
+
+    .preview{
+        input[type=file]{
+            display: none;
+        }
+    }
+
+    .preview-box{
+        width: 150px;
+        height: 150px;
+        background-color: #f0f0f0;
+        margin: 0 auto;
+        border-radius: 5px;
+        cursor: pointer;
+        overflow: hidden;
+        img{
+            width: 100%;
+        }
     }
 
     .product-overview{

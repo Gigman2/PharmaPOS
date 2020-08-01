@@ -224,6 +224,7 @@
             font-family: 'Open sans';
             font-size: 1.3em;
             font-weight: bold;
+            color: #3a7bd5;
         }
         .products{
             padding-top: 15px;
@@ -279,11 +280,31 @@
 
     .checkout-box{
         .checkout-title{
-            color:#2c3e50;
-            font-family: 'Open sans';
-            font-size: 1.3em;
-            font-weight: bold;
             padding: 10px;
+            text-align: left;
+            line-height: 30px;
+            overflow: hidden;
+            &--title{
+                color:#3a7bd5;
+                font-family: 'Open sans';
+                font-size: 1.3em;
+                font-weight: bold;
+            }
+            &--actions{
+                font-weight: bold;
+                color: silver;
+                span{
+                    margin: 0 20px;
+                    cursor: pointer;
+                    font-size: 1.2em;
+                }
+                i{
+                    cursor: pointer;
+                    margin: 0 15px;
+                    font-size: 1.4em;
+                }
+            }
+            
         }
 
         .checkout-headings{
@@ -292,7 +313,7 @@
         }
 
         .checkout-table-wrapper{
-            height: calc(100vh - 402px);
+            height: calc(100vh - 372px);
             overflow: hidden;
         }
         .checkout-table{
@@ -328,7 +349,7 @@
                 }
 
                 .circle-outline{
-                    border: 2px solid #5982aa;
+                    border: 2px solid #84aadf;;
                     border-radius: 50%;
                     width: 29px;
                     height: 29px;
@@ -373,16 +394,29 @@
         }
 
         .checkout-payout{
-            background-color: #2c3e50;
+            background-color: #3a7bd5;
             border-radius: 5px;
             padding: 15px 10px;
             font-family: 'Open sans';
             color: white;
             font-size: 1em;
             cursor: pointer;
+            width: 60%;
+            display: inline-block;
             span{
                 font-weight: bold;
             }
+        }
+
+        .checkout-reset{
+            width: calc(25%);
+            display: inline-block;
+            font-family: 'Open sans';
+            border: 2px solid #3a7bd5;
+            padding: 12px 10px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: slategray;
         }
     }
 </style>

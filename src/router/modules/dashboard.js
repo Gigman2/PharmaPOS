@@ -11,7 +11,7 @@ export default {
         nav: [
           {
             name: 'Administration Dashboard',
-            path: 'office-sales'
+            path: 'office-dashboard'
           },
         ]
       }

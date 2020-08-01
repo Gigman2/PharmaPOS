@@ -149,10 +149,18 @@
                     </vue-custom-scrollbar>
                 </div>
             </div>
-        </div>
+        </div> 
         <div class="checkout-box">
            <div class="checkout-invoice">
-                <div class="checkout-title">Purchase Detail</div>
+                <div class="checkout-title">
+                    <div class="pull-left checkout-title--title">Purchase Detail</div>
+                    <div class="pull-right checkout-title--actions">
+                        <span>Hold</span>
+                        <i class="fe-user-plus"></i>
+                        <i class="fe-slash "></i>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
                 <vue-custom-scrollbar class="checkout-table-wrapper">
                     <table class="checkout-table" cellspacing="0" cellpadding="0">
                         <thead class="checkout-headings">
@@ -216,10 +224,6 @@
                             <td width="100px" align="right">Ghc 0.2</td>
                         </tr>
                         <tr>
-                            <th align="left">Sub Total (1%)</th>
-                            <td>Ghc 24.1</td>
-                        </tr>
-                        <tr>
                             <th align="left">Tax (1.5%)</th>
                             <td>Ghc 0.21</td>
                         </tr>
@@ -234,9 +238,10 @@
                     </tbody>
                 </table>
            </div>
-           <div class="checkout-payout">
-                <span>Pay</span> (Ghc 24.5)
-            </div>
+           <div class="checkout-pay-section">
+                <div class="checkout-payout"><span>Pay</span> (Ghc 24.5)</div>
+                <div class="checkout-reset">Reset</div>
+           </div>
         </div>
     </div>
 </template>
