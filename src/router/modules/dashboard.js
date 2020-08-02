@@ -1,4 +1,4 @@
-import NavLayout from '@/components/nav-layout.vue'
+import NavLayout from '@/layout/nav-layout.vue'
 import Office_Home from '@/pages/office/dashboard'
 
 export default {

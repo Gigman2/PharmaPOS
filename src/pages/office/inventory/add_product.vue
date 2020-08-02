@@ -1,15 +1,13 @@
 <template>
     <div class="dashboard-wrapper mt-15">
-        <div class="dashboard-top">
-            <div class="pull-left">
-                <i class="fe-arrow"></i>
-            </div>
-        </div>
         <div class="clearfix"></div>
         <div class="dashboard-content p-20">
             <div class="form-box">
                 <el-row>
                     <el-col :span="13">
+                        <div class="pull-left">
+                            <i class="fe-arrow-left dashboard-top--icon"></i>
+                        </div>
                         <div class="form-title mb-40">Product Information</div>
                         <el-row :gutter="20">
                             <el-col :span="24">
@@ -82,6 +80,13 @@
                                     <input type="email" placeholder="Shelf ID" v-model.trim.lazy="$v.mail.$model">
                                 </div>
                             </el-col>
+                            <el-col :span="8">
+                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="email" placeholder="Restock limit" v-model.trim.lazy="$v.mail.$model">
+                                </div>
+                            </el-col>
+
                         </el-row>
             
                         <div class="btn btn-primary disabled" v-if="$v.$anyError">Add Product</div>

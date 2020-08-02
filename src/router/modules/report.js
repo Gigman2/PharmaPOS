@@ -1,4 +1,4 @@
-import NavLayout from '@/components/nav-layout.vue'
+import NavLayout from '@/layout/nav-layout.vue'
 import Office_Report from '@/pages/office/report/index.vue'
 
 export default {

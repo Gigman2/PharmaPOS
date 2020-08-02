@@ -1,4 +1,4 @@
-import NavLayout from '@/components/nav-layout.vue'
+import NavLayout from '@/layout/nav-layout.vue'
 import Office_Account from '@/pages/office/accounts/index.vue'
 import Office_Account_Add from '@/pages/office/accounts/add.vue'
 import Office_Account_Edit from '@/pages/office/accounts/edit.vue'

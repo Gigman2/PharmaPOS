@@ -5,7 +5,6 @@ import VueRouter from 'vue-router'
 import AccessLayout from '../layout/access.vue'
 import POSLayout from '../layout/pos.vue'
 import OfficeLayout from '../layout/office.vue'
-import NavLayout from '../components/nav-layout.vue'
 
 
 import Login from '../pages/login.vue'

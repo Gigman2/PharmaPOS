@@ -34,6 +34,12 @@
 </script>
 
 <style lang="scss">
+    .dashboard-top{
+        &--icon{
+            color: silver;
+            font-size: 1.4em;
+        }
+    }
     .dashboard-navbar{
         height: 55px;
         background-color: rgb(252, 252, 252);

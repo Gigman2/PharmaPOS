@@ -1,4 +1,4 @@
-import NavLayout from '@/components/nav-layout.vue'
+import NavLayout from '@/layout/nav-layout.vue'
 import Office_Product from '@/pages/office/inventory/products'
 import Office_Product_Add from '@/pages/office/inventory/add_product.vue'
 import Office_Product_Stock from '@/pages/office/inventory/stock.vue'
@@ -21,15 +21,11 @@ export default {
           },
           {
             name: 'Category',
-            path: 'b'
+            path: 'office-inventory_category'
           },
           {
-            name: 'Variant',
-            path: 'b'
-          },
-          {
-            name: 'Supplier',
-            path: 'b'
+            name: 'Suppliers',
+            path: 'office-inventory_supplier'
           }
         ]
       }
@@ -57,6 +53,22 @@ export default {
           component: Office_Product_Stock,
           meta: {
             title: "Stock Control"
+          },
+        },
+        {
+          path: 'supplier',
+          name: 'office-inventory_supplier',
+          component: Office_Product_Stock,
+          meta: {
+            title: "Suppliers"
+          },
+        },
+        {
+          path: 'category',
+          name: 'office-inventory_category',
+          component: Office_Product_Stock,
+          meta: {
+            title: "Categories"
           },
         },
     ]
