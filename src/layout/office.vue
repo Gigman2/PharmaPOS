@@ -40,8 +40,8 @@
                         </router-link>
                     </li>
                     <li>
-                        <router-link :to="{name: 'office-inventory'}">
-                            <div class="sidebar-item" :class="{'active': $route.name == 'office-inventory'}">
+                        <router-link :to="{name: 'office-inventory_product'}">
+                            <div class="sidebar-item" :class="{'active': baseRoute() == 'office-inventory'}">
                                 <div class="sidebar-icon">
                                     <i class="fe-clipboard"></i>
                                 </div>
@@ -105,7 +105,13 @@
             lock(){
                 this.$store.commit('LOGOUT');
                 this.$router.push({name: 'login'})
+            },
+            baseRoute(){
+                let route = this.$route.name.split('_')
+                return route[0]
             }
+        },
+        created() {
         },
     }
 </script>
@@ -122,7 +128,7 @@
         .topbar{
             width: 100%;
             height: 60px;
-            background-color: #125b96;
+            background-color: #6751de;
             .actions{
                 float: right;
                 ul{
@@ -212,7 +218,7 @@
                     box-sizing: border-box;
                     width: 100%;
                     height: calc(100vh * 0.152);
-                    color: #1f8db6;
+                    color: #7966e7;
                     font-size: .9em;
                     &.active{
                         background-color: #e7ecf3;

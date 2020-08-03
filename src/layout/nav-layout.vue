@@ -5,7 +5,7 @@
                 <li v-for="(item, index) in nav" 
                     :key="'nav'+index">
                     <router-link :to="{name: item.path}">
-                        <div class="nav" :class="{'active': (item.path ==  $route.name)}">
+                        <div class="nav" :class="{'active': (item.path == baseRoute())}">
                             {{item.name}}
                         </div>
                     </router-link>
@@ -30,14 +30,24 @@
         components: {
             vueCustomScrollbar,
         },
+        methods: {
+            baseRoute(){
+                let route = this.$route.name.split('^')
+                return route[0]
+            }
+        },
     }
 </script>
 
 <style lang="scss">
+    .dashboard-content{
+        a{text-decoration: none;}
+    }
     .dashboard-top{
         &--icon{
             color: silver;
             font-size: 1.4em;
+            text-decoration: none;
         }
     }
     .dashboard-navbar{

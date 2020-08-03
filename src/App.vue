@@ -199,7 +199,7 @@ body {
   cursor: pointer;
   font-family: 'Open sans';
   &.btn-primary{
-    background-color: #3a7bd5;
+    background-color: #6751de;
     color:white
   }
   &.disabled{

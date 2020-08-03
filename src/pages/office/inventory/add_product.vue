@@ -6,7 +6,9 @@
                 <el-row>
                     <el-col :span="13">
                         <div class="pull-left">
-                            <i class="fe-arrow-left dashboard-top--icon"></i>
+                            <router-link :to="{name: 'office-inventory_product'}">
+                                <i class="fe-arrow-left dashboard-top--icon"></i>
+                            </router-link>
                         </div>
                         <div class="form-title mb-40">Product Information</div>
                         <el-row :gutter="20">
@@ -17,9 +19,9 @@
                                 </div>
                             </el-col>
                             <el-col :span="24">
-                                <div class="input-box" :class="{ 'input-box--error': $v.firstname.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.name.$error }">
                                     <i class="fe-file-plus"></i>
-                                    <input type="text" placeholder="Product name here ..." v-model.trim.lazy="$v.firstname.$model">
+                                    <input type="text" placeholder="Product name here ..." v-model.trim.lazy="$v.name.$model">
                                 </div>
                             </el-col>
                             <el-col :span="10">
@@ -36,54 +38,54 @@
                                 </div>
                             </el-col>
                             <el-col :span="7">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.barcode.$error }">
                                     <i class="fe-tag"></i>
-                                    <input type="email" placeholder="Barcode ID" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="text" placeholder="Barcode ID" v-model.trim.lazy="$v.barcode.$model">
                                 </div>
                             </el-col>
                             <el-col :span="7">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.sku.$error }">
                                     <i class="fe-tag"></i>
-                                    <input type="email" placeholder="SKU" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="text" placeholder="SKU" v-model.trim.lazy="$v.sku.$model">
                                 </div>
                             </el-col>
                         </el-row>
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
                              <el-col :span="12">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.supplier.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="email" placeholder="Supplier" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="text" placeholder="Supplier" v-model.trim.lazy="$v.supplier.$model">
                                 </div>
                             </el-col>
                              <el-col :span="12">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.manufacturer.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="email" placeholder="Manufacturer" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="text" placeholder="Manufacturer" v-model.trim.lazy="$v.manufacturer.$model">
                                 </div>
                             </el-col>
                             <el-col :span="8">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="email" placeholder="Price" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="text" placeholder="Price" v-model.trim.lazy="$v.price.$model">
                                 </div>
                             </el-col>
                             <el-col :span="8">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="email" placeholder="Quantity" v-model.trim.lazy="$v.mail.$model">
-                                </div>
-                            </el-col>
-                             <el-col :span="8">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-square"></i>
-                                    <input type="email" placeholder="Shelf ID" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="text" placeholder="Quantity" v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
                             <el-col :span="8">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                                <div class="input-box" :class="{ 'input-box--error': $v.restock.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="email" placeholder="Restock limit" v-model.trim.lazy="$v.mail.$model">
+                                    <input type="text" placeholder="Restock limit" v-model.trim.lazy="$v.restock.$model">
+                                </div>
+                            </el-col>
+                             <el-col :span="16">
+                                <div class="input-box" :class="{ 'input-box--error': $v.shelf.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="text" placeholder="Shelf-Row-Column" v-model.trim.lazy="$v.shelf.$model">
                                 </div>
                             </el-col>
 
@@ -122,11 +124,13 @@
         },
         data() {
             return {
-                firstname: "",
-                lastname: "",
-                mail: "",
-                role: "",
-                phone: "",
+                name: "",
+                barcode: "",
+                sku: "",
+                supplier: "",
+                manufacturer: "",
+                price: "",
+                quantity: "",
 
                 submitting: false,
                 error: false,
@@ -134,20 +138,25 @@
             }
         },
          validations: {
-            firstname: {
+            name: {
                 required,
             },
-            lastname: {
+            barcode: {
                 required,
             },
-            mail: {
-                required,
-                email
-            },
-            role: {
+            sku: {
                 required,
             },
-            phone: {
+            supplier: {
+                required,
+            },
+            manufacturer: {
+                
+            },
+            price: {
+                
+            },
+            quantity: {
                 
             }
         },

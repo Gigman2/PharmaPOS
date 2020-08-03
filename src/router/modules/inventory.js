@@ -2,6 +2,8 @@ import NavLayout from '@/layout/nav-layout.vue'
 import Office_Product from '@/pages/office/inventory/products'
 import Office_Product_Add from '@/pages/office/inventory/add_product.vue'
 import Office_Product_Stock from '@/pages/office/inventory/stock.vue'
+import Office_Product_Supplier from '@/pages/office/inventory/supplier.vue'
+import Office_Product_Category from '@/pages/office/inventory/category.vue'
 
 export default {
     path: 'inventory/',
@@ -13,7 +15,7 @@ export default {
         nav: [
           {
             name: 'Products',
-            path: 'office-inventory'
+            path: 'office-inventory_product'
           },
           {
             name: 'Stock Control',
@@ -33,7 +35,7 @@ export default {
     children: [
         {
           path: '',
-          name: 'office-inventory',
+          name: 'office-inventory_product',
           component: Office_Product,
           meta: {
             title: "Products"
@@ -41,7 +43,7 @@ export default {
         },
         {
           path: 'add',
-          name: 'office-inventory_add',
+          name: 'office-inventory_product^add',
           component: Office_Product_Add,
           meta: {
             title: "Add Product"
@@ -58,7 +60,7 @@ export default {
         {
           path: 'supplier',
           name: 'office-inventory_supplier',
-          component: Office_Product_Stock,
+          component: Office_Product_Supplier,
           meta: {
             title: "Suppliers"
           },
@@ -66,7 +68,7 @@ export default {
         {
           path: 'category',
           name: 'office-inventory_category',
-          component: Office_Product_Stock,
+          component: Office_Product_Category,
           meta: {
             title: "Categories"
           },
