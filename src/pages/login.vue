@@ -20,7 +20,7 @@
 
             <div class="btn btn-primary disabled" v-if="$v.$anyError">Login</div>
             <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-            <div class="btn btn-primary" @click="submit" v-else>Login</div>
+            <div class="btn btn-primary" @click="submit" @keyup.enter="submit" v-else>Login</div>
         </div>
     </div>
 </template>

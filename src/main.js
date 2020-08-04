@@ -26,7 +26,7 @@ if(localStorage.getItem('access_token') != ''){
 
 console.log(process.env.SERVER)
 
-Vue.http.options.root = 'localhost:4000/api/';
+Vue.http.options.root = 'http://localhost:4000/api/';
 Vue.http.interceptors.push((request, next) => {
   request.headers.set('Authorization', store.getters['TOKEN'])
   next(res => {                                                                                                                                                                                                                                                                                                                    

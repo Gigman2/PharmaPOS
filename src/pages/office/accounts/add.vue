@@ -169,7 +169,6 @@
                 })
             },
             uploadAvatar(e){
-                console.log(e)
                 let file = e.target.files[0]
                 this.avatarImage = URL.createObjectURL(file);
                 this.avatar = file

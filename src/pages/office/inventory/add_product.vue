@@ -25,9 +25,9 @@
                                 </div>
                             </el-col>
                             <el-col :span="10">
-                                <div class="input-box-el" :class="{ 'input-box--error': $v.lastname.$error }">
+                                <div class="input-box-el" :class="{ 'input-box--error': $v.category.$error }">
                                     <i class="fe-layers"></i>
-                                        <el-select v-model="value" filterable placeholder="Category ...">
+                                    <el-select v-model.trim.lazy="$v.name.$model" filterable placeholder="Category ...">
                                         <el-option
                                         v-for="item in ['Herbal', 'OTC', 'Consumable']"
                                         :key="item"
@@ -125,13 +125,18 @@
         data() {
             return {
                 name: "",
+                category: "",
                 barcode: "",
                 sku: "",
                 supplier: "",
                 manufacturer: "",
                 price: "",
                 quantity: "",
-
+                restock: "",
+                shelf: "", 
+                avatar: null,
+                
+                avatarImage: '',
                 submitting: false,
                 error: false,
                 errorMessage: null
@@ -141,6 +146,7 @@
             name: {
                 required,
             },
+            category: "",
             barcode: {
                 required,
             },
@@ -158,6 +164,12 @@
             },
             quantity: {
                 
+            },
+            restock: {
+
+            },
+            shelf: {
+                
             }
         },
         methods: {
@@ -165,30 +177,31 @@
                 this.error = false;
                 this.submitting = true;
                 let postdata = {
-                    firstname: this.firstname,
-                    lastname: this.lastname,
-                    email: this.mail,
-                    role: this.role,
-                    phone: this.phone
+                   
                 }
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                    this.submitting = false;
                 } else {
-                   this.getAccounts(postdata)
+                //    this.getAccounts(postdata)
                 }
             },
-            getAccounts(formdata){
-                this.$http.post('users/new', formdata)
-                .then(res => {
-                    this.resetform
-                })
-                .catch((err) => {
-                    this.error = true
-                    this.errorMessage = err.body.message
-                     this.submitting =  false;
-                })
+            uploadAvatar(e){
+                let file = e.target.files[0]
+                this.avatarImage = URL.createObjectURL(file);
+                this.avatar = file
             },
+            // getAccounts(formdata){
+            //     this.$http.post('users/new', formdata)
+            //     .then(res => {
+            //         this.resetform
+            //     })
+            //     .catch((err) => {
+            //         this.error = true
+            //         this.errorMessage = err.body.message
+            //          this.submitting =  false;
+            //     })
+            // },
             resetform(){
                 this.firstname = ""
                 this.lastname = ""
