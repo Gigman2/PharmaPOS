@@ -72,7 +72,7 @@
         .active{
             background-color: #e7ecf3;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-            color: #1f8db6;
+            color: #6751de;
         }
         &:last-child .nav{
             border-right: none;

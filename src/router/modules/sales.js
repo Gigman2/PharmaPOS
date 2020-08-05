@@ -1,5 +1,7 @@
 import NavLayout from '@/layout/nav-layout.vue'
 import Office_Sale from '@/pages/office/sales'
+import Office_Customer from '@/pages/office/sales/customer'
+import Office_Discount from '@/pages/office/sales/discount'
 
 export default {
     path: 'transaction/',
@@ -11,15 +13,15 @@ export default {
         nav: [
           {
             name: 'Transaction',
-            path: 'office-sales'
+            path: 'office-sales_transaction'
           },
           {
             name: 'Customer',
-            path: 'office-accounts-role'
+            path: 'office-sales_customer'
           },
           {
             name: 'Discount & Promo',
-            path: 'office-accounts-role'
+            path: 'office-sales_discount'
           },
         ]
       }
@@ -27,10 +29,26 @@ export default {
     children: [
         {
           path: '',
-          name: 'office-sale',
+          name: 'office-sales_transaction',
           component: Office_Sale,
           meta: {
             title: "Sales transaction"
+          },
+        },
+        {
+          path: 'customers',
+          name: 'office-sales_customer',
+          component: Office_Customer,
+          meta: {
+            title: "Customers"
+          },
+        },
+        {
+          path: 'discount',
+          name: 'office-sales_discount',
+          component: Office_Discount,
+          meta: {
+            title: "Discounts"
           },
         },
     ]

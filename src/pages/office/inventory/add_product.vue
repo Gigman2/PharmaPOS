@@ -24,26 +24,22 @@
                                     <input type="text" placeholder="Product name here ..." v-model.trim.lazy="$v.name.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="15">
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.category.$error }">
                                     <i class="fe-layers"></i>
-                                    <el-select v-model.trim.lazy="$v.name.$model" filterable placeholder="Category ...">
-                                        <el-option
-                                        v-for="item in ['Herbal', 'OTC', 'Consumable']"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
-                                        </el-option>
+                                    <el-select v-model.trim.lazy="$v.category.$model" filterable placeholder="Category ...">
+                                        <el-option v-for="item in categories" :key="item.key" 
+                                        :label="item.value" :value="item.key"> </el-option>
                                     </el-select>
                                 </div>
                             </el-col>
-                            <el-col :span="7">
+                            <el-col :span="10">
                                 <div class="input-box" :class="{ 'input-box--error': $v.barcode.$error }">
                                     <i class="fe-tag"></i>
                                     <input type="text" placeholder="Barcode ID" v-model.trim.lazy="$v.barcode.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="7">
+                            <el-col :span="10">
                                 <div class="input-box" :class="{ 'input-box--error': $v.sku.$error }">
                                     <i class="fe-tag"></i>
                                     <input type="text" placeholder="SKU" v-model.trim.lazy="$v.sku.$model">
@@ -52,13 +48,16 @@
                         </el-row>
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
-                             <el-col :span="12">
-                                <div class="input-box" :class="{ 'input-box--error': $v.supplier.$error }">
+                             <el-col :span="10">
+                                <div class="input-box-el" :class="{ 'input-box--error': $v.supplier.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="text" placeholder="Supplier" v-model.trim.lazy="$v.supplier.$model">
+                                    <el-select v-model.trim.lazy="$v.supplier.$model" filterable placeholder="Supplier ...">
+                                        <el-option v-for="item in suppliers" :key="item.key" 
+                                        :label="item.value" :value="item.key"> </el-option>
+                                    </el-select>
                                 </div>
                             </el-col>
-                             <el-col :span="12">
+                             <el-col :span="14">
                                 <div class="input-box" :class="{ 'input-box--error': $v.manufacturer.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="Manufacturer" v-model.trim.lazy="$v.manufacturer.$model">
@@ -137,6 +136,8 @@
                 avatar: null,
                 
                 avatarImage: '',
+                categories: [],
+                suppliers: [],
                 submitting: false,
                 error: false,
                 errorMessage: null
@@ -177,13 +178,22 @@
                 this.error = false;
                 this.submitting = true;
                 let postdata = {
-                   
+                   name: this.name,
+                   category: this.category,
+                   barcode: this.barcode,
+                   sku: this.sku,
+                   supplier: this.supplier,
+                   manufacturer: this.manufacturer,
+                   price: this.price,
+                   quantity: this.quantity,
+                   restock: this.restock,
+                   shelf: this.shelf
                 }
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                    this.submitting = false;
                 } else {
-                //    this.getAccounts(postdata)
+                   this.saveProduct(postdata)
                 }
             },
             uploadAvatar(e){
@@ -191,17 +201,49 @@
                 this.avatarImage = URL.createObjectURL(file);
                 this.avatar = file
             },
-            // getAccounts(formdata){
-            //     this.$http.post('users/new', formdata)
-            //     .then(res => {
-            //         this.resetform
-            //     })
-            //     .catch((err) => {
-            //         this.error = true
-            //         this.errorMessage = err.body.message
-            //          this.submitting =  false;
-            //     })
-            // },
+            saveProduct(formdata){
+                this.$http.post('product/new', formdata)
+                .then(res => {
+                    this.submitting = false
+                    this.$notify({
+                        title: 'Success',
+                        message: "Category saved",
+                        type: 'success'
+                    });
+                    this.resetform()
+                })
+                .catch((err) => {
+                    this.error = true
+                    this.errorMessage = err.body.message
+                     this.submitting =  false;
+                })
+            },
+            getCategories(){
+                this.$http.get('product/category/list?type=simple')
+                .then(res => {
+                    let data =  res.body.result
+                    data.map((item, i) => {
+                        let unit = {
+                            key: item.id,
+                            value: item.name
+                        }
+                        this.categories[i] = unit
+                    })
+                })
+            },
+             getSuppliers(){
+                this.$http.get('product/supplier/list?type=simple')
+                .then(res => {
+                    let data =  res.body.result
+                    data.map((item, i) => {
+                        let unit = {
+                            key: item.id,
+                            value: item.name
+                        }
+                        this.suppliers[i] = unit
+                    })
+                })
+            },
             resetform(){
                 this.firstname = ""
                 this.lastname = ""
@@ -211,7 +253,8 @@
             }
         },
         created() {
-            // this.getAccounts()
+            this.getCategories()
+            this.getSuppliers()
         },
     }
 </script>

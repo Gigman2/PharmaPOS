@@ -9,11 +9,14 @@
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
             <el-table :data="accountData" style="width: 100%">
-                <el-table-column prop="id" label="ID"></el-table-column>
-                <el-table-column prop="saler" label="Saler"> </el-table-column>
-                <el-table-column prop="product" label="Items"> </el-table-column>
-                <el-table-column prop="price" label="Net Price"> </el-table-column>
-                <el-table-column prop="price" label="Customer"> </el-table-column>
+                <el-table-column>
+                    <el-template>
+                    </el-template>
+                </el-table-column>
+                <el-table-column prop="name" label="Full Name"> </el-table-column>
+                <el-table-column prop="email" label="Email"> </el-table-column>
+                <el-table-column prop="phone" label="Phone"> </el-table-column>
+                <el-table-column prop="purchase" label="Last Purchase"> </el-table-column>
                 <el-table-column>
                     <el-template>
                             <el-button size="mini">Complete</el-button>

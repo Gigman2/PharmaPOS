@@ -30,8 +30,8 @@
                         </router-link>
                     </li>
                     <li>
-                        <router-link :to="{name: 'office-sale'}">
-                            <div class="sidebar-item" :class="{'active': $route.name == 'office-sale'}">
+                        <router-link :to="{name: 'office-sales_transaction'}">
+                            <div class="sidebar-item" :class="{'active': $route.name == 'office-sales_transaction'}">
                                 <div class="sidebar-icon">
                                     <i class="fe-trending-up"></i>
                                 </div>

@@ -171,6 +171,7 @@ body {
     .input-box-el{
       background-color: #f0f0f0;
       border-radius: 5px;
+      margin-bottom: 20px;
       i{
         color: rgb(137, 147, 155);;
       }
@@ -239,6 +240,13 @@ body {
 .back-icon{
   font-size: 1.3em;
   color: silver;
+}
+
+.form-title{
+  font-size: 1.25em;
+  font-family: 'Open sans';
+  font-weight: bold;
+  color: slategray;
 }
 
 </style>

@@ -7,18 +7,18 @@
         <div class="dashboard-content mt-10">
             <el-row :gutter="20">
                 <el-col :span="13">
-                     <div class="search-box pull-left">
+                    <div class="search-box pull-left">
                         <i class="fe-search"></i>
                         <input type="text" placeholder="Search ...">
                     </div>
                     <el-table :data="tableData" style="width: 100%">
                         <el-table-column prop="name" label="Name"></el-table-column>
-                        <el-table-column prop="products" label="Products"> </el-table-column>
+                        <el-table-column prop="product" label="Products"> </el-table-column>
                         <el-table-column prop="by" label="Added by"> </el-table-column>
                         <el-table-column>
-                            <template>
-                                    <el-button size="mini">Edit</el-button>
-                                    <el-button size="mini" type="danger">Delete</el-button>
+                            <template slot-scope="scope">
+                                    <el-button size="mini" @click="editItem(scope.$index, scope.row)">Edit</el-button>
+                                    <el-button size="mini" type="danger" @click="deleteItem(scope.$index, scope.row.id)">Delete</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -52,7 +52,7 @@
 
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar';
-   import Loader from '@/components/loader.vue'
+    import Loader from '@/components/loader.vue'
     import { required, alpha, helpers } from 'vuelidate/lib/validators'
 
     export default {
@@ -65,6 +65,7 @@
             return {
                 name: "",
                 tableData: [],
+                id: null,
 
                 submitting: false,
                 error: false,
@@ -92,15 +93,17 @@
                 }
             },
             saveCategory(formdata){
-                this.$http.post('product/add-category', formdata)
+                formdata.id = this.id
+                this.$http.post('product/save-category', formdata)
                 .then(res => {
+                    this.id = null
                     this.submitting = false
-                    this.resetform
                     this.$notify({
                         title: 'Success',
                         message: "Category saved",
                         type: 'success'
                     });
+                    this.resetform()
                     this.getCategories()
                 })
                 .catch((err) => {
@@ -122,7 +125,7 @@
                     data.map(item => {
                         if(item.addedby){
                             item.by = item.addedby.firstname+' '+item.addedby.lastname
-                            item.product = item.length
+                            item.product = item.products.length
                         }
                     })
                     this.tableData = data
@@ -135,6 +138,28 @@
                     });
                 })
 
+            },
+            editItem(i, item){
+                this.name = item.name
+                this.id = item.id
+            },
+            deleteItem(i, id){
+                this.$http.post('product/category/remove', {id})
+                .then(res => {
+                     this.tableData.splice(i, 1);
+                    this.$notify({
+                        title: 'Success',
+                        message: "Category deleted",
+                        type: 'success'
+                    });
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Unable to delete category",
+                        type: 'error'
+                    });
+                })
             }
         },
         created() {
