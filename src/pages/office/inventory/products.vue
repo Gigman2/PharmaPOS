@@ -18,9 +18,9 @@
                 <el-table-column prop="quantity" label="In Stock"> </el-table-column>
                 <el-table-column prop="price" label="Price (Ghc)"> </el-table-column>
                 <el-table-column>
-                    <template>
+                    <template slot-scope="scope">
                             <el-button size="mini">Edit</el-button>
-                            <el-button size="mini" type="danger">Delete</el-button>
+                            <el-button size="mini" type="danger" @click="triggerDelete(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -31,6 +31,7 @@
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import lineChart from '@/components/chart/lineChart.vue'
+import categoryVue from './category.vue';
     export default {
         components: {
             vueCustomScrollbar,
@@ -46,18 +47,34 @@
                 this.$http.get('product/list')
                 .then(res => {
                     let data =  res.body.result
-                    // data.map(i => {
-                    //     i.name = i.firstname+' '+i.lastname
-                    //     i.login = 'never'
-                    //     if(i.lastLogin){
-                    //         i.login = moment(i.lastLogin).format('MMMM Do YYYY, H:mm')
-                    //     }
-                    // })
+                    data.map(i => {
+                        if(i.category){
+                            i.category = i.category.name
+                        }
+                    })
 
                     this.result = data;
                 })
                 .catch(() => {
 
+                })
+            },
+            triggerDelete(i, id){
+                this.$http.post('product/remove', {id})
+                .then(res => {
+                     this.accountData.splice(i, 1);
+                    this.$notify({
+                        title: 'Success',
+                        message: "account deleted",
+                        type: 'success'
+                    });
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Unable to delete account",
+                        type: 'error'
+                    });
                 })
             }
         },

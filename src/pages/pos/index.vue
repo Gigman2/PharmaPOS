@@ -11,74 +11,26 @@
                 <div class="filter-box">
                     <!-- <i class="fe-filter"></i> -->
                     <ul class="filters">
-                        <li class="shadow-1">
-                             <div class="filter-icon all"></div>  
+                        <li class="shadow-1 active">
                              <span>All</span>
                             </li>
-                        <li class="shadow-1">
-                            <div class="filter-icon herb"></div>  
-                            <span>Herbal</span>
-                        </li>
-                        <!-- <li class="shadow-1">Herbal</li> -->
-                        <li class="shadow-1">
-                            <div class="filter-icon otc"></div>  
-                            <span>OTC</span>
-                        </li>
-                        <li class="shadow-1">
-                            <div class="filter-icon consumer"></div>  
-                            <span>Consumer</span>
-                        </li>
-                        <li class="shadow-1">
-                            <div class="filter-icon consumer"></div>  
-                            <span>Consumer</span>
-                        </li>
-                        <li class="shadow-1">
-                            <div class="filter-icon pharm"></div>  
-                            <span>Pharmaceutical</span>
+                        <li class="shadow-1" v-for="(item, i) in categories" :key="i">
+                            <span>{{item.name}}</span>
                         </li>
                     </ul>
                 </div>
+                <div class="clearfix"></div>
 
                 <div class="products-box">
                     <div class="products-title">Top 25 Sellers</div>
                     <vue-custom-scrollbar class="scroll-area products" :settings="settings">
                         <div class="product-row">
-                            <div class="product shadow-1">
+                            <div class="product shadow-1" v-for="(item, i) in products" :key="i">
                                 <div class="product-image">
-                                <div class="image"></div>
+                                <!-- <div class="image"></div> -->
                                 </div>
-                                <div class="product-title">Tabea Herbal Mixture</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-
-                            <div class="product shadow-1">
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/doctor.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Marla-2 Forte Rapinol</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-
-                            <div class="product shadow-1" >
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/drugs.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Maalox Antacid</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-                            <div class="product shadow-1">
-                                <div class="product-image">
-                                <div class="image"></div>
-                                </div>
-                                <div class="product-title">Tabea Herbal Mixture</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-                            <div class="product shadow-1" >
-                                <div class="product-image">
-                                <div class="image":style="{ backgroundImage: 'url(' + require('@/assets/images/pills.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Rapinol</div>
-                                <div class="product-price">Ghc 0.7</div>
+                                <div class="product-title">{{item.name}}</div>
+                                <div class="product-price">Ghc {{item.price}}.00</div>
                             </div>
                         </div>
 
@@ -256,8 +208,45 @@
             return {
                 settings: {
                     maxScrollbarLength: 60
-                }
+                },
+                categories: [],
+                products: []
             }
+        },
+        methods: {
+            getCategories(){
+                this.$http.get('product/category/list?type=simple')
+                .then(res => {
+                    let data =  res.body.result
+                    this.categories = data
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Unable to load data",
+                        type: 'error'
+                    });
+                })
+
+            },
+            getProducts(){
+                this.$http.get('product/stock')
+                .then(res => {
+                    let data =  res.body.result
+                    this.products = data;
+                })
+                .catch(() => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Unable to load data",
+                        type: 'error'
+                    });
+                })
+            }
+        },
+        created() {
+            this.getCategories()
+            this.getProducts()
         },
     }
 </script>

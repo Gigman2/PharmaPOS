@@ -4,6 +4,7 @@
             <div class="brand">SluxiPOS</div>
             <div class="actions">
                 <ul class="action-menu">
+                    <li class="mt-10" @click="sell"> <i class="fe-dollar-sign"></i> Sell</li>
                     <li class="mt-10" @click="lock"> <i class="fe-power"></i> Logout</li>
                     <li>
                         <div class="user-account">
@@ -31,7 +32,7 @@
                     </li>
                     <li>
                         <router-link :to="{name: 'office-sales_transaction'}">
-                            <div class="sidebar-item" :class="{'active': $route.name == 'office-sales_transaction'}">
+                            <div class="sidebar-item" :class="{'active': baseRoute() == 'office-sales'}">
                                 <div class="sidebar-icon">
                                     <i class="fe-trending-up"></i>
                                 </div>
@@ -105,6 +106,9 @@
             lock(){
                 this.$store.commit('LOGOUT');
                 this.$router.push({name: 'login'})
+            },
+            sell(){
+                this.$router.push({name: 'pos-home'})
             },
             baseRoute(){
                 let route = this.$route.name.split('_')

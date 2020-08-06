@@ -113,7 +113,7 @@
 </template>
 
 <script>
-    import { required, email } from 'vuelidate/lib/validators'
+    import { required, helpers } from 'vuelidate/lib/validators'
     import Loader from '@/components/loader.vue'
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     export default {
@@ -150,9 +150,11 @@
             category: "",
             barcode: {
                 required,
+                alphaChar:helpers.regex('alphaChar', /^[a-z0-9_-]*$/i),
             },
             sku: {
                 required,
+                alphaChar:helpers.regex('alphaChar', /^[a-z0-9_-]*$/i),
             },
             supplier: {
                 required,
@@ -245,11 +247,18 @@
                 })
             },
             resetform(){
-                this.firstname = ""
-                this.lastname = ""
-                this.mail = ""
-                this.role = ""
-                this.phone = ""
+                this.name = ""
+                this.category = ""
+                this.barcode = ""
+                this.sku = ""
+                this.supplier = ""
+                this.manufacturer = ""
+                this.price = ""
+                this.quantity = ""
+                this.restock = ""
+                this.shelf = ""
+
+                this.$nextTick(() => { this.$v.$reset() })
             }
         },
         created() {
