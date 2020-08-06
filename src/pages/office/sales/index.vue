@@ -33,8 +33,24 @@
             lineChart
         },
         data() {
-            return {}
+            return {
+                accountData:[]
+            }
         },
+        methods:{
+            getData(){
+                this.$http.get('sales/list')
+                .then(res=>{
+                    let data = res.body.result
+
+                    this.accountData = data
+                })
+
+            }
+
+        },created() {
+            this.getData()
+        }
     }
 </script>
 
