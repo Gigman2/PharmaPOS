@@ -231,7 +231,7 @@
                         }
                         this.categories[i] = unit
                     })
-                })
+                })  
             },
              getSuppliers(){
                 this.$http.get('product/supplier/list?type=simple')
