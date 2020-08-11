@@ -3,7 +3,6 @@ import Office_Report from '@/pages/office/report/index.vue'
 
 export default {
     path: 'reports/',
-    name: 'office-reports-layout',
     component: NavLayout,
     props(route) {
       return {

@@ -256,15 +256,16 @@
                 // box-sizing: b;
 
                 .product-image{
-                    width: 50%;
+                    width: 90%;
                     height: 70px;
-                    margin: 20px auto 0 auto;
+                    margin: 0 auto 30px auto;
                     .image  {
                         width: 100%;
-                        height: 100%;
                         background-repeat: no-repeat;
-                        background-image: url('~@/assets/images/leaf.svg');
                         background-size: contain;
+                        img{
+                            width: 100%;
+                        }
                     }
                 }
                 .product-title{

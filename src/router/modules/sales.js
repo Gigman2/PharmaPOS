@@ -5,7 +5,6 @@ import Office_Discount from '@/pages/office/sales/discount'
 
 export default {
     path: 'transaction/',
-    name: 'office-sale-layout',
     component: NavLayout,
     props (route) {
       return {

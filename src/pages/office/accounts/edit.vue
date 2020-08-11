@@ -126,7 +126,7 @@
                 required,
             },
             phone: {
-                
+                 
             }
         },
         computed: {
@@ -162,7 +162,6 @@
                 for(const index in fields){
                     formData.append(fields[index][0], fields[index][1]);
                 }
-                console.log(payload)
                 this.$http.put('users/update', formData)
                 .then(res => {
                     this.submitting = false

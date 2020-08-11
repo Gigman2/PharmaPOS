@@ -24,78 +24,15 @@
                 <div class="products-box">
                     <div class="products-title">Top 25 Sellers</div>
                     <vue-custom-scrollbar class="scroll-area products" :settings="settings">
-                        <div class="product-row">
-                            <div class="product shadow-1" v-for="(item, i) in products" :key="i">
+                        <div class="product-row" v-for="(row, index) in products" :key="index">
+                            <div class="product shadow-1"  v-for="(item, i) in row" :key="i">
                                 <div class="product-image">
-                                <!-- <div class="image"></div> -->
+                                    <div class="image">
+                                        <img :src="bucket+item.image" alt="">
+                                    </div>
                                 </div>
                                 <div class="product-title">{{item.name}}</div>
                                 <div class="product-price">Ghc {{item.price}}.00</div>
-                            </div>
-                        </div>
-
-                        <div class="product-row">
-                            <div class="product shadow-1" >
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/pills.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Rapinol</div>
-                                <div class="product-price">Ghc 0.7</div>
-                            </div>
-                            <div class="product shadow-1">
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/doctor.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Marla-2 Forte</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-
-                            <div class="product shadow-1" >
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/drugs.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Maalox Antacid</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-                            <div class="product shadow-1">
-                                <div class="product-image">
-                                <div class="image"></div>
-                                </div>
-                                <div class="product-title">Tabea Herbal Mixture</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-                             <div class="product shadow-1">
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/doctor.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Marla-2 Forte</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-
-                        </div>
-
-                        <div class="product-row">
-                            <div class="product shadow-1" >
-                                <div class="product-image">
-                                <div class="image":style="{ backgroundImage: 'url(' + require('@/assets/images/pills.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Rapinol</div>
-                                <div class="product-price">Ghc 0.7</div>
-                            </div>
-                            <div class="product shadow-1">
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/doctor.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Marla-2 Forte</div>
-                                <div class="product-price">Ghc 100.00</div>
-                            </div>
-
-                            <div class="product shadow-1" >
-                                <div class="product-image">
-                                <div class="image" :style="{ backgroundImage: 'url(' + require('@/assets/images/drugs.svg') + ')' }"></div>
-                                </div>
-                                <div class="product-title">Maalox Antacid</div>
-                                <div class="product-price">Ghc 100.00</div>
                             </div>
                         </div>
                     </vue-custom-scrollbar>
@@ -200,6 +137,8 @@
 
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar'
+    import {mapGetters} from 'vuex';
+
     export default {
         components: {
             vueCustomScrollbar
@@ -212,6 +151,9 @@
                 categories: [],
                 products: []
             }
+        },
+        computed: {
+            ...mapGetters({bucket: 'GET_BUCKET'})
         },
         methods: {
             getCategories(){
@@ -234,8 +176,23 @@
                 .then(res => {
                     let data =  res.body.result
                     this.products = data;
+                    var newData = [];
+                    var index = 0;
+                    this.products.forEach((element,i )=> {
+                        if(newData[index] === undefined){
+                            newData[index] = []
+                        }
+                        console.log('Data logs ',newData[index])
+                        newData[index].push(element)
+                        while (i%5 > 0){
+                            index  = index + 1;
+                        }
+                        console.log(newData)
+                    });
+                    this.products = newData
                 })
-                .catch(() => {
+                .catch((err) => {
+                    console.log(err)
                     this.$notify({
                         title: 'Failed',
                         message: "Unable to load data",

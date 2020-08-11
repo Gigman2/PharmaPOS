@@ -3,7 +3,6 @@ import Office_Setup_Company from '@/pages/office/setup/company.vue'
 
 export default {
   path: 'setup',
-  name: 'office-setup-layout',
   component: NavLayout,
   props (route) {
     return {

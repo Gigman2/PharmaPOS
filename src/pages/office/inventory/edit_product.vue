@@ -90,9 +90,9 @@
 
                         </el-row>
             
-                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Add Product</div>
+                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Update Product</div>
                         <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-                        <div class="btn btn-primary" @click="submit" v-else>Add Product</div>
+                        <div class="btn btn-primary" @click="submit" v-else>Update Product</div>
                     </el-col>
                     <el-col :span="10">
                         <div class="form-title mb-40">Product Image</div>
@@ -114,6 +114,7 @@
 
 <script>
     import { required, helpers } from 'vuelidate/lib/validators'
+    import {mapGetters} from 'vuex'
     import Loader from '@/components/loader.vue'
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     export default {
@@ -174,6 +175,9 @@
             shelf: {
                 
             }
+        },
+        computed: {
+            ...mapGetters({bucket: 'GET_BUCKET'})
         },
         methods: {
             submit(){
@@ -243,7 +247,7 @@
                     })
                 })  
             },
-             getSuppliers(){
+            getSuppliers(){
                 this.$http.get('product/supplier/list?type=simple')
                 .then(res => {
                     let data =  res.body.result
@@ -256,26 +260,32 @@
                     })
                 })
             },
-            resetform(){
-                this.name = ""
-                this.category = ""
-                this.barcode = ""
-                this.sku = ""
-                this.supplier = ""
-                this.manufacturer = ""
-                this.price = ""
-                this.quantity = ""
-                this.restock = ""
-                this.shelf = ""
-                this.avatarImage = ""
-                this.avatar = null
 
-                this.$nextTick(() => { this.$v.$reset() })
-            }
+            getProduct(){
+                this.$http.post('product/single?type=simple', {id: this.$route.params.id})
+                .then(res => {
+                    this.name = res.body.result.name
+                    this.category = res.body.result.categoryId
+                    this.barcode = res.body.result.barcode
+                    this.sku = res.body.result.sku
+                    this.supplier = res.body.result.supplierId
+                    this.manufacturer = res.body.result.manufacturer
+                    this.price = res.body.result.price
+                    this.quantity = res.body.result.quantity
+                    this.restock = res.body.result.saleThreshold
+                    this.shelf = res.body.result.shelf
+                    this.avatarImage = ""
+                    this.avatar = null
+                    // if(account.avatar != null){
+                    //     this.avatarImage = this.bucket+account.avatar;
+                    // }
+                })
+            },
         },
         created() {
             this.getCategories()
             this.getSuppliers()
+            this.getProduct()
         },
     }
 </script>
