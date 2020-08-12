@@ -99,7 +99,7 @@
                         <div class="preview">
                             <label for="avatar">
                                 <div class="preview-box">
-                                    <img :src="avatarImage" alt="">
+                                    <img :src="itemImage" alt="">
                                 </div>
                                 <el-link class="mt-10" >Upload Image</el-link>
                             </label>
@@ -136,7 +136,7 @@
                 shelf: "", 
                 image: null,
                 
-                avatarImage: '',
+                itemImage: '',
                 categories: [],
                 suppliers: [],
                 submitting: false,
@@ -193,7 +193,8 @@
                    price: this.price,
                    quantity: this.quantity,
                    restock: this.restock,
-                   shelf: this.shelf
+                   shelf: this.shelf,
+                   id: this.$route.params.id
                 }
 
                 if(this.image != null){
@@ -209,7 +210,7 @@
             },
             uploadAvatar(e){
                 let file = e.target.files[0]
-                this.avatarImage = URL.createObjectURL(file);
+                this.itemImage = URL.createObjectURL(file);
                 this.image = file
             },
             saveProduct(payload){
@@ -218,7 +219,7 @@
                 for(const index in fields){
                     formData.append(fields[index][0], fields[index][1]);
                 }
-                this.$http.post('product/new', formData)
+                this.$http.post('product/update', formData)
                 .then(res => {
                     this.submitting = false
                     this.$notify({
@@ -274,11 +275,12 @@
                     this.quantity = res.body.result.quantity
                     this.restock = res.body.result.saleThreshold
                     this.shelf = res.body.result.shelf
-                    this.avatarImage = ""
+                    this.itemImage = ""
                     this.avatar = null
-                    // if(account.avatar != null){
-                    //     this.avatarImage = this.bucket+account.avatar;
-                    // }
+
+                    if(res.body.result.image != null){
+                        this.itemImage = this.bucket+res.body.result.image;
+                    }
                 })
             },
         },
