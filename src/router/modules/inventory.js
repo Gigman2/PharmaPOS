@@ -1,13 +1,13 @@
 import NavLayout from '@/layout/nav-layout.vue'
 import Office_Product from '@/pages/office/inventory/products'
 import Office_Product_Add from '@/pages/office/inventory/add_product.vue'
+import Office_Product_Edit from '@/pages/office/inventory/edit_product.vue'
 import Office_Product_Stock from '@/pages/office/inventory/stock.vue'
 import Office_Product_Supplier from '@/pages/office/inventory/supplier.vue'
 import Office_Product_Category from '@/pages/office/inventory/category.vue'
 
 export default {
     path: 'inventory/',
-    name: 'office-inventory-layout',
     component: NavLayout,
     props (route) {
       return {
@@ -47,6 +47,14 @@ export default {
           component: Office_Product_Add,
           meta: {
             title: "Add Product"
+          },
+        },
+        {
+          path: ':id/edit',
+          name: 'office-inventory_product^edit',
+          component: Office_Product_Edit,
+          meta: {
+            title: "Edit Product"
           },
         },
         {

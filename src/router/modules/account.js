@@ -7,7 +7,6 @@ import Office_Account_Role from '@/pages/office/accounts/roles.vue'
 
 export default {
   path: 'accounts',
-  name: 'office-accounts-layout',
   component: NavLayout,
   props (route) {
     return {

@@ -3,7 +3,6 @@ import Office_Home from '@/pages/office/dashboard'
 
 export default {
     path: '',
-    name: 'office-dashboard-layout',
     component:NavLayout,
     props (route) {
       return {

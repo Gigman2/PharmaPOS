@@ -90,16 +90,16 @@
 
                         </el-row>
             
-                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Add Product</div>
+                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Update Product</div>
                         <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-                        <div class="btn btn-primary" @click="submit" v-else>Add Product</div>
+                        <div class="btn btn-primary" @click="submit" v-else>Update Product</div>
                     </el-col>
                     <el-col :span="10">
                         <div class="form-title mb-40">Product Image</div>
                         <div class="preview">
                             <label for="avatar">
                                 <div class="preview-box">
-                                    <img :src="avatarImage" alt="">
+                                    <img :src="itemImage" alt="">
                                 </div>
                                 <el-link class="mt-10" >Upload Image</el-link>
                             </label>
@@ -114,6 +114,7 @@
 
 <script>
     import { required, helpers } from 'vuelidate/lib/validators'
+    import {mapGetters} from 'vuex'
     import Loader from '@/components/loader.vue'
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     export default {
@@ -135,7 +136,7 @@
                 shelf: "", 
                 image: null,
                 
-                avatarImage: '',
+                itemImage: '',
                 categories: [],
                 suppliers: [],
                 submitting: false,
@@ -175,6 +176,9 @@
                 
             }
         },
+        computed: {
+            ...mapGetters({bucket: 'GET_BUCKET'})
+        },
         methods: {
             submit(){
                 this.error = false;
@@ -189,7 +193,8 @@
                    price: this.price,
                    quantity: this.quantity,
                    restock: this.restock,
-                   shelf: this.shelf
+                   shelf: this.shelf,
+                   id: this.$route.params.id
                 }
 
                 if(this.image != null){
@@ -205,7 +210,7 @@
             },
             uploadAvatar(e){
                 let file = e.target.files[0]
-                this.avatarImage = URL.createObjectURL(file);
+                this.itemImage = URL.createObjectURL(file);
                 this.image = file
             },
             saveProduct(payload){
@@ -214,7 +219,7 @@
                 for(const index in fields){
                     formData.append(fields[index][0], fields[index][1]);
                 }
-                this.$http.post('product/new', formData)
+                this.$http.post('product/update', formData)
                 .then(res => {
                     this.submitting = false
                     this.$notify({
@@ -243,7 +248,7 @@
                     })
                 })  
             },
-             getSuppliers(){
+            getSuppliers(){
                 this.$http.get('product/supplier/list?type=simple')
                 .then(res => {
                     let data =  res.body.result
@@ -256,26 +261,33 @@
                     })
                 })
             },
-            resetform(){
-                this.name = ""
-                this.category = ""
-                this.barcode = ""
-                this.sku = ""
-                this.supplier = ""
-                this.manufacturer = ""
-                this.price = ""
-                this.quantity = ""
-                this.restock = ""
-                this.shelf = ""
-                this.avatarImage = ""
-                this.avatar = null
 
-                this.$nextTick(() => { this.$v.$reset() })
-            }
+            getProduct(){
+                this.$http.post('product/single?type=simple', {id: this.$route.params.id})
+                .then(res => {
+                    this.name = res.body.result.name
+                    this.category = res.body.result.categoryId
+                    this.barcode = res.body.result.barcode
+                    this.sku = res.body.result.sku
+                    this.supplier = res.body.result.supplierId
+                    this.manufacturer = res.body.result.manufacturer
+                    this.price = res.body.result.price
+                    this.quantity = res.body.result.quantity
+                    this.restock = res.body.result.saleThreshold
+                    this.shelf = res.body.result.shelf
+                    this.itemImage = ""
+                    this.avatar = null
+
+                    if(res.body.result.image != null){
+                        this.itemImage = this.bucket+res.body.result.image;
+                    }
+                })
+            },
         },
         created() {
             this.getCategories()
             this.getSuppliers()
+            this.getProduct()
         },
     }
 </script>
