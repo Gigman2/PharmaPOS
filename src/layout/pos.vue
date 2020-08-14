@@ -196,12 +196,12 @@
             margin-right: 15px;
             background-color: white;
             border-radius: 3px;
-            color: rgba(0, 0, 0, 0.877);;
+            color: rgba(69, 20, 116, 0.829);
             cursor: pointer;
-            border: 2px solid rgba(0, 0, 0, 0.877);
+            border: 2px solid rgba(69, 20, 116, 0.829);
             font-weight: bold;
             &.active{
-                background-color: rgba(0, 0, 0, 0.877);
+                background-color: rgba(69, 20, 116, 0.829);
                 color: white;
             }
         }
@@ -213,7 +213,8 @@
             font-family: 'Open sans';
             font-size: 1.3em;
             font-weight: bold;
-            color: rgba(0, 0, 0, 0.877);
+            color: rgba(0, 0, 0, 0.671);
+            margin-left: 10px;
         }
         .products{
             padding-top: 15px;
@@ -276,7 +277,7 @@
             line-height: 30px;
             overflow: hidden;
             &--title{
-                color:rgba(0, 0, 0, 0.877);;
+                color:rgba(0, 0, 0, 0.671);;
                 font-family: 'Open sans';
                 font-size: 1.3em;
                 font-weight: bold;
@@ -300,7 +301,7 @@
 
         .checkout-headings{
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.829);
+            background-color: rgba(69, 20, 116, 0.829);
         }
 
         .checkout-table-wrapper{
@@ -324,7 +325,7 @@
 
             .selected{
                 td{
-                    background-color: #2196f342;
+                    background-color: rgba(69, 20, 116, 0.829);
                 }
             }
 
@@ -368,7 +369,7 @@
 
         .checkout-subtotal{
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.082);
+            background-color: rgba(218, 218, 218, 0.726);
             color: #89939b;
             td{
                 padding: 10px;
@@ -395,7 +396,7 @@
         }
 
         .checkout-payout{
-            background-color: rgba(0, 0, 0, 0.877);
+            background-color: rgba(69, 20, 116, 0.829);
             border-radius: 5px;
             padding: 15px 10px;
             font-family: 'Open sans';
@@ -413,11 +414,11 @@
             width: calc(25%);
             display: inline-block;
             font-family: 'Open sans';
-            border: 2px solid rgba(0, 0, 0, 0.877);
+            border: 2px solid rgba(69, 20, 116, 0.829);
             padding: 12px 10px;
             border-radius: 5px;
             margin-left: 10px;
-            color: black;
+            color: rgba(69, 20, 116, 0.829);;
             font-weight: bold;
             background-color: white;
             cursor: pointer;

@@ -48,7 +48,7 @@
                 <div class="checkout-title">
                     <div class="pull-left checkout-title--title">Purchase Detail</div>
                     <div class="pull-right checkout-title--actions">
-                        <span>Hold</span>
+                        <span @click="checkout('hold')">Hold</span>
                         <i class="fe-user-plus"></i>
                          <i class="fe-tag"></i>
                         <i class="fe-slash " @click="resetOrder"></i>
@@ -270,7 +270,8 @@
                     let product = {
                         quantity: item.quantity,
                         unit: item.price,
-                        total: item.quantity * item.price
+                        total: item.quantity * item.price,
+                        productId: item.id
                     }
                     transaction.products.push(product)
                 })  
@@ -282,9 +283,14 @@
                     transaction.state = 'processing'
                 }
             },
-            createTransaction(){
-                this.$http.post('product/transaction/new')
+            createTransaction(postData){
+                this.$http.post('product/transaction/new', postData)
                 .then(res => {
+                     this.$notify({
+                        title: 'Success',
+                        message: "Transaction on hold",
+                        type: 'success'
+                    });
                     this.resetOrder()
                 })
             }

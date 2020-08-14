@@ -31,7 +31,8 @@ Vue.http.interceptors.push((request, next) => {
   request.headers.set('Authorization', store.getters['TOKEN'])
   next(res => {                                                                                                                                                                                                                                                                                                                    
       if (res.status === 401 || res.status === 403) {
-          router.push('/');
+        store.commit('LOGOUT')
+        router.push({name: 'login'});
       }
   })
 })
