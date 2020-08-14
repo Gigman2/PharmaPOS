@@ -87,7 +87,7 @@
                 }else{
                     this.$notify({
                         title: 'Warning',
-                        message: "Can't delete ony account",
+                        message: "Can't delete only account",
                         type: 'warning'
                     });
                 }
