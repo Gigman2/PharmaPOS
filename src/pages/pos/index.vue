@@ -5,16 +5,17 @@
                 <div class="form-box">
                     <div class="input-box">
                         <i class="fe-search"></i>
-                        <input type="text" placeholder="Search ...">
+                        <input type="text" placeholder="Search ..." v-model="q" @keyup="search()">
                     </div>
                 </div>
                 <div class="filter-box">
                     <!-- <i class="fe-filter"></i> -->
                     <ul class="filters">
-                        <li class="shadow-1 active">
+                        <li class="shadow-1 active" @click="filerByCategory('all', $event)">
                              <span>All</span>
-                            </li>
-                        <li class="shadow-1" v-for="(item, i) in categories" :key="i">
+                        </li>
+                        <li class="shadow-1" v-for="(item, i) in categories" :key="i" 
+                           @click="filerByCategory(item, $event)">
                             <span>{{item.name}}</span>
                         </li>
                     </ul>
@@ -23,7 +24,7 @@
 
                 <div class="products-box">
                     <div class="products-title">Products</div>
-                    <vue-custom-scrollbar class="scroll-area products" :settings="settings">
+                    <vue-custom-scrollbar class="scroll-area products" :settings="settings" v-loading="loading">
                         <div class="product-row" v-for="(row, index) in products" :key="index">
                             <el-tooltip class="item" effect="dark" placement="bottom-end"
                                 v-for="(item, i) in row" :key="i">
@@ -51,8 +52,8 @@
                         <span @click="checkout('hold')">Hold</span>
                         <i class="fe-user-plus" v-if="customer === null" @click="showCustomerDialog = true"></i>
                         <i class="fe-user-minus" v-else @click="customer = null"></i>
-                        <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
-                        <span  v-else>{{discount}} <em class="fe-percent"></em></span>
+                        <!-- <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
+                        <span  v-else>{{discount}} <em class="fe-percent"></em></span> -->
                         <i class="fe-slash " @click="resetOrder"></i>
                     </div>
                 </div>
@@ -104,7 +105,8 @@
                 </table>
            </div>
            <div class="checkout-pay-section">
-                <div class="checkout-payout" @click="showPaymentDialog = true"><span>Pay</span> (Ghc {{grossTotal}})</div>
+                <div class="checkout-payout disabled" v-if="Number(grossTotal) < 1" ><span>Pay</span> (Ghc {{grossTotal}})</div>
+                <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{grossTotal}})</div>
                 <div class="checkout-reset" @click="resetOrder">Reset</div>
            </div>
         </div>
@@ -169,7 +171,7 @@
                     <el-col :span="12">
                         <div class="input-box">
                             <i class="">Ghc</i>
-                            <input type="text" placeholder="0.00" v-model="cash">
+                            <input type="text" placeholder="0.00" v-model="cash" @blur="splitPayment('cash')">
                         </div>
                     </el-col>
                      <el-col :span="12">
@@ -178,14 +180,16 @@
                     <el-col :span="12">
                         <div class="input-box">
                             <i class="">Ghc</i>
-                            <input type="text" placeholder="0.00" v-model="momo">
+                            <input type="text" placeholder="0.00" v-model="momo" @blur="splitPayment('momo')">
                         </div>
                     </el-col>
                 </el-row>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showPaymentDialog = false">Cancel</el-button>
-                <el-button type="primary" @click="checkout('pay');showPaymentDialog = false">Checkout</el-button>
+                <el-button type="primary" v-if="(Number(cash) + Number(momo)) == grossTotal"
+                 @click="checkout('pay'); showPaymentDialog = false">Checkout</el-button>
+                <el-button v-else type="primary" disabled>Checkout</el-button>
             </span>
         </el-dialog>
     </div>
@@ -212,7 +216,7 @@
 
                 cash: 0,
                 momo: 0,
-
+                q: '',
                 barcodeScanned: '',
                 netTotal: 0,
                 grossTotal: 0,
@@ -225,7 +229,9 @@
 
                 discount: 0,
                 discountCode: '',
-                discountId: null
+                discountId: null,
+
+                loading: true,
             }
         },
         computed: {
@@ -254,7 +260,8 @@
                 })
 
             },
-            getProducts( query){
+            getProducts(){
+                this.loading = true
                 this.$http.get('product/list')
                 .then(res => {
                     let data =  res.body.result
@@ -271,13 +278,48 @@
                         newData[index].push(element)
                     });
                     this.products = newData
+                    this.loading = false
                 })
                 .catch((err) => {
-                    console.log(err)
+                    this.loading = false
                     this.$notify({
                         title: 'Failed',
                         message: "Unable to load data",
                         type: 'error'
+                    });
+                })
+            },
+            productSearch(query){
+                this.loading = true
+                this.$http.get('product/search', {
+                    params: query
+                })
+                .then(res => {
+                    let data =  res.body.result
+                    this.products = data;
+                    var newData = [];
+                    var index = 0;
+                    this.products.forEach((element,i )=> {
+                        while (i+1 % 5 == 0){
+                            index  = index + 1;
+                        }
+                        if(newData[index] === undefined){
+                            newData[index] = []
+                        }
+                        newData[index].push(element)
+                    });
+                    this.products = newData
+                    if(query.barcode && data !== undefined){
+                        this.addItem(data[0])
+                    }
+                    this.loading = false
+                })
+                .catch((err) => {
+                    this.loading = false
+                    this.$notify({
+                        title: 'Not found',
+                        message: "Product not found",
+                        type: 'warning'
                     });
                 })
             },
@@ -298,6 +340,24 @@
                     });
                 })
 
+            },
+            filerByCategory(i, e){
+                let element = e.target
+                if(e.target.tagName == 'SPAN'){
+                    element = element.parentElement
+                } 
+                let filters = element.parentElement.children
+                filters.forEach(item => {
+                    item.classList.remove('active')
+                })
+
+                element.classList.add('active');
+                if(i == 'all'){
+                    this.getProducts()
+                }else{
+                    this.productSearch({categoryId: i.id})
+                }
+                
             },
             /**************************************
             *     CHECKOUT FUNCTIONS
@@ -420,45 +480,34 @@
                             let scanner = BarcodeScanner ();
                             scanner.on((code, event) => {
                                 if(code != ''){
-                                    this.barcodeScanned = code
-                                    this.productSearch({barcode: code})
+                                    console.log(this.barcodeScanned == code)
+                                    if(this.barcodeScanned != code){
+                                        this.barcodeScanned = code
+                                        this.productSearch({barcode: code})
+                                        setTimeout(()=> {
+                                            this.barcodeScanned = ''
+                                        }, 300)
+                                    }
+                                    this.allActive = false
                                 }
                             });
                         }
                     }
                 })
             },
-            productSearch(query){
-                this.$http.get('product/search', {
-                    params: query
-                })
-                .then(res => {
-                    let data =  res.body.result
-                    this.products = data;
-                    var newData = [];
-                    var index = 0;
-                    this.products.forEach((element,i )=> {
-                        while (i+1 % 5 == 0){
-                            index  = index + 1;
-                        }
-                        if(newData[index] === undefined){
-                            newData[index] = []
-                        }
-                        newData[index].push(element)
-                    });
-                    this.products = newData
-                    if(query.barcode && data !== undefined){
-                        this.addItem(data[0])
-                    }
-                })
-                .catch((err) => {
-                    console.log(err)
-                    this.$notify({
-                        title: 'Not found',
-                        message: "Product not found",
-                        type: 'warning'
-                    });
-                })
+            search(){
+                if(this.q != ''){
+                    this.productSearch({name: this.q})
+                }else{
+                    this.getProducts()
+                }
+            },
+            splitPayment(type){
+                if(type == 'cash'){
+                    this.momo = Number(this.grossTotal) - Number(this.cash)
+                }else{
+                     this.cash = Number(this.grossTotal) - Number(this.momo)
+                }
             }
         },
         created() {

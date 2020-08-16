@@ -405,6 +405,10 @@
             cursor: pointer;
             width: 60%;
             display: inline-block;
+            &.disabled{
+                background-color: rgba(130, 72, 185, 0.829);
+                cursor: not-allowed;
+            }
             span{
                 font-weight: bold;
             }
