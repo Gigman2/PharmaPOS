@@ -16,10 +16,10 @@ export default {
           name: 'Users',
           path: 'office-accounts'
         },
-        {
-          name: 'Role',
-          path: 'office-accounts-role'
-        },
+        // {
+        //   name: 'Role',
+        //   path: 'office-accounts-role'
+        // },
         {
           name: 'Settings',
           path: 'b'

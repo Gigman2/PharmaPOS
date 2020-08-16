@@ -1,5 +1,7 @@
 import NavLayout from '@/layout/nav-layout.vue'
+
 import Office_Setup_Company from '@/pages/office/setup/company.vue'
+import Office_Setup_Hardware from '@/pages/office/setup/hardware.vue'
 
 export default {
   path: 'setup',
@@ -12,18 +14,18 @@ export default {
           name: 'Company',
           path: 'office-setup-company'
         },
-        {
-          name: 'Data Import',
-          path: 'office-accounts-role'
-        },
+        // {
+        //   name: 'Data Import',
+        //   path: 'office-accounts-role'
+        // },
         {
           name: 'Hardware',
-          path: 'b'
+          path: 'office-setup-hardware'
         },
-        {
-          name: 'Add-on',
-          path: 'b'
-        }
+        // {
+        //   name: 'Add-on',
+        //   path: 'b'
+        // }
       ]
     }
   },
@@ -37,11 +39,11 @@ export default {
       },
     },
     {
-      path: '',
-      name: 'office-setup-company',
-      component: Office_Setup_Company,
+      path: 'hardware',
+      name: 'office-setup-hardware',
+      component: Office_Setup_Hardware,
       meta: {
-        title: "Data Import"
+        title: "Hardware"
       },
     }
   ]

@@ -100,9 +100,16 @@ body {
 }
 
 .form-box{
-    .form-input-group{
-        margin-top: 30px;
-    }
+  .input-label{
+    text-align: left;  
+    margin-bottom: 7px;
+    font-size: .9em;
+    color: slategrey;
+    font-weight: bold;
+  }
+  .form-input-group{
+      margin-top: 30px;
+  }
     .input-error-box{
       width: 90%;
       margin: 0 auto;
@@ -166,6 +173,30 @@ body {
         font-size: 14px;
         position: absolute;
         right: 0px;
+      }
+    }
+    .input-box-file{
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      .hidden{
+        display: none;
+      }
+      .file-button{
+        height: 40px;
+        width: 150px;
+        background-color: slategrey;
+        color: white;
+        cursor: pointer;
+        line-height: 40px;
+        display: inline-block;
+      }
+
+      .file-name{
+        width: calc(100% - 151px);
+        display: inline-block;
+        color: slategray
       }
     }
     .input-box-el{
@@ -248,5 +279,17 @@ body {
   font-weight: bold;
   color: slategray;
 }
-
+.preview-box{
+    width: 150px;
+    height: 150px;
+    background-color: #f0f0f0;
+    margin: 0 auto;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    img{
+        width: 100%;
+    }
+}
 </style>
+

@@ -22,7 +22,7 @@
                 <div class="clearfix"></div>
 
                 <div class="products-box">
-                    <div class="products-title">Top 25 Sellers</div>
+                    <div class="products-title">Products</div>
                     <vue-custom-scrollbar class="scroll-area products" :settings="settings">
                         <div class="product-row" v-for="(row, index) in products" :key="index">
                             <el-tooltip class="item" effect="dark" placement="bottom-end"
@@ -49,8 +49,10 @@
                     <div class="pull-left checkout-title--title">Purchase Detail</div>
                     <div class="pull-right checkout-title--actions">
                         <span @click="checkout('hold')">Hold</span>
-                        <i class="fe-user-plus"></i>
-                         <i class="fe-tag"></i>
+                        <i class="fe-user-plus" v-if="customer === null" @click="showCustomerDialog = true"></i>
+                        <i class="fe-user-minus" v-else @click="customer = null"></i>
+                        <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
+                        <span  v-else>{{discount}} <em class="fe-percent"></em></span>
                         <i class="fe-slash " @click="resetOrder"></i>
                     </div>
                 </div>
@@ -102,26 +104,95 @@
                 </table>
            </div>
            <div class="checkout-pay-section">
-                <div class="checkout-payout"><span>Pay</span> (Ghc {{grossTotal}})</div>
+                <div class="checkout-payout" @click="showPaymentDialog = true"><span>Pay</span> (Ghc {{grossTotal}})</div>
                 <div class="checkout-reset" @click="resetOrder">Reset</div>
            </div>
         </div>
 
-        <!-- <el-dialog
-            title="Tips"
-            :visible.sync="dialogVisible"
-            width="30%"
-            :before-close="handleClose">
-            <span>This is a message</span>
+        <el-dialog
+            title="Attach Customer"
+            :visible.sync="showCustomerDialog"
+            width="30%">
+            <div class="form-box">
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <div class="input-box-el">
+                            <i class="fe-user-plus"></i>
+                            <el-select v-model="customer" filterable placeholder="Select customer">
+                                <el-option
+                                v-for="item in customers"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                    <span style="float: left">{{ item.name }}</span>
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+                <el-button @click="showCustomerDialog = false">Cancel</el-button>
+                <el-button type="primary" @click="showCustomerDialog = false">Confirm</el-button>
             </span>
-        </el-dialog> -->
+        </el-dialog>
+
+        <el-dialog
+            title="Add Discount"
+            :visible.sync="showDiscountDialog"
+            width="30%">
+            <div class="form-box">
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <div class="input-box">
+                            <i class="fe-user-plus"></i>
+                            <input type="text" placeholder="Discount Code" v-model="discountCode">
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showDiscountDialog = false">Cancel</el-button>
+                <el-button type="primary" @click="showDiscountDialog = false">Confirm</el-button>
+            </span>
+        </el-dialog>
+        
+        <el-dialog
+            title="Split Payment"
+            :visible.sync="showPaymentDialog"
+            width="30%">
+            <div class="form-box">
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <div class="payment-title">Cash</div>
+                    </el-col>
+                    <el-col :span="12">
+                        <div class="input-box">
+                            <i class="">Ghc</i>
+                            <input type="text" placeholder="0.00" v-model="cash">
+                        </div>
+                    </el-col>
+                     <el-col :span="12">
+                        <div class="payment-title">Mobile Money</div>
+                    </el-col>
+                    <el-col :span="12">
+                        <div class="input-box">
+                            <i class="">Ghc</i>
+                            <input type="text" placeholder="0.00" v-model="momo">
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showPaymentDialog = false">Cancel</el-button>
+                <el-button type="primary" @click="checkout('pay');showPaymentDialog = false">Checkout</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+    import BarcodeScanner from "simple-barcode-scanner";
     import vueCustomScrollbar from 'vue-custom-scrollbar'
     import {mapGetters} from 'vuex';
 
@@ -134,17 +205,38 @@
                 settings: {
                     maxScrollbarLength: 60
                 },
+
+                showCustomerDialog: false,
+                showDiscountDialog: false,
+                showPaymentDialog: false,
+
+                cash: 0,
+                momo: 0,
+
+                barcodeScanned: '',
                 netTotal: 0,
                 grossTotal: 0,
                 tax: 0,
-                discount: 0,
                 categories: [],
                 products: [],
-                orderProducts: []
+                orderProducts: [],
+                customers: [],
+                customer: null,
+
+                discount: 0,
+                discountCode: '',
+                discountId: null
             }
         },
         computed: {
-            ...mapGetters({bucket: 'GET_BUCKET'})
+            ...mapGetters({
+                bucket: 'GET_BUCKET',
+                barcode_online: 'BARCODE_ONLINE_STATE',  
+                scanner: 'GET_BARCODE'
+            }),
+        },
+        mounted() {
+            this.initScanner()  
         },
         methods: {
             getCategories(){
@@ -162,8 +254,8 @@
                 })
 
             },
-            getProducts(){
-                this.$http.get('product/stock')
+            getProducts( query){
+                this.$http.get('product/list')
                 .then(res => {
                     let data =  res.body.result
                     this.products = data;
@@ -189,10 +281,27 @@
                     });
                 })
             },
+            getCustomers(){
+                this.$http.get('sales/customer-list')
+                .then(res => {
+                    let data =  res.body.result
+                    data.map(item => {
+                        item.name = item.firstname+' '+item.lastname
+                    })
+                    this.customers = data
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Unable to load data",
+                        type: 'error'
+                    });
+                })
 
-            /**
+            },
+            /**************************************
             *     CHECKOUT FUNCTIONS
-            **/
+            ***************************************/
             addItem(item){
                 var orderProducts = [...this.orderProducts]
                 var product = {
@@ -253,16 +362,20 @@
             },
             resetOrder(){
                 this.orderProducts = []
+                this.customer = null
+                this.discount = null
                 this.updatePrice()
                 localStorage.removeItem('orderProducts')
             },
             checkout(type){
                 let transaction = {
                     grossTotal: this.grossTotal,
-                    netTotal:  this.netTotal,
+                    netTotal:  this.netTotal, 
                     itemTotal: this.orderProducts.length,
                     discount: this.discount,
                     tax: this.tax,
+                    customerId: this.customer,
+                    discountId: this.discountId,
                     products: []
                 }
 
@@ -281,17 +394,70 @@
                     this.createTransaction(transaction)
                 }else if(type == 'pay'){
                     transaction.state = 'processing'
+                    this.createTransaction(transaction)
                 }
             },
             createTransaction(postData){
                 this.$http.post('product/transaction/new', postData)
                 .then(res => {
-                     this.$notify({
-                        title: 'Success',
-                        message: "Transaction on hold",
-                        type: 'success'
-                    });
+                    if(postData.state == 'holding'){
+                        this.$notify({
+                            title: 'Success',
+                            message: "Transaction on hold",
+                            type: 'success'
+                        });
+                    }
                     this.resetOrder()
+                })
+            },
+            initScanner(){
+                this.$store.dispatch('GET_BARCODE')
+                .then(res => {
+                    let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
+                    if(barcode_online){
+                        let barcode = this.$store.getters['GET_BARCODE']
+                        if(barcode){
+                            let scanner = BarcodeScanner ();
+                            scanner.on((code, event) => {
+                                if(code != ''){
+                                    this.barcodeScanned = code
+                                    this.productSearch({barcode: code})
+                                }
+                            });
+                        }
+                    }
+                })
+            },
+            productSearch(query){
+                this.$http.get('product/search', {
+                    params: query
+                })
+                .then(res => {
+                    let data =  res.body.result
+                    this.products = data;
+                    var newData = [];
+                    var index = 0;
+                    this.products.forEach((element,i )=> {
+                        while (i+1 % 5 == 0){
+                            index  = index + 1;
+                        }
+                        if(newData[index] === undefined){
+                            newData[index] = []
+                        }
+                        newData[index].push(element)
+                    });
+                    this.products = newData
+                    if(query.barcode && data !== undefined){
+                        this.addItem(data[0])
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.$notify({
+                        title: 'Not found',
+                        message: "Product not found",
+                        type: 'warning'
+                    });
                 })
             }
         },
@@ -300,10 +466,16 @@
             this.orderProducts = (JSON.parse(orderProductsInStorage)) ? JSON.parse(orderProductsInStorage) : [];
             this.getCategories()
             this.getProducts()
+            this.getCustomers()
         },
     }
 </script>
 
 <style lang="scss">
-    
+    .payment-title{
+        vertical-align: middle;
+        float: left;
+        font-weight: bold;
+        line-height: 40px;
+    }
 </style>
