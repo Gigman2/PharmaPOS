@@ -2,6 +2,7 @@ import NavLayout from '@/layout/nav-layout.vue'
 import Office_Sale from '@/pages/office/sales'
 import Office_Customer from '@/pages/office/sales/customer'
 import Office_Discount from '@/pages/office/sales/discount'
+import Office_Customer_Add from '@/pages/office/sales/add_customer.vue'
 
 export default {
     path: 'transaction/',
@@ -40,6 +41,14 @@ export default {
           component: Office_Customer,
           meta: {
             title: "Customers"
+          },
+        },
+        {
+          path: 'add',
+          name: 'office-sales_customer^add',
+          component: Office_Customer_Add,
+          meta: {
+            title: "Add Customer"
           },
         },
         {
