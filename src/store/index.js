@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import Account from './modules/auth'
+import Hardware from './modules/hardware'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    Account
+    Account,
+    Hardware
   }
 })

@@ -25,7 +25,11 @@
                     <vue-custom-scrollbar class="scroll-area products" :settings="settings">
                         <el-table :data="tableData"
                             style="width: 100%">
-                            <el-table-column label="Transaction ID" prop="transactionID"> </el-table-column>
+                            <el-table-column label="Transaction ID">
+                                <template slot-scope="scope">
+                                    <span>{{'TR-'+scope.row.id}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="Total Products" prop="itemTotal"> </el-table-column>
                             <el-table-column label="Amount (Ghc)" prop="grossTotal"> </el-table-column>
                             <el-table-column label="Date" prop="date"> </el-table-column>

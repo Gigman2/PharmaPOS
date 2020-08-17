@@ -1,5 +1,9 @@
 import NavLayout from '@/layout/nav-layout.vue'
 import Office_Report from '@/pages/office/report/index.vue'
+import Office_Report_Sales  from '@/pages/office/report/report_sales.vue'
+import Office_Report_Inventory from '@/pages/office/report/report_inventory.vue'
+import Office_Report_Employee from '@/pages/office/report/report_employee.vue'
+import Office_Report_Income_Statement from '@/pages/office/report/income_statement.vue'
 
 export default {
     path: 'reports/',
@@ -10,23 +14,23 @@ export default {
         nav: [
           {
             name: 'Sales Report',
-            path: 'office-accounts'
+            path: 'office-report_sales'
           },
           {
             name: 'Inventory Report',
-            path: 'office-accounts-role'
+            path: 'office-report_inventory'
           },
           {
             name: 'Employee Report',
-            path: 'office-accounts-role'
+            path: 'office-report_employee'
           },
           {
             name: 'Customer Report',
-            path: 'b'
+            path: 'office-report_customer'
           },
           {
             name: 'Income Statement',
-            path: 'b'
+            path: 'office-report_income'
           }
         ]
       }
@@ -34,8 +38,43 @@ export default {
     children: [
         {
           path: '',
-          name: 'office-report',
-          component: Office_Report
+          name: 'office-report_sales',
+          component: Office_Report_Sales  ,
+          meta: {
+            title: "Sales Report"
+          },
+        },
+        {
+          path: 'inventory',
+          name: 'office-report_inventory',
+          component: Office_Report_Inventory,
+          meta: {
+            title: "Inventory Report"
+          },
+        },
+        {
+          path: 'employee',
+          name: 'office-report_employee',
+          component: Office_Report_Employee,
+          meta: {
+            title: "Employee Report"
+          },
+        },
+        {
+          path: 'customer',
+          name: 'office-report_customer',
+          component: Office_Report_Employee,
+          meta: {
+            title: "Customer Report"
+          },
+        },
+        {
+          path: 'income',
+          name: 'office-report_income',
+          component: Office_Report_Income_Statement,
+          meta: {
+            title: "Income Statement"
+          },
         },
     ]
   }
