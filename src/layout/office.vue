@@ -51,8 +51,8 @@
                         </router-link>
                     </li>
                     <li>
-                       <router-link :to="{name: 'office-report'}">
-                            <div class="sidebar-item" :class="{'active': $route.name == 'office-report'}">
+                       <router-link :to="{name: 'office-report_sales'}">
+                            <div class="sidebar-item" :class="{'active': baseRoute() == 'office-report'}">
                                 <div class="sidebar-icon">
                                     <i class="fe-bar-chart"></i>
                                 </div>
