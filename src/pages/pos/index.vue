@@ -217,6 +217,7 @@
                 cash: 0,
                 momo: 0,
                 q: '',
+                id: null,
                 barcodeScanned: '',
                 netTotal: 0,
                 grossTotal: 0,
@@ -370,7 +371,8 @@
                     price: item.price,
                     left: item.left,
                     quantity: 1,
-                    selected: false
+                    selected: false,
+                    saleId: null
                 }
 
                 product.index = orderProducts.length
@@ -420,10 +422,12 @@
                 this.netTotal = grosstotal - this.tax
                 this.grossTotal = grosstotal
             },
-            resetOrder(){
+            resetOrder(){ 
                 this.orderProducts = []
                 this.customer = null
                 this.discount = null
+                this.cash = 0;
+                this.momo = 0;
                 this.updatePrice()
                 localStorage.removeItem('orderProducts')
             },
@@ -436,7 +440,10 @@
                     tax: this.tax,
                     customerId: this.customer,
                     discountId: this.discountId,
-                    products: []
+                    products: [],
+                    cashAmount: this.cash,
+                    momoAmount: this.momo,
+                    id : this.id
                 }
 
                 this.orderProducts.forEach(item => {
@@ -444,7 +451,8 @@
                         quantity: item.quantity,
                         unit: item.price,
                         total: item.quantity * item.price,
-                        productId: item.id
+                        productId: item.id,
+                        id: item.saleId
                     }
                     transaction.products.push(product)
                 })  
@@ -458,7 +466,7 @@
                 }
             },
             createTransaction(postData){
-                this.$http.post('product/transaction/new', postData)
+                this.$http.post('product/transaction/save', postData)
                 .then(res => {
                     if(postData.state == 'holding'){
                         this.$notify({
@@ -479,6 +487,7 @@
                         if(barcode){
                             let scanner = BarcodeScanner ();
                             scanner.on((code, event) => {
+                                event.preventDefault()
                                 if(code != ''){
                                     console.log(this.barcodeScanned == code)
                                     if(this.barcodeScanned != code){
@@ -486,7 +495,7 @@
                                         this.productSearch({barcode: code})
                                         setTimeout(()=> {
                                             this.barcodeScanned = ''
-                                        }, 300)
+                                        }, 3000)
                                     }
                                     this.allActive = false
                                 }
@@ -508,11 +517,43 @@
                 }else{
                      this.cash = Number(this.grossTotal) - Number(this.momo)
                 }
+            },
+            setRetrieved(data){
+                this.id = data.id
+                this.cash = data.cashAmount
+                this.momo = data.momoAmount
+                this.customer = data.customerId
+
+                data.products.forEach(item => {
+                    let product = {
+                        name: item.product.name,
+                        quantity: item.quantity,
+                        price: item.total,
+                        id: item.product.id,
+                        selected: false,
+                        saleId: item.id
+                    }
+                    product.index = this.orderProducts.length
+                    this.orderProducts.push(product)
+                    this.updatePrice()
+                })
             }
         },
         created() {
-            let orderProductsInStorage = localStorage.getItem('orderProducts')
-            this.orderProducts = (JSON.parse(orderProductsInStorage)) ? JSON.parse(orderProductsInStorage) : [];
+            let retrievedTransaction = JSON.parse(localStorage.getItem('retrievedTransaction'))
+            let orderProductsInStorage;
+            if(retrievedTransaction != undefined){
+                this.setRetrieved(retrievedTransaction)
+                localStorage.removeItem('retrievedTransaction')
+            } else{
+                orderProductsInStorage = JSON.parse(localStorage.getItem('orderProducts'))
+                console.log(orderProductsInStorage)
+                if(orderProductsInStorage !== null){
+                    orderProductsInStorage.forEach(item => {
+                        this.addItem(item)
+                    })
+                }
+            }
             this.getCategories()
             this.getProducts()
             this.getCustomers()

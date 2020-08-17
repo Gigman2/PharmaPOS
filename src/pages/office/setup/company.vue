@@ -133,7 +133,7 @@
             },
             logo: {
                 
-            },
+            }, 
         },
         computed: {
             ...mapGetters({bucket: 'GET_BUCKET'})

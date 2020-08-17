@@ -8,17 +8,6 @@
                         <input type="text" placeholder="Search ...">
                     </div>
                 </div>
-                <div class="filter-box">
-                    <!-- <i class="fe-filter"></i> -->
-                    <ul class="filters">
-                        <li class="shadow-1">
-                             <span>All</span>
-                        </li>
-                        <li class="shadow-1" v-for="(item, i) in categories" :key="i">
-                            <span>{{item.name}}</span>
-                        </li>
-                    </ul>
-                </div>
                 <div class="clearfix"></div>
 
                 <div class="products-box">
@@ -33,14 +22,22 @@
                             <el-table-column label="Total Products" prop="itemTotal"> </el-table-column>
                             <el-table-column label="Amount (Ghc)" prop="grossTotal"> </el-table-column>
                             <el-table-column label="Date" prop="date"> </el-table-column>
-                            <el-table-column label="">
+                            <el-table-column label=""  width="200">
                                 <template slot-scope="scope">
                                     <el-button size="mini" @click="viewItem(scope.row)">
                                         <span>view</span>
                                     </el-button>
 
-                                     <el-button size="mini" @click="retrieve(scope.row)" type="primary">
+                                    <el-button size="mini" @click="retrieveItem(scope.row)" type="primary" v-if="scope.row.state == 'holding'">
                                         <span>retrieve</span>
+                                    </el-button>
+                                    
+                                    <el-button  v-else-if="scope.row.state == 'complete'" size="mini" type="success">
+                                        <span>{{scope.row.state}}</span>
+                                    </el-button>
+
+                                    <el-button  v-else size="mini" type="info">
+                                        <span>{{scope.row.state}}</span>
                                     </el-button>
                                 </template>
                             </el-table-column>
@@ -138,7 +135,7 @@
                            item.first = item.products[0]
                        }
                    })
-                })
+                }) 
                 .catch((err) => {
                     console.log(err)
                     this.$notify({
@@ -151,11 +148,10 @@
             viewItem(item){
                 this.transaction = item
             },
-            retrieveItem(){
+            retrieveItem(item){
                 let products = [];
-                this.transaction.products.forEach(item => {
-                    
-                })
+                localStorage.setItem('retrievedTransaction', JSON.stringify(item))
+                this.$router.push({name: 'pos-home'})
             }
         },
         created() {

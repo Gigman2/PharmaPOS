@@ -15,7 +15,7 @@
                 <el-table-column prop="name" label="Product Name"></el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
                 <el-table-column prop="barcode" label="Barcode ID"> </el-table-column>
-                <el-table-column prop="quantity" label="In Stock"> </el-table-column>
+                <el-table-column prop="left" label="In Stock"> </el-table-column>
                 <el-table-column prop="price" label="Price (Ghc)"> </el-table-column>
                 <el-table-column>
                     <template slot-scope="scope">
@@ -52,7 +52,6 @@ import categoryVue from './category.vue';
                             i.category = i.category.name
                         }
                     })
-
                     this.result = data;
                 })
                 .catch(() => {
