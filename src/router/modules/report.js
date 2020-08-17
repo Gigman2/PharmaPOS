@@ -38,8 +38,8 @@ export default {
     children: [
         {
           path: '',
-          name: 'office-report_sales',
-          component: Office_Report_Sales  ,
+          name: 'office-report',
+          component:  Office_Report,
           meta: {
             title: "Sales Report"
           },
