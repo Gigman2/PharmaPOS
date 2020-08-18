@@ -18,9 +18,9 @@
                 <el-table-column prop="supplier" label="Supplier"> </el-table-column>
                 <el-table-column prop="updated" label="Last Updated"> </el-table-column>
                 <el-table-column>
-                    <template>
+                    <template slot-scope="scope">
                             <el-button size="mini">Edit</el-button>
-                            <el-button size="mini" type="danger">Delete</el-button>
+                            <el-button size="mini" type="danger" @click="triggerDelete(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -61,6 +61,13 @@
 
                 })
             },
+            triggerDelete(i, id) {
+                this.$notify({
+                    title: 'Failed',
+                    message: "Stock entry cannot be deleted",
+                    type: 'error'
+                });
+            }
         },
         created() {
             this.getData()

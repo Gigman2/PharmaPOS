@@ -166,11 +166,9 @@
                 alphaChar:helpers.regex('alphaChar', /^[a-z0-9_-]*$/i),
             },
             sku: {
-                required,
                 alphaChar:helpers.regex('alphaChar', /^[a-z0-9_-]*$/i),
             },
             supplier: {
-                required,
             },
             manufacturer: {
                 

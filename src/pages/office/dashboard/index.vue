@@ -77,7 +77,7 @@
                     <div class="card graph-card">
                         <div class="card-title pt-15 pb-15 pr-15 pl-15">Sales over the day</div>
                         <div class="card-content pt-15 pb-15 pr-15 pl-15">
-                            <line-chart :dataset="salesData"></line-chart>
+                            <line-chart :dataset="salesData" :label="graphLabel"></line-chart>
                         </div>
                     </div>
                 </el-col>
@@ -98,7 +98,7 @@
                                         <td>{{item.name}}</td>
                                         <td>{{item.left}}</td>
                                         <td>
-                                            <el-button size="mini" round>View</el-button>
+                                            <el-button size="mini" round @click="$router.push({name: 'office-inventory_product'})">View</el-button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -128,10 +128,11 @@
                 monthlySales:'',
                 salesData: {
                     label: "sales",
-                    data: [215, 321,127,661,112,311, 222, 257, 231, 211, 133, 480],
+                    data: [],
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'transparent'
-                }
+                },
+                graphLabel: []
             }
         },
         methods: {
@@ -153,6 +154,17 @@
                 .then(res => {
                     this.monthlySales =  res.body.result
                     this.monthlySales = formatMoney(this.monthlySales, ',', '.')
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+            },
+            getSalesGraph(){
+                this.$http.get('dashboard/sales-graph')
+                .then(res => {
+                    let data =  res.body.result
+                    this.prepareGraphData(data)
                 })
                 .catch(err => {
                     console.log(err)
@@ -182,12 +194,41 @@
                 })
 
             },
+            prepareGraphLabel(){
+                let daysInWeek = [];
+                var curr = new Date;
+
+                daysInWeek = Array(7).fill().map((_, i) => 
+                    {
+                        if(curr.getDay()+i > 6){
+                            return curr.getDay()+i - 7
+                        }else{
+                            return curr.getDay()+i
+                        }
+                    }
+                );
+                var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                this.graphLabel = [];
+                daysInWeek.forEach(day => {
+                    this.graphLabel.push(days[day])
+                })
+
+            },
+            prepareGraphData(data){
+                this.salesData.data = Array(7).fill().map((_, i) => 0);
+
+                data.forEach((item, i) => {
+                    this.salesData.data[i] = item.total
+                })
+            }
         },
         created() {
+            this.prepareGraphLabel()
             this.getSales()
             this.getSalesMonthly()
             this.getWorthSales()
             this.getAccountAdmin()
+            this.getSalesGraph()
         },
     }
 </script>

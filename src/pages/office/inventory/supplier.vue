@@ -17,7 +17,7 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                     <el-button size="mini" @click="editItem(scope.$index, scope.row)">Edit</el-button>
-                                    <el-button size="mini" type="danger" @click="deleteItem(scope.$index, scope.row.id)">Delete</el-button>
+                                    <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -90,11 +90,9 @@
                 alphaSpace:helpers.regex('alphaSpace', /^[a-z0-9_ ]*$/i),
             },
             email: {
-                required,
                 email
             },
             phone: {
-                required
             }
         },
         methods: {
@@ -184,6 +182,21 @@
                         type: 'error'
                     });
                 })
+            },
+            deleteModal(i, id) {
+                this.$confirm('This will permanently delete the supplier. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+                })
+                .then(() => {
+                    this.deleteItem(i, id)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: 'Delete canceled'
+                    });          
+                });
             }
         },
         created() {

@@ -75,15 +75,24 @@
                         })
                     )
 
-                    if(totalAdmins == 1 && this.accountData[index].role == 'admin'){
+                    if(this.accountData[index].role == 'tech'){
                         this.$notify({
                             title: 'Warning',
-                            message: "Can't delete last admin account",
+                            message: "Can't delete tech account",
                             type: 'warning'
                         });
                     }else{
-                        this.deleteAccount(index, id)
+                        if(totalAdmins == 1 && this.accountData[index].role == 'admin'){
+                            this.$notify({
+                                title: 'Warning',
+                                message: "Can't delete last admin account",
+                                type: 'warning'
+                            });
+                        }else{
+                            this.deleteAccount(index, id)
+                        }
                     }
+                    
                 }else{
                     this.$notify({
                         title: 'Warning',

@@ -10,33 +10,29 @@
       },
       props: [
         'dataset',
+        'label'
       ],
       data() {
         return {
           datacollection: null
         };
       },
+      computed: {
+        chartData: function() {
+          return this.data;
+        }
+      },
       mounted() {
         this.fillData();
+      },
+      watch(){
+         this.fillData();
       },
       methods: {
         fillData() {
             var gradient = this.$children[0].$refs.canvas
             this.datacollection = {
-              labels: [
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec"
-              ],
+              labels: this.label,
               datasets: [
               this.dataset
             ]
