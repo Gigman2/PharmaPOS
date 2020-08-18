@@ -465,24 +465,25 @@
                     momoAmount: this.momo,
                     id : this.id
                 }
-
-                this.orderProducts.forEach(item => {
-                    let product = {
-                        quantity: item.quantity,
-                        unit: item.price,
-                        total: item.quantity * item.price,
-                        productId: item.id,
-                        id: item.saleId
+                if(this.orderProducts.length > 0){
+                    this.orderProducts.forEach(item => {
+                        let product = {
+                            quantity: item.quantity,
+                            unit: item.price,
+                            total: item.quantity * item.price,
+                            productId: item.id,
+                            id: item.saleId
+                        }
+                        transaction.products.push(product)
+                    })  
+                    
+                    if(type == 'hold'){
+                        transaction.state = 'holding';
+                        this.createTransaction(transaction)
+                    }else if(type == 'pay'){
+                        transaction.state = 'processing'
+                        this.createTransaction(transaction)
                     }
-                    transaction.products.push(product)
-                })  
-                
-                if(type == 'hold'){
-                    transaction.state = 'holding';
-                    this.createTransaction(transaction)
-                }else if(type == 'pay'){
-                    transaction.state = 'processing'
-                    this.createTransaction(transaction)
                 }
             },
             createTransaction(postData){

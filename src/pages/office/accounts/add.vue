@@ -63,6 +63,15 @@
                             </el-col>
                         </el-row>
 
+                         <el-row :gutter="20">
+                            <el-col :span="24">
+                                <div class="input-box" :class="{ 'input-box--error': $v.password.$error }">
+                                    <i class="fe-lock"></i>
+                                    <input type="password" placeholder="Account password here ..." v-model.trim.lazy="$v.password.$model">
+                                </div>
+                            </el-col>
+                        </el-row>
+
                         <div class="btn btn-primary disabled" v-if="$v.$anyError">Add user</div>
                         <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
                         <div class="btn btn-primary" @click="submit" v-else>Add user</div>
@@ -98,6 +107,7 @@
                 role: "",
                 phone: "",
                 avatar: null,
+                password: '',
                 
                 avatarImage: '',
                 submitting: false,
@@ -121,6 +131,9 @@
             },
             phone: {
                 
+            },
+            password: {
+                
             }
         },
         methods: {
@@ -132,7 +145,8 @@
                     lastname: this.lastname,
                     email: this.mail,
                     role: this.role,
-                    phone: this.phone
+                    phone: this.phone,
+                    password: this.password
                 }
 
                 if(this.avatar != null){
@@ -181,6 +195,7 @@
                 this.phone = ""
                 this.avatar = null;
                 this.avatarImage = "";
+                this.password = ""
 
                 this.$nextTick(() => { this.$v.$reset() })
             }

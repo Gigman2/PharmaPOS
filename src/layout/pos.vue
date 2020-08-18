@@ -243,6 +243,8 @@
                 }
                 &.outstock{
                     border: 3px solid rgb(233, 95, 95);
+                    border-top: none;
+                    border-bottom: none;
                 }
 
                 .product-image{
