@@ -180,7 +180,7 @@
                     <el-col :span="12">
                         <div class="input-box" :class="{ 'input-box--error': $v.cash.$error }">
                             <i class="">Ghc</i>
-                            <input type="text" placeholder="0.00" v-model.trim.lazy="$v.cash.$model" @blur="splitPayment('cash')">
+                            <input type="text" placeholder="0.00" v-model.trim.lazy="$v.cash.$model" @blur="splitPayment('cash')" @change="splitPayment('cash')">
                         </div>
                     </el-col>
                      <el-col :span="12">
@@ -189,12 +189,14 @@
                     <el-col :span="12">
                         <div class="input-box" :class="{ 'input-box--error': $v.momo.$error }">
                             <i class="">Ghc</i>
-                            <input type="text" placeholder="0.00" v-model.trim.lazy="$v.momo.$model" @blur="splitPayment('momo')">
+                            <input type="text" placeholder="0.00" v-model.trim.lazy="$v.momo.$model" @blur="splitPayment('momo')" @change="splitPayment('momo')">
                         </div>
                     </el-col>
                 </el-row>
             </div>
             <span slot="footer" class="dialog-footer">
+                <el-button style="float: left" @click="quickPay()">Quick Pay</el-button>
+                
                 <el-button @click="showPaymentDialog = false">Cancel</el-button>
                 <el-button type="primary" v-if="(Number(cash) + Number(momo)) == grossTotal"
                  @click="checkout('pay'); showPaymentDialog = false">Checkout</el-button>
@@ -536,13 +538,12 @@
                 if (this.$v.$invalid) {
                    this.submitting = false;
                 }else{
-
                     if(type == 'cash'){
-                        if(this.cash > this.grosstotal){
+                        if(parseFloat(this.cash) < this.grossTotal){
                             this.momo = Number(this.grossTotal) - Number(this.cash)   
                         }
                     }else{
-                        if(this.momo > this.grosstotal){
+                        if(parseFloat(this.momo) < this.grossTotal){
                             this.cash = Number(this.grossTotal) - Number(this.momo) 
                         }
                     }
@@ -567,6 +568,10 @@
                     this.orderProducts.push(product)
                     this.updatePrice()
                 })
+            },
+            quickPay(){
+                this.cash = this.grossTotal
+                this.checkout('pay')
             }
         },
         created() {
