@@ -1,6 +1,6 @@
 <template>
     <vue-custom-scrollbar class="main-content">
-        <div class="dashboard-title">Reports</div>
+      
     </vue-custom-scrollbar>
 </template>
 

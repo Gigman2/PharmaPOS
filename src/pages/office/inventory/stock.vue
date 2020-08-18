@@ -5,21 +5,23 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ...">
             </div>
+             <router-link :to="{name: 'office-inventory_stock^add'}">
+                <div class="btn btn-primary pull-right"><i class="fe-plus"></i> Update Stock</div>
+            </router-link>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
-            <el-table :data="accountData" style="width: 100%">
-                <el-table-column prop="name" label="Product Name"></el-table-column>
-                <el-table-column prop="email" label="In Stock"> </el-table-column>
-                <el-table-column prop="phone" label="Shelf Number"> </el-table-column>
-                <el-table-column prop="login" label="Supplier"> </el-table-column>
-                <el-table-column prop="login" label="Last Updated"> </el-table-column>
+            <el-table :data="tableData" style="width: 100%">
+                <el-table-column prop="productName" label="Product Name"></el-table-column>
+                <el-table-column prop="currentStock" label="In Stock"> </el-table-column>
+                <el-table-column prop="shelf" label="Shelf Number"> </el-table-column>
+                <el-table-column prop="supplier" label="Supplier"> </el-table-column>
+                <el-table-column prop="updated" label="Last Updated"> </el-table-column>
                 <el-table-column>
-                    <el-template>
-                            <el-button size="mini">View</el-button>
+                    <template>
                             <el-button size="mini">Edit</el-button>
-                            <el-button size="mini" danger>Delete</el-button>
-                    </el-template>
+                            <el-button size="mini" type="danger">Delete</el-button>
+                    </template>
                 </el-table-column>
             </el-table>
         </div>
@@ -28,14 +30,40 @@
 
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar';
-    import lineChart from '@/components/chart/lineChart.vue'
+    import lineChart from '@/components/chart/lineChart.vue';
+    import Moment from 'moment'
+
     export default {
         components: {
             vueCustomScrollbar,
             lineChart
         },
         data() {
-            return {}
+            return {
+                tableData: []
+            }
+        },
+        methods: {
+            getData(){
+                this.$http.get('product/stock/list')
+                .then(res => {
+                    let data =  res.body.result
+                    data.map(i => {
+                        i.updated = Moment(i.updatedAt).format('D MMM YYYY - h:mm a')
+                        i.shelf = i.product.shelf
+                        if(i.supplier){
+                            i.supplier = i.supplier.name
+                        }
+                    })
+                    this.tableData = data;
+                })
+                .catch(() => {
+
+                })
+            },
+        },
+        created() {
+            this.getData()
         },
     }
 </script>

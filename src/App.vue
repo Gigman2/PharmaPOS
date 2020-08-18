@@ -8,16 +8,22 @@
  
   $font-path: './assets/fonts/';  
 
+    @font-face {
+      font-family: Do_Hyeon;
+      src: url($font-path+'Do_Hyeon/DoHyeon-Regular.ttf');
+    }
+
+    @font-face {
+      font-family: 'Open sans';
+      src: url($font-path+'Open_Sans/OpenSans-Regular.ttf');
+    }
+
   body{
     padding: 0;
     margin: 0;
     font-family: 'Open sans';
   }
 
-  @font-face {
-    font-family: Do_Hyeon;
-    src: url($font-path+'Do_Hyeon/DoHyeon-Regular.ttf');
-  }
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -206,7 +212,11 @@ body {
       i{
         color: rgb(137, 147, 155);;
       }
+      .el-select{
+        width: calc(100% - 60px);
+      }
       .el-input__inner {
+        width: 100%;
         -webkit-appearance: none;
         background-color: #f0f0f0;
         border: none;

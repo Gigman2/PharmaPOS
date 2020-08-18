@@ -5,6 +5,7 @@ import Office_Product_Edit from '@/pages/office/inventory/edit_product.vue'
 import Office_Product_Stock from '@/pages/office/inventory/stock.vue'
 import Office_Product_Supplier from '@/pages/office/inventory/supplier.vue'
 import Office_Product_Category from '@/pages/office/inventory/category.vue'
+import Office_Product_Stock_Add from '@/pages/office/inventory/add_stock.vue'
 
 export default {
     path: 'inventory/',
@@ -50,7 +51,7 @@ export default {
           },
         },
         {
-          path: ':id/edit',
+          path: ':id/edit',  
           name: 'office-inventory_product^edit',
           component: Office_Product_Edit,
           meta: {
@@ -63,6 +64,14 @@ export default {
           component: Office_Product_Stock,
           meta: {
             title: "Stock Control"
+          },
+        },
+        {
+          path: 'stock/add',
+          name: 'office-inventory_stock^add',
+          component: Office_Product_Stock_Add,
+          meta: {
+            title: "Add Stock"
           },
         },
         {

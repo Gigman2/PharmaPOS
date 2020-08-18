@@ -1,18 +1,22 @@
 <template>
     <div class="dashboard-wrapper mt-15">
         <div class="dashboard-top">
-            <div class="search-box pull-left">
+            <div class="search-box pull-left"> 
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ...">
             </div>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
-            <el-table :data="accountData" style="width: 100%">
-                <el-table-column prop="id" label="ID"></el-table-column>
-                <el-table-column prop="saler" label="Saler"> </el-table-column>
-                <el-table-column prop="product" label="Items"> </el-table-column>
-                <el-table-column prop="price" label="Net Price"> </el-table-column>
+            <el-table :data="tableData" style="width: 100%">
+                <el-table-column prop="id" label="ID">
+                    <template slot-scope="scope">
+                         <div> TR-{{scope.row.id}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="employee" label="Employee"> </el-table-column>
+                <el-table-column prop="itemTotal" label="Items"> </el-table-column>
+                <el-table-column prop="grossTotal" label="Gross Total"> </el-table-column>
                 <el-table-column prop="price" label="Customer"> </el-table-column>
                 <el-table-column>
                     <el-template>
@@ -34,16 +38,14 @@
         },
         data() {
             return {
-                accountData:[]
+                tableData:[]
             }
         },
         methods:{
             getData(){
-                this.$http.get('sales/list')
+                this.$http.get('product/transaction/list')
                 .then(res=>{
-                    let data = res.body.result
-
-                    this.accountData = data
+                    this.tableData = res.body.result
                 })
 
             }

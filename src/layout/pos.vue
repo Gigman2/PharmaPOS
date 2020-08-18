@@ -228,7 +228,7 @@
                 overflow: hidden;
             }
             .product{
-                width: calc(20% - 40px);
+                width: calc(20% - 46px);
                 min-height: 150px;
                 height: auto;
                 border-radius: 4px;
@@ -238,6 +238,12 @@
                 float: left;
                 cursor: pointer;
                 // box-sizing: b;
+                &.disabled{
+                    cursor: not-allowed;
+                }
+                &.outstock{
+                    border: 3px solid rgb(233, 95, 95);
+                }
 
                 .product-image{
                     width: 80%;

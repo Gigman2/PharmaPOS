@@ -2,10 +2,10 @@
     <div class="dashboard-wrapper">
             <div class="card-wrapper">
                 <div class="card mini-card">
-                    <div class="mini-card-row">
+                    <div class="mini-card-row"> 
                         <div class="card-col">
-                            <div class="card-title">Sales</div>
-                            <div class="card-content">24,215.00</div>
+                            <div class="card-title">Sales today</div>
+                            <div class="card-content">{{sales.grossTotal}}</div>
                         </div>
                         <div class="card-col">
                             <div class="icon-box">
@@ -13,9 +13,10 @@
                             </div>
                         </div> 
                     </div>
-                    <div class="card-footer">sales over the month 
+                    <div class="card-footer">net sales today
                         <span>
-                            <i class="fe-trending-up green"></i> 210,000
+                            <!-- <i class="fe-trending-up green"></i>  -->
+                            {{sales.netTotal}}
                         </span>
                     </div>
                 </div>
@@ -23,7 +24,7 @@
                     <div class="mini-card-row">
                         <div class="card-col">
                             <div class="card-title">Stock worth</div>
-                            <div class="card-content">244,215.00</div>
+                            <div class="card-content">{{salesWorth.stockWorth}}</div>
                         </div>
                         <div class="card-col">
                             <div class="icon-box">
@@ -33,7 +34,7 @@
                     </div>
                     <div class="card-footer">products in shortage
                         <span>
-                            120
+                            {{salesWorth.shortage}}
                         </span>
                     </div>
                 </div>
@@ -41,7 +42,7 @@
                     <div class="mini-card-row">
                         <div class="card-col">
                             <div class="card-title">Account admins</div>
-                            <div class="card-content">5</div>
+                            <div class="card-content">{{account.admins}}</div>
                         </div>
                         <div class="card-col">
                             <div class="icon-box">
@@ -51,15 +52,15 @@
                     </div>
                     <div class="card-footer">employees 
                         <span>
-                            2
+                            {{account.employees}}
                         </span>
                     </div>
                 </div>
                 <div class="card mini-card">
                     <div class="mini-card-row">
                         <div class="card-col">
-                            <div class="card-title">Total sales</div>
-                            <div class="card-content">24,215.00</div>
+                            <div class="card-title">Sales this months</div>
+                            <div class="card-content">{{monthlySales}}</div>
                         </div>
                         <div class="card-col">
                             <div class="icon-box">
@@ -67,8 +68,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">since 31st June 2020
-                    </div>
+                    <!-- <div class="card-footer">since 31st June 2020
+                    </div> -->
                 </div>
             </div>
             <el-row :gutter="20" class="card-wrapper">
@@ -82,27 +83,20 @@
                 </el-col>
                 <el-col :span="8">
                     <div class="card graph-card" >
-                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Drug shortage list</div>
+                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Product shortage list</div>
                         <div class="card-body">
                             <table  cellspacing="0" cellpadding="0" class="card-table">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Item</th>
+                                        <th>Left</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Marla-2 Forte</td>
-                                        <td>3</td>
-                                        <td>
-                                            <el-button size="mini" round>View</el-button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Marla-2 Forte</td>
-                                        <td>3</td>
+                                    <tr v-for="(item, i) in salesWorth.products" :key="i">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.left}}</td>
                                         <td>
                                             <el-button size="mini" round>View</el-button>
                                         </td>
@@ -119,6 +113,8 @@
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import lineChart from '@/components/chart/lineChart.vue'
+    import formatMoney from '@/components/formatmoney.js'
+    
     export default {
         components: {
             vueCustomScrollbar,
@@ -126,13 +122,10 @@
         },
         data() {
             return {
-                tableData: [{
-                    name: 'Tom',
-                    left: 1
-                }, {
-                    name: 'Tom',
-                    left: 0
-                }] ,
+                sales: '',
+                salesWorth: '',
+                account: '',
+                monthlySales:'',
                 salesData: {
                     label: "sales",
                     data: [215, 321,127,661,112,311, 222, 257, 231, 211, 133, 480],
@@ -140,6 +133,61 @@
                     backgroundColor: 'transparent'
                 }
             }
+        },
+        methods: {
+            getSales(){
+                this.$http.get('dashboard/sales')
+                .then(res => {
+                    let sales =  res.body.result
+                    sales.grossTotal = formatMoney(sales.grossTotal, ',', '.')
+                    sales.netTotal = formatMoney(sales.netTotal, ',', '.')
+                    this.sales = sales
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+            },
+            getSalesMonthly(){
+                this.$http.get('dashboard/sales-monthly')
+                .then(res => {
+                    this.monthlySales =  res.body.result
+                    this.monthlySales = formatMoney(this.monthlySales, ',', '.')
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+            },
+            getWorthSales(){
+                this.$http.get('dashboard/stock-worth')
+                .then(res => {
+                    let salesWorth =  res.body.result
+                    salesWorth =  res.body.result
+                    salesWorth.stockWorth = formatMoney(salesWorth.stockWorth, ',', '.')
+                    this.salesWorth = salesWorth
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+            },
+            getAccountAdmin(){
+                this.$http.get('dashboard/account-admins')
+                .then(res => {
+                    this.account =  res.body.result
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+            },
+        },
+        created() {
+            this.getSales()
+            this.getSalesMonthly()
+            this.getWorthSales()
+            this.getAccountAdmin()
         },
     }
 </script>

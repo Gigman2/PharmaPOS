@@ -29,7 +29,16 @@
                             <el-tooltip class="item" effect="dark" placement="bottom-end"
                                 v-for="(item, i) in row" :key="i">
                                 <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                <div class="product shadow-1" @click="addItem(item)">
+                                <div class="product shadow-1" v-if="item.left > 0" @click="addItem(item)">
+                                    <div class="product-image">
+                                        <div class="image">
+                                            <img :src="bucket+item.image" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="product-title">{{item.name}}</div>
+                                    <div class="product-price">Ghc {{item.price}}.00</div>
+                                </div>
+                                 <div class="product shadow-1 disabled outstock" v-else>
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="">
@@ -169,18 +178,18 @@
                         <div class="payment-title">Cash</div>
                     </el-col>
                     <el-col :span="12">
-                        <div class="input-box">
+                        <div class="input-box" :class="{ 'input-box--error': $v.cash.$error }">
                             <i class="">Ghc</i>
-                            <input type="text" placeholder="0.00" v-model="cash" @blur="splitPayment('cash')">
+                            <input type="text" placeholder="0.00" v-model.trim.lazy="$v.cash.$model" @blur="splitPayment('cash')">
                         </div>
                     </el-col>
                      <el-col :span="12">
                         <div class="payment-title">Mobile Money</div>
                     </el-col>
                     <el-col :span="12">
-                        <div class="input-box">
+                        <div class="input-box" :class="{ 'input-box--error': $v.momo.$error }">
                             <i class="">Ghc</i>
-                            <input type="text" placeholder="0.00" v-model="momo" @blur="splitPayment('momo')">
+                            <input type="text" placeholder="0.00" v-model.trim.lazy="$v.momo.$model" @blur="splitPayment('momo')">
                         </div>
                     </el-col>
                 </el-row>
@@ -199,6 +208,7 @@
     import BarcodeScanner from "simple-barcode-scanner";
     import vueCustomScrollbar from 'vue-custom-scrollbar'
     import {mapGetters} from 'vuex';
+    import { required, helpers, numeric } from 'vuelidate/lib/validators'
 
     export default {
         components: {
@@ -216,6 +226,7 @@
 
                 cash: 0,
                 momo: 0,
+                
                 q: '',
                 id: null,
                 barcodeScanned: '',
@@ -233,6 +244,15 @@
                 discountId: null,
 
                 loading: true,
+            }
+        },
+        validations: {
+            cash: {
+                required,
+                numeric
+            },
+            momo: {
+                numeric
             }
         },
         computed: {
@@ -489,7 +509,6 @@
                             scanner.on((code, event) => {
                                 event.preventDefault()
                                 if(code != ''){
-                                    console.log(this.barcodeScanned == code)
                                     if(this.barcodeScanned != code){
                                         this.barcodeScanned = code
                                         this.productSearch({barcode: code})
@@ -512,10 +531,20 @@
                 }
             },
             splitPayment(type){
-                if(type == 'cash'){
-                    this.momo = Number(this.grossTotal) - Number(this.cash)
+                this.$v.$touch()
+                if (this.$v.$invalid) {
+                   this.submitting = false;
                 }else{
-                     this.cash = Number(this.grossTotal) - Number(this.momo)
+
+                    if(type == 'cash'){
+                        if(this.cash > this.grosstotal){
+                            this.momo = Number(this.grossTotal) - Number(this.cash)   
+                        }
+                    }else{
+                        if(this.momo > this.grosstotal){
+                            this.cash = Number(this.grossTotal) - Number(this.momo) 
+                        }
+                    }
                 }
             },
             setRetrieved(data){
@@ -547,7 +576,6 @@
                 localStorage.removeItem('retrievedTransaction')
             } else{
                 orderProductsInStorage = JSON.parse(localStorage.getItem('orderProducts'))
-                console.log(orderProductsInStorage)
                 if(orderProductsInStorage !== null){
                     orderProductsInStorage.forEach(item => {
                         this.addItem(item)
