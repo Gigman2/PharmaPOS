@@ -46,14 +46,6 @@ export default {
       },
     },
     {
-      path: ':id',
-      name: 'office-accounts_edit',
-      component: Office_Account_Edit,
-      meta: {
-        title: "Edit Account" 
-      },
-    },
-    {
       path: 'roles',
       name: 'office-accounts-role',
       component: Office_Account_Role,
@@ -67,6 +59,14 @@ export default {
       component: Office_Account_Setting,
       meta: {
         title: "Account Settings" 
+      },
+    },
+    {
+      path: ':id',
+      name: 'office-accounts_edit',
+      component: Office_Account_Edit,
+      meta: {
+        title: "Edit Account" 
       },
     },
   ]

@@ -1,4 +1,4 @@
-<template>
+    <template>
     <div class="dashboard-wrapper mt-15">
         <div class="clearfix"></div>
         <div class="dashboard-content p-20">

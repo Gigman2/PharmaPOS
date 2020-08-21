@@ -217,7 +217,9 @@
                 let formData = new FormData(); 
                 const fields = Object.entries(payload);
                 for(const index in fields){
-                    formData.append(fields[index][0], fields[index][1]);
+                    if(fields[index][1] != null){
+                        formData.append(fields[index][0], fields[index][1]);
+                    }
                 }
                 this.$http.post('product/update', formData)
                 .then(res => {
@@ -265,23 +267,28 @@
             getProduct(){
                 this.$http.post('product/single?type=simple', {id: this.$route.params.id})
                 .then(res => {
-                    this.name = res.body.result.name
-                    this.category = res.body.result.categoryId
-                    this.barcode = res.body.result.barcode
-                    this.sku = res.body.result.sku
-                    this.supplier = res.body.result.supplierId
-                    this.manufacturer = res.body.result.manufacturer
-                    this.price = res.body.result.price
-                    this.quantity = res.body.result.quantity
-                    this.restock = res.body.result.saleThreshold
-                    this.shelf = res.body.result.shelf
+                    let data = res.body.result
+                    this.id = data.id
+                    this.name = data.name
+                    this.category = data.categoryId
+                    this.barcode = data.barcode
+                    this.sku = data.sku
+                    this.supplier = data.supplierId
+                    this.manufacturer = data.manufacturer
+                    this.price = data.price
+                    this.quantity = data.quantity
+                    this.restock = data.restock
+                    this.shelf = data.shelf
                     this.itemImage = ""
                     this.avatar = null
 
-                    if(res.body.result.image != null){
-                        this.itemImage = this.bucket+res.body.result.image;
+                    if(data.image != null){
+                        this.itemImage = this.bucket+data.image;
                     }
                 })
+            },
+            resetform(){
+                this.$nextTick(() => { this.$v.$reset() })
             },
         },
         created() {

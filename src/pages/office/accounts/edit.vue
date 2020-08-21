@@ -20,13 +20,22 @@
                                     <span>{{errorMessage}}</span>
                                 </div>
                             </el-col>
+                            <el-col :span="24">
+                                <div class="input-label">Account ID</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.username.$error }">
+                                    <i class="fe-hexagon"></i>
+                                    <input type="text" placeholder="" v-model.trim.lazy="$v.username.$model">
+                                </div>
+                            </el-col>
                             <el-col :span="12">
+                                <div class="input-label">Firstname</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.firstname.$error }">
                                     <i class="fe-user"></i>
                                     <input type="text" placeholder="Firstname here ..." v-model.trim.lazy="$v.firstname.$model">
                                 </div>
                             </el-col>
                             <el-col :span="12">
+                                <div class="input-label">Lastname</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.lastname.$error }">
                                     <i class="fe-user"></i>
                                     <input type="text" placeholder="Lastname here ..." v-model.trim.lazy="$v.lastname.$model">
@@ -35,6 +44,7 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
+                                <div class="input-label">Email</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-mail"></i>
                                     <input type="email" placeholder="Email here ..." v-model.trim.lazy="$v.mail.$model">
@@ -42,12 +52,13 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="20">
-                            <el-col :span="8">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                            <el-col :span="10">
+                                <div class="input-label">Account role</div>
+                                <div class="input-box-el" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-mail"></i>
                                     <el-select v-model.trim.lazy="$v.role.$model" placeholder="Role here ...">
                                         <el-option
-                                        v-for="item in ['Admin', 'Employee']"
+                                        v-for="item in ['admin', 'employee']"
                                         :key="item"
                                         :label="item"
                                         :value="item">
@@ -55,7 +66,8 @@
                                     </el-select>
                                 </div>
                             </el-col>
-                            <el-col :span="16">
+                            <el-col :span="14">
+                                <div class="input-label">Email</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-phone"></i>
                                     <input type="text" placeholder="Phone number here ..." v-model.trim.lazy="$v.phone.$model">
@@ -63,9 +75,9 @@
                             </el-col>
                         </el-row>
 
-                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Update user</div>
+                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Add user</div>
                         <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-                        <div class="btn btn-primary" @click="submit" v-else>Update user</div>
+                        <div class="btn btn-primary" @click="submit" v-else>Add user</div>
                     </el-col>
                     <el-col :span="10">
                         <div class="form-title mb-40">User Avatar</div>
@@ -96,6 +108,7 @@
         },
         data() {
             return {
+                username: "",
                 firstname: "",
                 lastname: "",
                 mail: "",
@@ -112,6 +125,9 @@
             }
         },
          validations: {
+            username: {
+                required
+            },
             firstname: {
                 required,
             },
@@ -137,6 +153,7 @@
                 this.error = false;
                 this.submitting = true;
                 let postdata = {
+                    username: this.username,
                     firstname: this.firstname,
                     lastname: this.lastname,
                     email: this.mail,
@@ -181,6 +198,7 @@
                 this.$http.post('users/single', {id: this.$route.params.id})
                 .then(res => {
                     let account = res.body.result
+                    this.username = account.username
                     this.firstname = account.firstname
                     this.lastname = account.lastname
                     this.mail = account.email

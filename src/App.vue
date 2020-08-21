@@ -178,7 +178,7 @@ body {
       .input-suffix{
         font-size: 14px;
         position: absolute;
-        right: 0px;
+        left: calc(100% - 30px);
       }
     }
     .input-box-file{

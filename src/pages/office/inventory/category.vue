@@ -9,7 +9,7 @@
                 <el-col :span="13">
                     <div class="search-box pull-left">
                         <i class="fe-search"></i>
-                        <input type="text" placeholder="Search ...">
+                        <input type="text" placeholder="Search ..." v-model="q"  @keyup="search()">
                     </div>
                     <el-table :data="tableData" style="width: 100%">
                         <el-table-column prop="name" label="Name"></el-table-column>
@@ -66,6 +66,7 @@
                 name: "",
                 tableData: [],
                 id: null,
+                q:'',
 
                 submitting: false,
                 error: false,
@@ -117,18 +118,20 @@
                 this.name = ""
                 this.$nextTick(() => { this.$v.$reset() })
             },
-
+            setCategories(data){
+                data.map(item => {
+                    if(item.addedby){
+                        item.by = item.addedby.firstname+' '+item.addedby.lastname
+                        item.product = item.products.length
+                    }
+                })
+                this.tableData = data
+            },
             getCategories(){
                 this.$http.get('product/category/list')
                 .then(res => {
                     let data =  res.body.result
-                    data.map(item => {
-                        if(item.addedby){
-                            item.by = item.addedby.firstname+' '+item.addedby.lastname
-                            item.product = item.products.length
-                        }
-                    })
-                    this.tableData = data
+                    this.setCategories(data)
                 })
                 .catch(err => {
                     this.$notify({
@@ -175,6 +178,15 @@
                         message: 'Delete canceled'
                     });          
                 });
+            },
+            search(){
+                this.$http.get('product/category/search', {
+                    params: {q: this.q}
+                })
+                .then(res => {
+                    let data =  res.body.result
+                    this.setCategories(data)
+                })
             }
         },
         created() {

@@ -8,7 +8,7 @@
                <el-col :span="14">
                    <div class="search-box pull-left">
                         <i class="fe-search"></i>
-                        <input type="text" placeholder="Search ...">
+                        <input v-model="q" type="text" placeholder="Search ..." @keyup="search()">
                     </div>
                     <el-table :data="tableData" style="width: 100%">
                         <el-table-column prop="name" label="Name"></el-table-column>
@@ -78,6 +78,7 @@
                 phone: "",
                 tableData: [],
                 id: null,
+                q:'',
 
                 submitting: false,
                 error: false,
@@ -142,12 +143,6 @@
                 this.$http.get('product/supplier/list')
                 .then(res => {
                     let data =  res.body.result
-                    data.map(item => {
-                        if(item.addedby){
-                            // item.by = item.addedby.firstname+' '+item.addedby.lastname
-                            // item.product = item.products.length
-                        }
-                    })
                     this.tableData = data
                 })
                 .catch(err => {
@@ -197,6 +192,15 @@
                         message: 'Delete canceled'
                     });          
                 });
+            },
+            search(){
+                this.$http.get('product/supplier/search', {
+                    params: {q: this.q}
+                })
+                .then(res => {
+                    let data =  res.body.result
+                    this.tableData = data
+                })
             }
         },
         created() {

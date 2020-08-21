@@ -57,7 +57,7 @@
                         <div class="hardware-name">
                              <span class="fe-rotate-ccw reload pull-right" @click="getScanner()"></span>
                             <div class="type">Barcode Scanner</div> 
-                            <div class="name">{{scanner.product}}</div></div>
+                            <div class="name">{{(canner) ? scanner.product : ''}}</div></div>
                         <el-row :gutter="20" class="mt-30">
                             <el-col :span="7">
                                 <div>Status: <div :class="{'offline': !barcode_online, 'online': barcode_online,}"></div></div>

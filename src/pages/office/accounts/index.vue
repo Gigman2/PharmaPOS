@@ -20,7 +20,7 @@
                 <el-table-column>
                     <template slot-scope="scope">
                             <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
-                            <el-button size="mini" type="danger" @click="triggerDelete(scope.$index, scope.row.id)">Delete</el-button>
+                            <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
                 </el-table-column>
         </el-table>
@@ -118,6 +118,21 @@
                         type: 'error'
                     });
                 })
+            },
+            deleteModal(i, id) {
+                this.$confirm('This will permanently delete the user. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+                })
+                .then(() => {
+                    this.triggerDelete(i, id)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: 'Delete canceled'
+                    });          
+                });
             }
         },
         created() {

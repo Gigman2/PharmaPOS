@@ -19,7 +19,7 @@
                 <el-table-column prop="price" label="Price (Ghc)"> </el-table-column>
                 <el-table-column>
                     <template slot-scope="scope">
-                            <el-button size="mini">Edit</el-button>
+                            <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
                             <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
                 </el-table-column>
@@ -58,6 +58,9 @@
                 .catch(() => {
 
                 })
+            },
+            triggerEdit(id){
+                this.$router.push({name: 'office-inventory_product^edit', params: {id}})
             },
             triggerDelete(i, id){
                 this.$http.post('product/remove', {id})

@@ -20,13 +20,22 @@
                                     <span>{{errorMessage}}</span>
                                 </div>
                             </el-col>
+                            <el-col :span="24">
+                                <div class="input-label">Account ID</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.username.$error }">
+                                    <i class="fe-hexagon"></i>
+                                    <input type="text" placeholder="" v-model.trim.lazy="$v.username.$model">
+                                </div>
+                            </el-col>
                             <el-col :span="12">
+                                <div class="input-label">Firstname</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.firstname.$error }">
                                     <i class="fe-user"></i>
                                     <input type="text" placeholder="Firstname here ..." v-model.trim.lazy="$v.firstname.$model">
                                 </div>
                             </el-col>
                             <el-col :span="12">
+                                <div class="input-label">Lastname</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.lastname.$error }">
                                     <i class="fe-user"></i>
                                     <input type="text" placeholder="Lastname here ..." v-model.trim.lazy="$v.lastname.$model">
@@ -35,6 +44,7 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
+                                <div class="input-label">Email</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-mail"></i>
                                     <input type="email" placeholder="Email here ..." v-model.trim.lazy="$v.mail.$model">
@@ -42,8 +52,9 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="20">
-                            <el-col :span="8">
-                                <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
+                            <el-col :span="10">
+                                <div class="input-label">Account role</div>
+                                <div class="input-box-el" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-mail"></i>
                                     <el-select v-model.trim.lazy="$v.role.$model" placeholder="Role here ...">
                                         <el-option
@@ -55,7 +66,8 @@
                                     </el-select>
                                 </div>
                             </el-col>
-                            <el-col :span="16">
+                            <el-col :span="14">
+                                <div class="input-label">Email</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-phone"></i>
                                     <input type="text" placeholder="Phone number here ..." v-model.trim.lazy="$v.phone.$model">
@@ -65,6 +77,7 @@
 
                          <el-row :gutter="20">
                             <el-col :span="24">
+                                <div class="input-label">Password</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.password.$error }">
                                     <i class="fe-lock"></i>
                                     <input type="password" placeholder="Account password here ..." v-model.trim.lazy="$v.password.$model">
@@ -101,6 +114,7 @@
         },
         data() {
             return {
+                username: "",
                 firstname: "",
                 lastname: "",
                 mail: "",
@@ -116,6 +130,9 @@
             }
         },
          validations: {
+            username: {
+                required,
+            },
             firstname: {
                 required,
             },
@@ -171,7 +188,7 @@
                     this.submitting = false
                     this.$notify({
                         title: 'Success',
-                        message: 'User account has being created check email for login details',
+                        message: 'User account created',
                         type: 'success'
                     });
                     this.resetform()
