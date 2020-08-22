@@ -155,9 +155,9 @@
         border-radius: 5px;
         margin-bottom: 20px;
     }
-    .inner-box{
-        // overflow-y: scroll;
-    }
+    // .inner-box{
+    //     // overflow-y: scroll;
+    // }
     .form-box{
         .input-box{
             margin-bottom: 20px;

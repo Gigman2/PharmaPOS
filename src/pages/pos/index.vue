@@ -335,7 +335,6 @@
                     this.products.forEach((element,i )=> {
                         if((i+1)% 6 == 0){
                             index  = index + 1;
-                            console.log(index)
                         }
                         if(newData[index] === undefined){
                             newData[index] = []
