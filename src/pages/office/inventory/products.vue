@@ -15,10 +15,11 @@
                 <el-table-column prop="name" label="Product Name"></el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
                 <el-table-column prop="barcode" label="Barcode ID"> </el-table-column>
-                <el-table-column prop="left" label="In Stock"> </el-table-column>
-                <el-table-column prop="price" label="Price (Ghc)"> </el-table-column>
-                <el-table-column>
+                <el-table-column prop="left" label="In Stock" width="100px"> </el-table-column>
+                <el-table-column prop="price" label="Price (Ghc)" width="120px"> </el-table-column>
+                <el-table-column width="220px">
                     <template slot-scope="scope">
+                            <el-button size="mini" @click="triggerAdd(scope.row.id)">Add</el-button>
                             <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
                             <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
@@ -58,6 +59,9 @@
                 .catch(() => {
 
                 })
+            },
+            triggerAdd(id){
+                 this.$router.push({name: 'office-inventory_stock^add-id', params: {id}})
             },
             triggerEdit(id){
                 this.$router.push({name: 'office-inventory_product^edit', params: {id}})

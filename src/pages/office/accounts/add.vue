@@ -158,6 +158,7 @@
                 this.error = false;
                 this.submitting = true;
                 let postdata = {
+                    username: this.username,
                     firstname: this.firstname,
                     lastname: this.lastname,
                     email: this.mail,

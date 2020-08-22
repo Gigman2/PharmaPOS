@@ -10,7 +10,7 @@
             </div>
             <div class="input-box" :class="{ 'input-box--error': $v.username.$error }">
                 <i class="fe-user"></i>
-                <input type="email" placeholder="Email here ..." v-model.trim.lazy="$v.username.$model">
+                <input type="email" placeholder="Account ID" v-model.trim.lazy="$v.username.$model">
             </div>
 
             <div class="input-box" :class="{ 'input-box--error': $v.password.$error }">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import { required, email } from 'vuelidate/lib/validators'
+    import { required } from 'vuelidate/lib/validators'
     import Loader from '@/components/loader.vue'
     export default {
         components: {
@@ -44,7 +44,6 @@
         validations: {
             username: {
                 required,
-                email
             },
             password: {
                 required,

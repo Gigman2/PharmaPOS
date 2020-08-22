@@ -29,7 +29,7 @@
                             <el-tooltip class="item" effect="dark" placement="bottom-end"
                                 v-for="(item, i) in row" :key="i">
                                 <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                <div class="product shadow-1" v-if="item.left > 0" @click="addItem(item)">
+                                <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item)">
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="">
@@ -38,7 +38,16 @@
                                     <div class="product-title">{{item.name}}</div>
                                     <div class="product-price">Ghc {{item.price}}.00</div>
                                 </div>
-                                 <div class="product shadow-1 disabled outstock" v-else>
+                                <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
+                                    <div class="product-image">
+                                        <div class="image">
+                                            <img :src="bucket+item.image" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="product-title">{{item.name}}</div>
+                                    <div class="product-price">Ghc {{item.price}}.00</div>
+                                </div>
+                                <div class="product shadow-1 shortage" @click="addItem(item)" v-else>
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="">
@@ -96,14 +105,14 @@
                         </tbody>
                     </table>
                 </vue-custom-scrollbar>
-                <table class="checkout-subtotal">
+                <!-- <table class="checkout-subtotal">
                     <tbody>
                         <tr>
                             <th align="left">Tax (0.015%)</th>
                             <td>Ghc {{tax}}</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
                 <table class="checkout-total">
                     <tbody>
                         <tr>
@@ -195,7 +204,7 @@
                 </el-row>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button style="float: left" @click="quickPay()">Quick Pay</el-button>
+                <el-button style="float: left" @click="quickPay(); showPaymentDialog = false">Quick Pay</el-button>
                 
                 <el-button @click="showPaymentDialog = false">Cancel</el-button>
                 <el-button type="primary" v-if="(Number(cash) + Number(momo)) == grossTotal"
@@ -292,8 +301,9 @@
                     var newData = [];
                     var index = 0;
                     this.products.forEach((element,i )=> {
-                        while (i+1 % 5 == 0){
+                        if((i+1)% 6 == 0){
                             index  = index + 1;
+                            console.log(index)
                         }
                         if(newData[index] === undefined){
                             newData[index] = []
@@ -323,8 +333,9 @@
                     var newData = [];
                     var index = 0;
                     this.products.forEach((element,i )=> {
-                        while (i+1 % 5 == 0){
+                        if((i+1)% 6 == 0){
                             index  = index + 1;
+                            console.log(index)
                         }
                         if(newData[index] === undefined){
                             newData[index] = []
@@ -499,6 +510,7 @@
                         });
                     }
                     this.resetOrder()
+                    this.getProducts()
                 })
             },
             initScanner(){

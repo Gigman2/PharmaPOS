@@ -55,6 +55,7 @@
                             i.supplier = i.supplier.name
                         }
                     })
+
                     this.tableData = data;
                 })
                 .catch(() => {

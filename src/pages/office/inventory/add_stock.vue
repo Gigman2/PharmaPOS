@@ -204,6 +204,16 @@
                         }
                         this.products[i] = unit
                     })
+
+                    if(this.$route.params.id){
+                        for (let i = 0; i < data.length; i++) {
+                            if(data[i].id == this.$route.params.id){
+                                this.product = i;
+                                break;
+                            }
+                        }
+                        this.productChange();
+                    }
                 })
                 .catch(err => {
                     this.loading = false

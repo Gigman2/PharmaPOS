@@ -75,6 +75,14 @@ export default {
           },
         },
         {
+          path: 'stock/add/:id',
+          name: 'office-inventory_stock^add-id',
+          component: Office_Product_Stock_Add,
+          meta: {
+            title: "Add Stock"
+          },
+        },
+        {
           path: 'supplier',
           name: 'office-inventory_supplier',
           component: Office_Product_Supplier,
