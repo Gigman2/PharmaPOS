@@ -162,10 +162,10 @@
                 if (this.$v.$invalid) {
                    this.submitting = false;
                 } else {
-                   this.saveProduct(postdata)
+                   this.saveCustomer(postdata)
                 }
             },
-            saveProduct(payload){
+            saveCustomer(payload){
                 this.$http.post('sales/customer-save', payload)
                 .then(res => {
                     this.submitting = false

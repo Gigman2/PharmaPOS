@@ -1,47 +1,18 @@
 <template>
     <div class="dashboard-wrapper dashboard-table mt-15">
         <div class="dashboard-top">
-            <el-date-picker class="pull-left mr-20"
-                v-model="date_filter"
-                type="daterange"
-                align="left"
-                value-format="yyyy-MM-dd"
-                unlink-panels
-                range-separator="To"
-                start-placeholder="Start date"
-                end-placeholder="End date"
-                :picker-options="pickerOptions"
-                @change="getReport">
-            </el-date-picker>
             <div class="search-box pull-left mr-20">
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ..." v-model="q" @keyup="getReport">
             </div>
-            <!-- <div class="pull-right">
-                <div class="doc-button">
-                    <img src="@/assets/images/xls.png" alt="" srcset="">
-                </div>
-                <div class="doc-button">
-                    <img src="@/assets/images/pdf.png" alt="" srcset="">
-                </div>
-            </div> -->
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
             <el-table :data="result" style="width: 100%" class="report-table">
-                <el-table-column prop="name" label="Product Name"></el-table-column>
-                <el-table-column prop="price" label="Price"></el-table-column>
-                <el-table-column prop="firstStock.initialStock" label="Starting Stock"> </el-table-column>
-                <el-table-column prop="left" label="Closing Stock" width="120px">
-                    <template slot-scope="scope">
-                        <div class="danger" v-if="scope.row.left <= 0">{{scope.row.left }}</div>
-                        <div class="warning" v-else-if="scope.row.left <= scope.row.restock">{{scope.row.left}}</div>
-                        <div class="" v-else>{{scope.row.left}}</div>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="timesrestocked" label="Times Restock"> </el-table-column>
-                <el-table-column prop="quantitysold" label="Quantity Sold"> </el-table-column>
-                <el-table-column prop="supplier" label="Current Supplier"> </el-table-column>
+                <el-table-column prop="name" label="Name"></el-table-column>
+                <el-table-column prop="added" label="Data Added"></el-table-column>
+                <el-table-column prop="last" label="Last Purchase"> </el-table-column>
+                <el-table-column prop="totalSales" label="Total Purchase"> </el-table-column>
             </el-table>
         </div>
     </div>
@@ -87,41 +58,36 @@
                 },
                 date_filter: '',
                 result: [],
-                q: ''
+                q:''
             }
         },
         methods: {
             getReport(payload){
-                var postData = {
-                    'from': Moment(payload[0]).subtract(1, 'days').format('YYYY-MM-DD'),
-                    'to': Moment(payload[1]).add(1, 'days').format('YYYY-MM-DD')
-                }
+                let postData = {}
                 if(this.q != ''){
                     postData.name = this.q
                 }
-                this.$http.post('product/report', postData)
+                this.$http.post('sales/customer-report', postData)
                 .then(res=>{
                     let data = res.body.result
                     data.map(item => {
-                        item.lastTransaction = Moment(item.lastTransaction).format('Do MMM YYYY')
-                        if(item.supplier[0] !== undefined){
-                            item.supplier = item.supplier[0].name
-                        }else{
-                            item.supplier = '--'
-                        }
-                        item.price = formatMoney(item.price, ',','.')
-                        item.quantitysold = formatMoney(item.quantitysold, ',','.')
+                        item.name = item.firstname+' '+item.lastname
+                        item.added = Moment(item.createdAt).format('Do MMM YYYY')
+                        item.last = Moment(item.lastPurchase).format('Do MMM YYYY')
+                        item.totalSales = formatMoney(item.totalSales, ',', '.')
                     })
                     this.result = data
                 })
             },
             getThisMonth(){
-                let payload = [Moment().subtract(30, 'days').format('YYYY-MM-DD'), Moment().format('YYYY-MM-DD')]
-                this.getReport(payload)
+                let from =  Moment().format('YYYY-MM-DD');
+                let to = Moment().subtract(30, 'days').format('YYYY-MM-DD');
+                this.getReport({from, to})
             }
         },
         created() {
-            this.getThisMonth()
+            this.getReport({})
+            // this.getThisMonth()
         },
     }
 </script>

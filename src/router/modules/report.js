@@ -1,8 +1,8 @@
 import NavLayout from '@/layout/nav-layout.vue'
 import Office_Report from '@/pages/office/report/index.vue'
-import Office_Report_Sales  from '@/pages/office/report/report_sales.vue'
 import Office_Report_Inventory from '@/pages/office/report/report_inventory.vue'
 import Office_Report_Employee from '@/pages/office/report/report_employee.vue'
+import Office_Report_Customer from '@/pages/office/report/report_customer.vue'
 import Office_Report_Income_Statement from '@/pages/office/report/income_statement.vue'
 
 export default {
@@ -27,11 +27,11 @@ export default {
           {
             name: 'Customer Report',
             path: 'office-report_customer'
-          },
-          {
-            name: 'Income Statement',
-            path: 'office-report_income'
           }
+          // {
+          //   name: 'Income Statement',
+          //   path: 'office-report_income'
+          // }
         ]
       }
     },
@@ -63,7 +63,7 @@ export default {
         {
           path: 'customer',
           name: 'office-report_customer',
-          component: Office_Report_Employee,
+          component: Office_Report_Customer,
           meta: {
             title: "Customer Report"
           },

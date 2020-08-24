@@ -32,7 +32,8 @@
                                 <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item)">
                                     <div class="product-image">
                                         <div class="image">
-                                            <img :src="bucket+item.image" alt="">
+                                            <img :src="bucket+item.image" alt="" v-if="item.image">
+                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 85%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
@@ -135,7 +136,7 @@
             width="30%">
             <div class="form-box">
                 <el-row :gutter="20">
-                    <el-col :span="24">
+                    <el-col :span="24" v-if="!activateNewCustomer">
                         <div class="input-box-el">
                             <i class="fe-user-plus"></i>
                             <el-select v-model="customer" filterable placeholder="Select customer">
@@ -148,12 +149,33 @@
                                 </el-option>
                             </el-select>
                         </div>
+                        <div class="pull-left">
+                            <el-link icon="el-icon-plus" @click="activateNewCustomer = true">Add new customer</el-link>
+                        </div>
+                    </el-col>
+                    <el-col :span="24" v-else>                        
+                        <div class="input-box">
+                            <i class="fe-user"></i>
+                            <input type="text" placeholder="First Name here ..." v-model.trim.lazy="newCustomer.firstname">
+                        </div>
+                        <div class="input-box">
+                            <i class="fe-user"></i>
+                            <input type="text" placeholder="Last Name here ..." v-model.trim.lazy="newCustomer.lastname">
+                        </div>
+                         <div class="input-box">
+                            <i class="fe-phone"></i>
+                            <input type="text" placeholder="Phone Number here ..." v-model.trim.lazy="newCustomer.phone">
+                        </div>
+                        <div class="pull-left">
+                            <el-link icon="el-icon-plus" @click="activateNewCustomer = false">Existing customer</el-link>
+                        </div>
                     </el-col>
                 </el-row>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showCustomerDialog = false">Cancel</el-button>
-                <el-button type="primary" @click="showCustomerDialog = false">Confirm</el-button>
+                <el-button type="primary" @click="showCustomerDialog = false" v-if="!activateNewCustomer">Confirm</el-button>
+                <el-button type="primary" @click="saveCustomer()" v-else>Save &amp; Attach</el-button>
             </span>
         </el-dialog>
 
@@ -234,6 +256,14 @@
                 showCustomerDialog: false,
                 showDiscountDialog: false,
                 showPaymentDialog: false,
+                activateNewCustomer: false,
+                
+                newCustomer: {
+                    firstname: '',
+                    lastname: '',
+                    email: '',
+                    phone: ''
+                },
 
                 cash: 0,
                 momo: 0,
@@ -583,6 +613,36 @@
             quickPay(){
                 this.cash = this.grossTotal
                 this.checkout('pay')
+            },
+            saveCustomer(){
+                let payload = {
+                    firstname: this.newCustomer.firstname,
+                    lastname: this.newCustomer.lastname,
+                    phone: this.newCustomer.phone,
+                    id: null
+                }
+                this.$http.post('sales/customer-save', payload)
+                .then(res => {
+                    this.submitting = false
+                    this.$notify({
+                        title: 'Success',
+                        message: "Customer added",
+                        type: 'success'
+                    });
+                    this.customer = res.body.result.id
+                    this.activateNewCustomer = false
+                    this.showCustomerDialog =  false
+                    this.newCustomer.firstname = ''
+                    this.newCustomer.lastname = ''
+                    this.newCustomer.phone = ''
+
+                    this.resetform()
+                })
+                .catch((err) => {
+                    this.error = true
+                    this.errorMessage = err.body.message
+                     this.submitting =  false;
+                })
             }
         },
         created() {

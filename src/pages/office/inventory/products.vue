@@ -3,7 +3,7 @@
         <div class="dashboard-top">
             <div class="search-box pull-left">
                 <i class="fe-search"></i>
-                <input type="text" placeholder="Search ...">
+                <input type="text" placeholder="Search ..." v-model="q"  @keyup="searchData()">
             </div>
             <router-link :to="{name: 'office-inventory_product^add'}">
                 <div class="btn btn-primary pull-right"><i class="fe-plus"></i> Add Product</div>
@@ -41,12 +41,30 @@
         },
         data() {
             return {
-                result: []
+                result: [],
+                q:''
             }
         },
         methods: {
             getData(){
                 this.$http.get('product/list')
+                .then(res => {
+                    let data =  res.body.result
+                    data.map(i => {
+                        if(i.category){
+                            i.category = i.category.name
+                        }
+                    })
+                    this.result = data;
+                })
+                .catch(() => {
+
+                })
+            },
+            searchData(){
+                this.$http.get('product/search', {
+                    params: {name: this.q}
+                })
                 .then(res => {
                     let data =  res.body.result
                     data.map(i => {

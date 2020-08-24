@@ -37,6 +37,7 @@
 <script> 
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import Moment from 'moment'
+    import formatMoney from '@/components/formatmoney.js'
     export default {
         components: {
             vueCustomScrollbar,
@@ -84,28 +85,27 @@
             }
         },
         methods: {
-            filter(){
-                let postData = {
-                    from: this.date_filter[0],
-                    to: this.date_filter[1]
-                }
-                this.getReport(postData)
-            },
             getReport(payload){
-                this.$http.post('sales/report', payload)
+                var postData = {
+                    'from': Moment(payload[0]).subtract(1, 'days').format('YYYY-MM-DD'),
+                    'to': Moment(payload[1]).add(1, 'days').format('YYYY-MM-DD')
+                }
+                this.$http.post('sales/report', postData)
                 .then(res=>{
                     let data = res.body.result
                     data.map(item => {
                         item.lastTransaction = Moment(item.lastTransaction).format('Do MMM YYYY')
+                        item.closing_cash = formatMoney(item.closing_cash, ',', '.')
+                        item.stockWorth = formatMoney(item.stockWorth, ',', '.')
+                        item.cash = formatMoney(item.cash, ',', '.')
+                        item.momo = formatMoney(item.momo, ',', '.')
                     })
                     this.result = data
                 })
             },
             getThisMonth(){
-                let from =  Moment().format('YYYY-MM-DD');
-                let to = Moment().subtract(30, 'days').format('YYYY-MM-DD');
-
-                this.getReport({from, to})
+                let payload = [Moment().format('YYYY-MM-DD'), Moment().add(1, 'days').format('YYYY-MM-DD')]
+                this.getReport(payload)
             }
         },
         created() {

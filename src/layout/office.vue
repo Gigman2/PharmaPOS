@@ -268,4 +268,17 @@
         min-height: 90%;
     }
 
+    .report-table{
+        .danger{
+            background-color: rgb(255, 133, 133);
+            color: rgb(78, 89, 100);
+            padding: 0 10px;
+        }
+        .warning{
+            background-color: rgb(255, 237, 133);
+            color: rgb(78, 89, 100);
+            padding: 0 10px;
+        }
+    }
+
 </style>
