@@ -10,10 +10,9 @@
         <div class="dashboard-content mt-10">
             <el-table :data="result" style="width: 100%" class="report-table">
                 <el-table-column prop="name" label="Name"></el-table-column>
-                <el-table-column prop="added" label="Data Added"></el-table-column>
-                <el-table-column prop="last" label="Last Purchase"> </el-table-column>
-                <el-table-column prop="totalSales" label="Total Purchase"> </el-table-column>
-                <el-table-column prop="c" label="Discount Used"> </el-table-column>
+                <el-table-column prop="created" label="Data Added"></el-table-column>
+                <el-table-column prop="products" label="Products"> </el-table-column>
+                <el-table-column prop="entry" label="Last Entry"> </el-table-column>
             </el-table>
         </div>
     </div>
@@ -61,25 +60,19 @@
                 result: [],
                 q:''
             }
-        },
+        }, 
         methods: {
             getReport(payload){
                 let postData = {}
                 if(this.q != ''){
                     postData.name = this.q
                 }
-                this.$http.post('sales/customer-report', postData)
+                this.$http.post('product/supplier/report', postData)
                 .then(res=>{
                     let data = res.body.result
                     data.map(item => {
-                        item.name = item.firstname+' '+item.lastname
-                        item.added = Moment(item.createdAt).format('Do MMM YYYY');
-                        if(item.lastPurchase){
-                            item.last = Moment(item.lastPurchase).format('Do MMM YYYY')
-                        }else{
-                            item.last = 'Never';
-                        }
-                        item.totalSales = formatMoney(item.totalSales, ',', '.')
+                        item.created = Moment(item.createdAt).format('Do MMM YYYY');
+                        item.entry = Moment(item.entry).format('Do MMM YYYY');
                     })
                     this.result = data
                 })
@@ -92,22 +85,21 @@
             download(file){
                 let title = { 
                     name:'Name',
-                    added: 'Data Added', 
-                    last: 'Closing Cash',
-                    totalSales: 'Stock Worth',
-                    discount:'Customers',
+                    created: 'Data Added', 
+                    products: 'Products',
+                    entry: 'Last Entry',
                 }
                 let data = this.result;
-                this.$http.post('sales/report/download?file=excel',
-                    {name:'Customer Report ', title, data}
+                this.$http.post('product/report/download?file=excel',
+                    {name:'Sales Report ', title, data}
                 ).then(res => {
 
                 })
             }
         },
         created() {
-            // this.getReport({})
-            this.getThisMonth()
+            this.getReport({})
+            // this.getThisMonth()
         },
     }
 </script>

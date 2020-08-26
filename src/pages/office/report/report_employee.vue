@@ -20,9 +20,8 @@
                 <el-table-column prop="name" label="Name"></el-table-column>
                 <el-table-column prop="role" label="Role"></el-table-column>
                 <el-table-column prop="totalSales" label="Sales Made"> </el-table-column>
-                <!-- <el-table-column prop="left" label="Earliest Checkin"></el-table-column>
-                <el-table-column prop="timesrestocked" label="Latest Checkin"> </el-table-column>
-                <el-table-column prop="quantitysold" label="Average Checkin"> </el-table-column> -->
+                <el-table-column prop="averageCheckin" label="Average checkin"></el-table-column>
+                <el-table-column prop="averageCheckout" label="Average checkout"> </el-table-column>
             </el-table>
         </div>
     </div>
@@ -67,7 +66,8 @@
                     }]
                 },
                 date_filter: '',
-                result: []
+                result: [],
+                q: ''
             }
         },
         methods: {
@@ -90,11 +90,25 @@
                 let from =  Moment().format('YYYY-MM-DD');
                 let to = Moment().subtract(30, 'days').format('YYYY-MM-DD');
                 this.getReport({from, to})
+            },
+            download(file){
+                let title = { 
+                    name:'Name',
+                    added:'Role', 
+                    totalSales: 'Sales Made',
+                    averageCheckin: 'Average Checkin',
+                    averageCheckout:'Average Checkout',
+                }
+                let data = this.result;
+                this.$http.post('sales/report/download?file=excel',
+                    {name:'Employee Report ', title, data}
+                ).then(res => {
+
+                })
             }
         },
         created() {
-            this.getReport({})
-            // this.getThisMonth()
+            this.getThisMonth()
         },
     }
 </script>

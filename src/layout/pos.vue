@@ -44,6 +44,11 @@
         },
         methods: {
             lock(){
+                this.$http.get('users/logout')
+                .then()
+                .catch(err => {
+                    console.log(err)
+                })
                 this.$store.commit('LOGOUT');
                 this.$router.push({name: 'login'})
             }

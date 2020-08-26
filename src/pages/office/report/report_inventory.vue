@@ -109,6 +109,9 @@
                         }else{
                             item.supplier = '--'
                         }
+                        if(item.firstStock){
+                            item.initialStock = item.firstStock.initialStock
+                        }
                         item.price = formatMoney(item.price, ',','.')
                         item.quantitysold = formatMoney(item.quantitysold, ',','.')
                     })
@@ -118,6 +121,23 @@
             getThisMonth(){
                 let payload = [Moment().subtract(30, 'days').format('YYYY-MM-DD'), Moment().format('YYYY-MM-DD')]
                 this.getReport(payload)
+            },
+            download(file){
+                let title = { 
+                    name:'Product Name',
+                    price: 'Price', 
+                    initialStock: 'Starting Stock',
+                    left: 'Closing Stock',
+                    timesrestocked:'Times Restock',
+                    quantitysold:'Quantity Sold',
+                    supplier:'Current Supplier'
+                }
+                let data = this.result;
+                this.$http.post('product/report/download?file=excel',
+                    {name:'Sales Report ', title, data}
+                ).then(res => {
+
+                })
             }
         },
         created() {

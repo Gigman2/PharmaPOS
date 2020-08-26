@@ -1,5 +1,8 @@
 <template>
     <div class="dashboard-wrapper dashboard-table mt-15">
+        <div class="dashboard-data">
+            
+        </div>
         <div class="dashboard-top">
             <el-date-picker class="pull-left mr-20"
                 v-model="date_filter"
@@ -13,11 +16,10 @@
                 :picker-options="pickerOptions"
                 @change="getReport">
             </el-date-picker>
-            <el-button class="pull-left" type="primary" icon="el-icon-search" @click="getReport">Search</el-button>
-            <!-- <div class="pull-right">
-                <el-button type="success" size="small" icon="el-icon-document">Excel</el-button>
+            <div class="pull-right">
+                <el-button type="success" size="small" icon="el-icon-document" @click="download('excel')">Excel</el-button>
                 <el-button type="danger" size="small" icon="el-icon-document">PDF</el-button>
-            </div> -->
+            </div>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
@@ -81,15 +83,19 @@
                     }]
                 },
                 date_filter: '',
+                to: '',
+                from: '',
                 result: []
             }
         },
         methods: {
             getReport(payload){
                 var postData = {
-                    'from': Moment(payload[0]).subtract(1, 'days').format('YYYY-MM-DD'),
-                    'to': Moment(payload[1]).add(1, 'days').format('YYYY-MM-DD')
+                    'from': Moment(payload[0]).format('YYYY-MM-DD'),
+                    'to': Moment(payload[1]).format('YYYY-MM-DD')
                 }
+                this.from = payload[0];
+                this.to = payload[1];
                 this.$http.post('sales/report', postData)
                 .then(res=>{
                     let data = res.body.result
@@ -104,8 +110,27 @@
                 })
             },
             getThisMonth(){
-                let payload = [Moment().format('YYYY-MM-DD'), Moment().add(1, 'days').format('YYYY-MM-DD')]
+                let payload = [Moment().subtract(6,'days').format('YYYY-MM-DD'), Moment().format('YYYY-MM-DD')]
+                this.from = payload[0];
+                this.to = payload[1];
                 this.getReport(payload)
+            },
+            download(file){
+                let title = { 
+                    lastTransaction:'Last Transaction',
+                    employee: 'Last Checkout By', 
+                    closing_cash: 'Closing Cash',
+                    stockWorth: 'Stock Worth',
+                    customers:'Customers',
+                    cash:'Cash',
+                    momo:'Momo'
+                }
+                let data = this.result;
+                this.$http.post('sales/report/download?file=excel',
+                    {name:'Sales Report ', title, data}
+                ).then(res => {
+
+                })
             }
         },
         created() {

@@ -3,7 +3,7 @@ import Office_Report from '@/pages/office/report/index.vue'
 import Office_Report_Inventory from '@/pages/office/report/report_inventory.vue'
 import Office_Report_Employee from '@/pages/office/report/report_employee.vue'
 import Office_Report_Customer from '@/pages/office/report/report_customer.vue'
-import Office_Report_Income_Statement from '@/pages/office/report/income_statement.vue'
+import Office_Report_Supplier from '@/pages/office/report/report_supplier.vue'
 
 export default {
     path: 'reports/',
@@ -27,11 +27,11 @@ export default {
           {
             name: 'Customer Report',
             path: 'office-report_customer'
+          },
+          {
+            name: 'Suppliers Report',
+            path: 'office-report_supplier'
           }
-          // {
-          //   name: 'Income Statement',
-          //   path: 'office-report_income'
-          // }
         ]
       }
     },
@@ -69,11 +69,11 @@ export default {
           },
         },
         {
-          path: 'income',
-          name: 'office-report_income',
-          component: Office_Report_Income_Statement,
+          path: 'supplier',
+          name: 'office-report_supplier',
+          component: Office_Report_Supplier,
           meta: {
-            title: "Income Statement"
+            title: "Supplier Report"
           },
         },
     ]
