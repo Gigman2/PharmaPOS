@@ -33,7 +33,8 @@
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import lineChart from '@/components/chart/lineChart.vue'
     import categoryVue from './category.vue';
-    
+    import formatMoney from '@/components/formatmoney.js'
+
     export default {
         components: {
             vueCustomScrollbar,
@@ -54,6 +55,7 @@
                         if(i.category){
                             i.category = i.category.name
                         }
+                        i.price = formatMoney(i.price,',','.')
                     })
                     this.result = data;
                 })

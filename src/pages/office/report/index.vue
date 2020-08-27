@@ -1,8 +1,5 @@
 <template>
     <div class="dashboard-wrapper dashboard-table mt-15">
-        <div class="dashboard-data">
-            
-        </div>
         <div class="dashboard-top">
             <el-date-picker class="pull-left mr-20"
                 v-model="date_filter"
@@ -18,7 +15,7 @@
             </el-date-picker>
             <div class="pull-right">
                 <el-button type="success" size="small" icon="el-icon-document" @click="download('excel')">Excel</el-button>
-                <el-button type="danger" size="small" icon="el-icon-document">PDF</el-button>
+                <!-- <el-button type="danger" size="small" icon="el-icon-document">PDF</el-button> -->
             </div>
         </div>
         <div class="clearfix"></div>
@@ -127,9 +124,18 @@
                 }
                 let data = this.result;
                 this.$http.post('sales/report/download?file=excel',
-                    {name:'Sales Report ', title, data}
+                    {   name:'Sales Report ', title, data, 
+                        from: Moment(this.from).format('Do MMM YYYY'),  
+                        to: Moment(this.to).format('Do MMM YYYY')
+                    }
                 ).then(res => {
-
+                    console.log(res)
+                    // var headers = res.headers();
+                    // var blob = new Blob([res.data],{type:headers['content-type']});
+                    // var link = document.createElement('a');
+                    // link.href = window.URL.createObjectURL(blob);
+                    // link.download = "Filename";
+                    // link.click();
                 })
             }
         },

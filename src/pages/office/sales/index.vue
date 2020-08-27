@@ -101,8 +101,6 @@
                 </div>
             </div>
         </el-drawer>
-
-
     </div>
 </template>
 
@@ -110,6 +108,8 @@
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import lineChart from '@/components/chart/lineChart.vue'
     import Moment from 'moment'
+    import formatMoney from '@/components/formatmoney.js'
+
     export default {
         components: {
             vueCustomScrollbar,
@@ -135,6 +135,7 @@
                     if(item.boughtBy){
                         item.to = item.boughtBy.firstname+' '+item.boughtBy.lastname
                     }
+                    item.grossTotal = formatMoney(item.grossTotal,',','.')
                 })
                 this.tableData = data
             },

@@ -61,6 +61,7 @@
                 if (this.$v.$invalid) {
                    this.submitting = false;
                 } else {
+                    localStorage.setItem('username', this.username)
                    this.login(postdata)
                 }
             },
@@ -79,6 +80,9 @@
                     this.submitting =  false;
                 })
             }
+        },
+        created() {
+            this.username = localStorage.getItem('username')
         },
     }
 </script>

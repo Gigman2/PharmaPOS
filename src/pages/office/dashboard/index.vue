@@ -216,7 +216,7 @@
             },
             prepareGraphData(data){
                 this.salesData.data = Array(7).fill().map((_, i) => 0);
-
+                console.log(data)
                 data.forEach((item, i) => {
                     this.salesData.data[i] = item.total
                 })
