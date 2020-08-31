@@ -243,7 +243,7 @@
     import BarcodeScanner from "simple-barcode-scanner";
     import vueCustomScrollbar from 'vue-custom-scrollbar'
     import {mapGetters} from 'vuex';
-    import { required, helpers, numeric } from 'vuelidate/lib/validators'
+    import { required, helpers, decimal } from 'vuelidate/lib/validators'
 
     export default {
         components: {
@@ -292,10 +292,10 @@
         validations: {
             cash: {
                 required,
-                numeric
+                decimal
             },
             momo: {
-                numeric
+                decimal
             }
         },
         computed: {
@@ -583,11 +583,11 @@
                 }else{
                     if(type == 'cash'){
                         if(parseFloat(this.cash) < this.grossTotal){
-                            this.momo = Number(this.grossTotal) - Number(this.cash)   
+                            this.momo = parseFloat(this.grossTotal) - parseFloat(this.cash)   
                         }
                     }else{
                         if(parseFloat(this.momo) < this.grossTotal){
-                            this.cash = Number(this.grossTotal) - Number(this.momo) 
+                            this.cash = parseFloat(this.grossTotal) - parseFloat(this.momo) 
                         }
                     }
                 }

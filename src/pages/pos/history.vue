@@ -175,10 +175,26 @@
                 localStorage.setItem('retrievedTransaction', JSON.stringify(item))
                 this.$router.push({name: 'pos-home'})
             },
+            returnModal(){
+                this.$confirm('Are you sure you want to record a returned transaction?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+                })
+                .then(() => {
+                    this.returnTransaction()
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: 'Return canceled'
+                    });          
+                });
+            },
             returnTransaction(){
                  this.$http.post('product/transaction/return', {id: this.transaction.id})
                 .then(res => {
-                   this.$notify({
+                    this.getTransaction()
+                    this.$notify({
                         title: 'Success',
                         message: "This transaction was returned by customer",
                         type: 'success'
@@ -192,10 +208,26 @@
                     });
                 })
             },
+            refundModal(){
+                this.$confirm('Are you sure you want to record a refund ?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+                })
+                .then(() => {
+                    this.refundTransaction()
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: 'Refund canceled'
+                    });          
+                });
+            },
             refundTransaction(){
                  this.$http.post('product/transaction/refund', {id: this.transaction.id})
                 .then(res => {
-                   this.$notify({
+                    this.getTransaction()
+                    this.$notify({
                         title: 'Success',
                         message: "This transaction was returned by customer",
                         type: 'success'
