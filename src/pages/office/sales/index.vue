@@ -85,19 +85,19 @@
                </table>
                 <div class="leftright-box">
                     <div class="left-box"><strong>Total</strong></div>
-                    <div class="right-box"><strong>Ghc 100.00</strong></div>
+                    <div class="right-box"><strong>Ghc {{selectedTransaction.grossTotal}}</strong></div>
                 </div>
-                <div class="leftright-box">
+                <!-- <div class="leftright-box">
                     <div class="left-box">Tax(15%)</div>
                     <div class="right-box">Ghc 100.00</div>
-                </div>
-                <div class="leftright-box">
+                </div> -->
+                <!-- <div class="leftright-box">
                     <div class="left-box">Discount(20%)</div>
                     <div class="right-box">Ghc 100.00</div>
-                </div>
+                </div> -->
                 <div class="leftright-box">
-                    <div class="left-box">Cash: <strong>Ghc 20</strong></div>
-                    <div class="right-box">Mobile Money:  <strong>Ghc 20</strong></div>
+                    <div class="left-box">Cash: <strong>Ghc {{selectedTransaction.cashAmount}}</strong></div>
+                    <div class="right-box">Mobile Money:  <strong>Ghc {{selectedTransaction.momoAmount}}</strong></div>
                 </div>
             </div>
         </el-drawer>
