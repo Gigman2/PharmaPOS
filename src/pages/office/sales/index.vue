@@ -22,6 +22,7 @@
                          <div> {{(scope.row.to) ? scope.row.to : '--'}}</div>
                     </template>
                 </el-table-column>
+                <el-table-column prop="date" label="Purchase Date"> </el-table-column>
                 <el-table-column>
                     <template slot-scope="scope">
                         <el-button size="mini" @click="drawer = true; selectedTransaction = scope.row">View</el-button>
@@ -127,7 +128,7 @@
         methods:{
             setData(data){
                 data.map(item => {
-                    item.createdAt = Moment(item.createdAt).format('D MMM YYYY h:mm a')
+                    item.date = Moment(item.createdAt).format('D MMM YYYY h:mm a')
                     if(item.soldby){
                         item.by = item.soldby.firstname+' '+item.soldby.lastname
                     }

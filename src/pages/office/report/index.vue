@@ -29,6 +29,8 @@
                 <el-table-column prop="momo" label="Momo"> </el-table-column>
             </el-table>
         </div>
+
+        <iframe id="my_iframe" style="display:none;" ref="d_frame"></iframe>
     </div>
 </template>
 

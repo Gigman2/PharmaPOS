@@ -69,11 +69,15 @@
                 </div>
 
                 <div class="pull-right mt-10 mr-10" v-else>
-                    <el-button size="mini" type="primary" @click="refundTransaction">
+                    <el-button size="mini" @click="showCustomerDialog = true">
+                        <span>Add Customer</span>
+                    </el-button>
+
+                    <el-button size="mini" type="primary" @click="refundModal">
                         <span>Refund</span>
                     </el-button>
 
-                    <el-button size="mini" type="primary" @click="returnTransaction">
+                    <el-button size="mini" type="primary" @click="returnModal">
                         <span>Return</span>
                     </el-button>
                 </div>
@@ -106,10 +110,62 @@
                             <th align="left">Total </th>
                             <td width="100px" align="right">Ghc {{transaction.grossTotal}}</td>
                         </tr>
+                        <tr>
+                            <th align="left">Bought By </th>
+                            <td width="200px" align="right">{{(transaction.boughtBy !== null) ?transaction.boughtBy.firstname+' '+transaction.boughtBy.lastname : ' -- '}}</td>
+                        </tr>
                     </tbody>
                 </table>
            </div>
         </div>
+        <el-dialog
+            title="Attach Customer"
+            :visible.sync="showCustomerDialog"
+            width="30%">
+            <div class="form-box">
+                <el-row :gutter="20">
+                    <el-col :span="24" v-if="!activateNewCustomer">
+                        <div class="input-box-el">
+                            <i class="fe-user-plus"></i>
+                            <el-select v-model="customer" filterable placeholder="Select customer">
+                                <el-option
+                                v-for="item in customers"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                    <span style="float: left">{{ item.name }}</span>
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="pull-left">
+                            <el-link icon="el-icon-plus" @click="activateNewCustomer = true">Add new customer</el-link>
+                        </div>
+                    </el-col>
+                    <el-col :span="24" v-else>                        
+                        <div class="input-box">
+                            <i class="fe-user"></i>
+                            <input type="text" placeholder="First Name here ..." v-model.trim.lazy="newCustomer.firstname">
+                        </div>
+                        <div class="input-box">
+                            <i class="fe-user"></i>
+                            <input type="text" placeholder="Last Name here ..." v-model.trim.lazy="newCustomer.lastname">
+                        </div>
+                         <div class="input-box">
+                            <i class="fe-phone"></i>
+                            <input type="text" placeholder="Phone Number here ..." v-model.trim.lazy="newCustomer.phone">
+                        </div>
+                        <div class="pull-left">
+                            <el-link icon="el-icon-plus" @click="activateNewCustomer = false">Existing customer</el-link>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showCustomerDialog = false">Cancel</el-button>
+                <el-button type="primary" @click="showCustomerDialog = false; attachCustomer()" v-if="!activateNewCustomer">Confirm</el-button>
+                <el-button type="primary" @click="saveCustomer()" v-else>Save &amp; Attach</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -128,7 +184,18 @@
                 tableData: [
                 ],
                 categories: [],
-                transaction: {}
+                transaction: {},
+
+                showCustomerDialog: false,
+                activateNewCustomer: false,
+                newCustomer: {
+                    firstname: '',
+                    lastname: '',
+                    email: '',
+                    phone: ''
+                },
+                customers: [],
+                customer: null,
             }
         },
         methods: {
@@ -240,11 +307,81 @@
                         type: 'error'
                     });
                 })
+            },
+            getCustomers(){
+                this.$http.get('sales/customer-list')
+                .then(res => {
+                    let data =  res.body.result
+                    data.map(item => {
+                        item.name = item.firstname+' '+item.lastname
+                    })
+                    this.customers = data
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Unable to load data",
+                        type: 'error'
+                    });
+                })
+            },
+            attachCustomer(){
+                let payload = {
+                    id: this.transaction.id,
+                    customerId: this.customer
+                }
+                this.$http.post('sales/customer-attach', payload)
+                .then(res => {
+                     this.$notify({
+                        title: 'Success',
+                        message: "Customer attached",
+                        type: 'success'
+                    });
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Error occurred",
+                        type: 'error'
+                    });
+                })
+            },
+            saveCustomer(){
+                let payload = {
+                    firstname: this.newCustomer.firstname,
+                    lastname: this.newCustomer.lastname,
+                    phone: this.newCustomer.phone,
+                    id: null
+                }
+                this.$http.post('sales/customer-save', payload)
+                .then(res => {
+                    this.submitting = false
+                    this.$notify({
+                        title: 'Success',
+                        message: "Customer added",
+                        type: 'success'
+                    });
+                    this.customer = res.body.result.id
+                    this.activateNewCustomer = false
+                    this.showCustomerDialog =  false
+                    this.newCustomer.firstname = ''
+                    this.newCustomer.lastname = ''
+                    this.newCustomer.phone = ''
+
+                   this.attachCustomer()
+                })
+                .catch((err) => {
+                    this.error = true
+                    this.errorMessage = err.body.message
+                     this.submitting =  false;
+                })
             }
+            
         },
         created() {
             this.getCategories()
             this.getTransaction()
+            this.getCustomers()
         },
     }
 </script>
