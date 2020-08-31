@@ -249,13 +249,13 @@
                 }
                 &.outstock{
                     border: 3px solid rgb(233, 95, 95);
-                    // border-top: none;
-                    // border-bottom: none;
+                    border-top: none;
+                    border-bottom: none;
                 }
                 &.shortage{
                     border: 3px solid rgb(243, 165, 47);
-                    // border-top: none;
-                    // border-bottom: none;
+                    border-top: none;
+                    border-bottom: none;
                 }
 
                 .product-image{
