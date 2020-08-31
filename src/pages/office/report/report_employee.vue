@@ -5,14 +5,9 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ..." v-model="q" @keyup="getReport">
             </div>
-            <!-- <div class="pull-right">
-                <div class="doc-button">
-                    <img src="@/assets/images/xls.png" alt="" srcset="">
-                </div>
-                <div class="doc-button">
-                    <img src="@/assets/images/pdf.png" alt="" srcset="">
-                </div>
-            </div> -->
+            <div class="pull-right">
+                <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')">Excel</el-button>
+            </div>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
@@ -100,10 +95,14 @@
                     averageCheckout:'Average Checkout',
                 }
                 let data = this.result;
-                this.$http.post('sales/report/download?file=excel',
-                    {name:'Employee Report ', title, data}
+                this.$http.post('data/download',
+                    {   name:'Employee Report ', title, data, 
+                        from: Moment(this.from).format('Do MMM YYYY'),  
+                        to: Moment(this.to).format('Do MMM YYYY')
+                    }
                 ).then(res => {
-
+                    window.open('http://localhost:4000/api/data/download?file='+res.body.file);
+                    this.$router.push({name: this.$route.name})
                 })
             }
         },

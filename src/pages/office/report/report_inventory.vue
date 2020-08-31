@@ -17,14 +17,9 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ..." v-model="q" @keyup="getReport">
             </div>
-            <!-- <div class="pull-right">
-                <div class="doc-button">
-                    <img src="@/assets/images/xls.png" alt="" srcset="">
-                </div>
-                <div class="doc-button">
-                    <img src="@/assets/images/pdf.png" alt="" srcset="">
-                </div>
-            </div> -->
+           <div class="pull-right">
+                <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')">Excel</el-button>
+            </div>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
@@ -122,8 +117,8 @@
                 let payload = [Moment().subtract(30, 'days').format('YYYY-MM-DD'), Moment().format('YYYY-MM-DD')]
                 this.getReport(payload)
             },
-            download(file){
-                let title = { 
+             download(file){
+               let title = { 
                     name:'Product Name',
                     price: 'Price', 
                     initialStock: 'Starting Stock',
@@ -133,10 +128,15 @@
                     supplier:'Current Supplier'
                 }
                 let data = this.result;
-                this.$http.post('product/report/download?file=excel',
-                    {name:'Sales Report ', title, data}
+                this.$http.post('data/download',
+                    {   name:'Inventory Report ', title, data, 
+                        from: Moment(this.from).format('Do MMM YYYY'),  
+                        to: Moment(this.to).format('Do MMM YYYY')
+                    }
                 ).then(res => {
-
+                    let file = res.body.file
+                    window.open('http://localhost:4000/api/data/download?file='+res.body.file);
+                    this.$router.push({name: 'office-report_sales'})
                 })
             }
         },

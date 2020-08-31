@@ -36,6 +36,14 @@
                                         <span>{{scope.row.state}}</span>
                                     </el-button>
 
+                                    <el-button  v-else-if="scope.row.state == 'returned'" size="mini" type="warning">
+                                        <span>{{scope.row.state}}</span>
+                                    </el-button>
+
+                                    <el-button  v-else-if="scope.row.state == 'refunded'" size="mini" type="warning">
+                                        <span>{{scope.row.state}}</span>
+                                    </el-button>
+
                                     <el-button  v-else size="mini" type="info">
                                         <span>{{scope.row.state}}</span>
                                     </el-button>
@@ -48,7 +56,29 @@
         </div>
         <div class="checkout-box">
            <div class="checkout-invoice">
-                <div class="checkout-title">Purchase Detail</div>
+                <div class="checkout-title pull-left" >Purchase Detail</div>
+
+                <div class="pull-right mt-10 mr-10" v-if="Object.keys(transaction).length === 0 && transaction.constructor === Object">
+                    <el-button size="mini">
+                        <span>Refund</span>
+                    </el-button>
+
+                    <el-button size="mini">
+                        <span>Return</span>
+                    </el-button>
+                </div>
+
+                <div class="pull-right mt-10 mr-10" v-else>
+                    <el-button size="mini" type="primary" @click="refundTransaction">
+                        <span>Refund</span>
+                    </el-button>
+
+                    <el-button size="mini" type="primary" @click="returnTransaction">
+                        <span>Return</span>
+                    </el-button>
+                </div>
+                <div class="clearfix"></div>
+
                 <vue-custom-scrollbar class="checkout-table-wrapper history">
                     <table class="checkout-table" cellspacing="0" cellpadding="0">
                         <thead class="checkout-headings">
@@ -69,15 +99,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </vue-custom-scrollbar>
-                <table class="checkout-subtotal">
-                    <tbody>
-                        <tr>
-                            <th align="left">Tax (0.015%)</th>
-                            <td>Ghc {{transaction.tax}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                </vue-custom-scrollbar> 
                 <table class="checkout-total">
                     <tbody>
                         <tr>
@@ -106,7 +128,7 @@
                 tableData: [
                 ],
                 categories: [],
-                transaction: []
+                transaction: {}
             }
         },
         methods: {
@@ -152,6 +174,40 @@
                 let products = [];
                 localStorage.setItem('retrievedTransaction', JSON.stringify(item))
                 this.$router.push({name: 'pos-home'})
+            },
+            returnTransaction(){
+                 this.$http.post('product/transaction/return', {id: this.transaction.id})
+                .then(res => {
+                   this.$notify({
+                        title: 'Success',
+                        message: "This transaction was returned by customer",
+                        type: 'success'
+                    });
+                }) 
+                .catch((err) => {
+                    this.$notify({
+                        title: 'Success',
+                        message: "This transaction can be returned",
+                        type: 'error'
+                    });
+                })
+            },
+            refundTransaction(){
+                 this.$http.post('product/transaction/refund', {id: this.transaction.id})
+                .then(res => {
+                   this.$notify({
+                        title: 'Success',
+                        message: "This transaction was returned by customer",
+                        type: 'success'
+                    });
+                }) 
+                .catch((err) => {
+                    this.$notify({
+                        title: 'Success',
+                        message: "This transaction can be returned",
+                        type: 'error'
+                    });
+                })
             }
         },
         created() {

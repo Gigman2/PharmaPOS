@@ -14,8 +14,7 @@
                 @change="getReport">
             </el-date-picker>
             <div class="pull-right">
-                <el-button type="success" size="small" icon="el-icon-document" @click="download('excel')">Excel</el-button>
-                <!-- <el-button type="danger" size="small" icon="el-icon-document">PDF</el-button> -->
+                <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')">Excel</el-button>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -123,19 +122,12 @@
                     momo:'Momo'
                 }
                 let data = this.result;
-                this.$http.post('sales/report/download?file=excel',
+                this.$http.post('data/download',
                     {   name:'Sales Report ', title, data, 
-                        from: Moment(this.from).format('Do MMM YYYY'),  
-                        to: Moment(this.to).format('Do MMM YYYY')
                     }
                 ).then(res => {
-                    console.log(res)
-                    // var headers = res.headers();
-                    // var blob = new Blob([res.data],{type:headers['content-type']});
-                    // var link = document.createElement('a');
-                    // link.href = window.URL.createObjectURL(blob);
-                    // link.download = "Filename";
-                    // link.click();
+                    window.open('http://localhost:4000/api/data/download?file='+res.body.file);
+                    this.$router.push({name: this.$route.name})
                 })
             }
         },

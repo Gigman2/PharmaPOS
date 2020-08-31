@@ -5,9 +5,10 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ..." v-model="q"  @keyup="searchData()">
             </div>
-            <router-link :to="{name: 'office-inventory_product^add'}">
-                <div class="btn btn-primary pull-right"><i class="fe-plus"></i> Add Product</div>
-            </router-link>
+            <div class="table-buttons pull-right">
+                <el-button round type="primary" size="medium" icon="el-icon-plus"  @click="$router.push({name: 'office-inventory_product^add'})" class="pull-left"> Add Product</el-button>
+                <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')" class="pull-left"> Export Data</el-button>
+            </div>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
@@ -89,7 +90,7 @@
             triggerDelete(i, id){
                 this.$http.post('product/remove', {id})
                 .then(res => {
-                     this.accountData.splice(i, 1);
+                     this.result.splice(i, 1);
                     this.$notify({
                         title: 'Success',
                         message: "account deleted",
@@ -97,6 +98,7 @@
                     });
                 })
                 .catch(err => {
+                    console.log(err)
                     this.$notify({
                         title: 'Failed',
                         message: "Unable to delete account",
@@ -118,6 +120,23 @@
                         message: 'Delete canceled'
                     });          
                 });
+            },
+            download(file){
+                let title = { 
+                    name:'Product Name',
+                    category: 'Category', 
+                    barcode: 'Barcode ID',
+                    left: 'In Stock',
+                    price:'Price (Ghc)',
+                }
+                let data = this.result;
+                this.$http.post('data/download',
+                    {   name:'Products', title, data, 
+                    }
+                ).then(res => {
+                    window.open('http://localhost:4000/api/data/download?file='+res.body.file);
+                    this.$router.push({name: this.$route.name})
+                })
             }
         },
         created() {
@@ -128,5 +147,7 @@
 
 
 <style lang="scss">
-    
+    .table-buttons{
+        width: 300px;
+    }
 </style>

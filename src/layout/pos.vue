@@ -205,6 +205,7 @@
             cursor: pointer;
             border: 2px solid rgba(69, 20, 116, 0.829);
             font-weight: bold;
+            margin-bottom: 5px;
             &.active{
                 background-color: rgba(69, 20, 116, 0.829);
                 color: white;

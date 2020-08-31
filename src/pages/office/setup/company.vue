@@ -242,4 +242,5 @@
         width: 120px;
         height: auto;
     }
+
 </style>

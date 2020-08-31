@@ -1,8 +1,13 @@
 <template>
     <div class="dashboard-wrapper mt-15">
         <div class="clearfix"></div>
+        <div class="dashboard-top">
+            <div class="table-buttons pull-right">
+                <el-button round type="success" size="medium" icon="el-icon-upload2" @click="openImportDialog = true" class="pull-right"> Import Data</el-button>
+            </div>
+        </div>
         <div class="dashboard-content p-20">
-            <div class="form-box">
+            <div class="form-box" v-loading="importing" >
                 <el-row>
                     <el-col :span="13">
                         <div class="pull-left">
@@ -30,6 +35,8 @@
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.category.$error }">
                                     <i class="fe-layers"></i>
                                     <el-select v-model.trim.lazy="$v.category.$model" filterable placeholder="Select Category ...">
+                                        <!-- <el-option :key="!0" 
+                                        :label="'None'" :value="''"> </el-option> -->
                                         <el-option v-for="item in categories" :key="item.key" 
                                         :label="item.value" :value="item.key"> </el-option>
                                     </el-select>
@@ -119,6 +126,50 @@
                 </el-row>
             </div>
         </div>
+
+        <el-dialog
+            title="Import Products"
+            :visible.sync="openImportDialog"
+            width="30%">
+            <div  class="form-box">
+                <div class="text-left">
+                    <div class="input-label-el mb-5">File Type</div>
+                    <div class="input-box-el">
+                        <!-- <i class="fe-server"></i> -->
+                        <el-select v-model.trim.lazy="fileType" filterable placeholder="Select file type">
+                            <el-option v-for="item in ['Excel', 'CSV']" :key="item" 
+                            :label="item" :value="item"> </el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+                <div class="text-left">
+                    <div class="input-label-el mb-5">Rows to skip</div>
+                    <div class="input-box">
+                        <i class="fe-x-circle"></i>
+                        <input type="text" placeholder="" v-model.trim.lazy="row">
+                    </div>
+                </div>
+
+                <div class="text-left">
+                   <div class="input-box-file">
+                        <input id="logo" type="file" class="hidden" @change="uploadFile">
+                        <label for="logo">
+                            <div class="file-button">
+                                <i class="fe-file"></i>
+                                Load file
+                            </div>
+                        </label>
+                        <div class="file-name">{{filename}}</div>
+                    </div>
+                </div>
+
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="openImportDialog = false">Cancel</el-button>
+                <el-button type="primary" @click="openImportDialog = false; importFile()">Confirm</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -148,15 +199,22 @@
                 shelf: "", 
                 image: null,
                 
+                file: '',
+                row: '',
+                fileType: '',
+
                 avatarImage: '',
+                filename: '',
                 categories: [],
                 suppliers: [],
+                importing: false,
+                openImportDialog: false,
                 submitting: false,
                 error: false,
                 errorMessage: null
             }
         },
-         validations: {
+        validations: {
             name: {
                 required,
             },
@@ -228,6 +286,11 @@
                 this.avatarImage = URL.createObjectURL(file);
                 this.image = file
             },
+            uploadFile(e){
+                let file = e.target.files[0]
+                this.filename = file.name
+                this.file = file
+            },
             saveProduct(payload){
                 let formData = new FormData(); 
                 const fields = Object.entries(payload);
@@ -261,6 +324,7 @@
                         }
                         this.categories[i] = unit
                     })
+                    this.categories.push({key:'!', value: 'None'})
                 })  
             },
              getSuppliers(){
@@ -274,6 +338,7 @@
                         }
                         this.suppliers[i] = unit
                     })
+                    this.suppliers.push({key:'!', value: 'None'})
                 })
             },
             resetform(){
@@ -306,6 +371,42 @@
                             });
                         }
                     }
+                })
+            },
+            importFile(){
+                let postData = {
+                    row: this.row,
+                    file: this.file,
+                    type: this.fileType
+                }
+
+                this.row = '';
+                this.file = ''
+                this.fileType = ''
+                this.importing = true
+
+                let formData = new FormData(); 
+                const fields = Object.entries(postData);
+                for(const index in fields){
+                    formData.append(fields[index][0], fields[index][1]);
+                }
+
+                this.$http.post('data/import', formData)
+                .then(res => {
+                    this.importing = false
+                     this.$notify({
+                        title: 'Success',
+                        message: "File Imported and saved",
+                        type: 'success'
+                    });
+                })
+                .catch(err => {
+                    this.importing = false
+                     this.$notify({
+                        title: 'Success',
+                        message: "Import could'nt complete",
+                        type: 'error'
+                    });
                 })
             }
         },
@@ -382,6 +483,17 @@
             &--name{
                 font-size: 1.15em;
             }
+        }
+    }
+
+    .input-box-file{
+        border: 1px solid #dadada;
+        .file-button{
+            background-color: #8471e8;
+            width: 90px;
+            padding: 0 10px;
+            border-radius: 5px;
+            margin-right: 10px;
         }
     }
     
