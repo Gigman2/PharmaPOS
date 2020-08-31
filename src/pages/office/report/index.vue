@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        <div class="dashboard-content mt-10">
+        <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="result" style="width: 100%">
                 <el-table-column prop="lastTransaction" label="Last Transaction"></el-table-column>
                 <el-table-column prop="employee" label="Last Checkout By"></el-table-column>
@@ -81,11 +81,13 @@
                 date_filter: '',
                 to: '',
                 from: '',
-                result: []
+                result: [],
+                fetching: false
             }
         },
         methods: {
             getReport(payload){
+                this.fetching = true
                 var postData = {
                     'from': Moment(payload[0]).format('YYYY-MM-DD'),
                     'to': Moment(payload[1]).format('YYYY-MM-DD')
@@ -102,7 +104,11 @@
                         item.cash = formatMoney(item.cash, ',', '.')
                         item.momo = formatMoney(item.momo, ',', '.')
                     })
+                    this.fetching = false
                     this.result = data
+                })
+                .catch(err => {
+                    this.fetching = false
                 })
             },
             getThisMonth(){

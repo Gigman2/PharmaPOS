@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        <div class="dashboard-content mt-10">
+        <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="result" style="width: 100%">
                 <el-table-column prop="name" label="Product Name"></el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
@@ -44,11 +44,13 @@
         data() {
             return {
                 result: [],
-                q:''
+                q:'',
+                fetching: false
             }
         },
         methods: {
             getData(){
+                this.fetching = true
                 this.$http.get('product/list')
                 .then(res => {
                     let data =  res.body.result
@@ -59,12 +61,14 @@
                         i.price = formatMoney(i.price,',','.')
                     })
                     this.result = data;
+                    this.fetching = false
                 })
                 .catch(() => {
-
+                    this.fetching = false
                 })
             },
             searchData(){
+                this.fetching = true
                 this.$http.get('product/search', {
                     params: {name: this.q}
                 })
@@ -76,9 +80,10 @@
                         }
                     })
                     this.result = data;
+                    this.fetching = false
                 })
                 .catch(() => {
-
+                    this.fetching = false
                 })
             },
             triggerAdd(id){

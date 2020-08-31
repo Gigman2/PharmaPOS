@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        <div class="dashboard-content mt-10">
+        <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="result" style="width: 100%" class="report-table">
                 <el-table-column prop="name" label="Product Name"></el-table-column>
                 <el-table-column prop="price" label="Price"></el-table-column>
@@ -87,6 +87,7 @@
         },
         methods: {
             getReport(payload){
+                this.fetching = true
                 var postData = {
                     'from': Moment(payload[0]).subtract(1, 'days').format('YYYY-MM-DD'),
                     'to': Moment(payload[1]).add(1, 'days').format('YYYY-MM-DD')
@@ -111,6 +112,10 @@
                         item.quantitysold = formatMoney(item.quantitysold, ',','.')
                     })
                     this.result = data
+                    this.fetching = false
+                })
+                .catch(err => {
+                    this.fetching = false
                 })
             },
             getThisMonth(){
