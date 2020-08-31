@@ -33,7 +33,7 @@
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 85%; margin-top: 10px" v-else>
+                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 75%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
@@ -42,7 +42,8 @@
                                 <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
                                     <div class="product-image">
                                         <div class="image">
-                                            <img :src="bucket+item.image" alt="">
+                                            <img :src="bucket+item.image" alt="" v-if="item.image">
+                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 75%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
@@ -51,7 +52,8 @@
                                 <div class="product shadow-1 shortage" @click="addItem(item)" v-else>
                                     <div class="product-image">
                                         <div class="image">
-                                            <img :src="bucket+item.image" alt="">
+                                            <img :src="bucket+item.image" alt="" v-if="item.image">
+                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 75%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
