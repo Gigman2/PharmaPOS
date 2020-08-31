@@ -110,10 +110,10 @@
                             <th align="left">Total </th>
                             <td width="100px" align="right">Ghc {{transaction.grossTotal}}</td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th align="left">Bought By </th>
-                            <td width="200px" align="right">{{(transaction.boughtBy !== null) ?transaction.boughtBy.firstname+' '+transaction.boughtBy.lastname : ' -- '}}</td>
-                        </tr>
+                            <!-- <td width="200px" align="right">{{(transaction !== null) ? transaction.boughtBy.firstname+' '+transaction.boughtBy.lastname : ' -- '}}</td> -->
+                        </tr> -->
                     </tbody>
                 </table>
            </div>
