@@ -114,7 +114,7 @@
             font-family: Do_Hyeon;
             font-size: 1.6em;
             letter-spacing: 1.1px;
-            color: #185b9d;
+            color: #40cfa2;
             float: left;
         }
 
@@ -201,13 +201,13 @@
             margin-right: 15px;
             background-color: white;
             border-radius: 3px;
-            color: rgba(69, 20, 116, 0.829);
+            color: #40cfa2;
             cursor: pointer;
-            border: 2px solid rgba(69, 20, 116, 0.829);
+            border: 2px solid #40cfa2;
             font-weight: bold;
             margin-bottom: 5px;
             &.active{
-                background-color: rgba(69, 20, 116, 0.829);
+                background-color: #40cfa2;
                 color: white;
             }
         }
@@ -296,7 +296,7 @@
             line-height: 30px;
             overflow: hidden;
             &--title{
-                color:rgba(0, 0, 0, 0.671);;
+                color: rgba(0, 0, 0, 0.671);;
                 font-family: 'Open sans';
                 font-size: 1.3em;
                 font-weight: bold;
@@ -320,7 +320,7 @@
 
         .checkout-headings{
             padding: 10px;
-            background-color: rgba(69, 20, 116, 0.829);
+            background-color: #40cfa2;
         }
 
         .checkout-table-wrapper{
@@ -369,7 +369,7 @@
                 }
 
                 .circle-outline{
-                    border: 2px solid #84aadf;;
+                    border: 2px solid #40cfa2;
                     border-radius: 50%;
                     width: 30px;
                     height: 30px;
@@ -406,7 +406,7 @@
                 padding:15px 10px;
                 padding-right: 25px;
                 text-align: right;
-                color: #3f5b77;
+                color: #40cfa2;
                 font-weight: bold;
             }
             th{
@@ -415,7 +415,7 @@
         }
 
         .checkout-payout{
-            background-color: rgba(69, 20, 116, 0.829);
+            background-color: #40cfa2;
             border-radius: 5px;
             padding: 15px 10px;
             font-family: 'Open sans';
@@ -425,7 +425,7 @@
             width: 60%;
             display: inline-block;
             &.disabled{
-                background-color: rgba(130, 72, 185, 0.829);
+                background-color: #a5d8c8;
                 cursor: not-allowed;
             }
             span{
@@ -437,11 +437,11 @@
             width: calc(25%);
             display: inline-block;
             font-family: 'Open sans';
-            border: 2px solid rgba(69, 20, 116, 0.829);
+            border: 2px solid #40cfa2;
             padding: 12px 10px;
             border-radius: 5px;
             margin-left: 10px;
-            color: rgba(69, 20, 116, 0.829);;
+            color: #40cfa2;
             font-weight: bold;
             background-color: white;
             cursor: pointer;

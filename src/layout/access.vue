@@ -17,9 +17,9 @@
             background-size: cover;
         }
         .bg-overlay{
-            background: #f857a6;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #f857a6d2, #ff5858);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #f857a6d2, #ff5858); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: #43cea2;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #185b9dd2, #43cea2);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #185b9dcc, #43cea2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
             width: 100%;
             min-height: 100%;
             display: table;

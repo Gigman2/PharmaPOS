@@ -90,10 +90,10 @@
 <style lang="scss">
     .access{
         position: relative;
-        &.bg-image{
-            background-image: url('../assets/images/retail.jpg');
+                &.bg-image{
+            background-image: url('../assets/images/national.jpg');
         }
-
+        
         .form-box.login{
             h2{
                 margin-bottom: 10px;

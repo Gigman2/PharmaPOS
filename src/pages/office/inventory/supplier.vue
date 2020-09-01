@@ -51,9 +51,10 @@
                                 </div>
                             </el-col>
                         </el-row>
-                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Save Supplier</div>
-                        <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-                        <div class="btn btn-primary" @click="submit" v-else>Save Supplier</div>
+                       <el-button round size="medium" v-if="$v.$anyError" class="disabled">Save Supplier</el-button>
+                        <el-button round size="medium" v-else-if="submitting" class="disabled"><loader/></el-button>
+                        <el-button round size="medium" v-else @click="submit">Save Supplier</el-button>
+
                    </div>
                </el-col>
            </el-row>

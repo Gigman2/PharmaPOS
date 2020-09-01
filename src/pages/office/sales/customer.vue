@@ -6,7 +6,7 @@
                 <input type="text" placeholder="Search ...">
             </div>
             <router-link :to="{name: 'office-sales_customer^add'}">
-                <div class="btn btn-primary pull-right"><i class="fe-plus"></i> Add Customer</div>
+                <el-button type="" icon="el-icon-plus" size="medium" class="pull-right" round>Add Customer</el-button>
             </router-link>
         </div>
         <div class="clearfix"></div>

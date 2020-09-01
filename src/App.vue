@@ -241,8 +241,9 @@ body {
   cursor: pointer;
   font-family: 'Open sans';
   &.btn-primary{
-    background-color: #6751de;
-    color:white
+    background-color: #faf9f9;
+    border: 1px solid rgb(158, 169, 180);
+    color:slategray
   }
   &.disabled{
     background-color: #6896c5;
@@ -300,6 +301,9 @@ body {
     img{
         width: 100%;
     }
+}
+.pointer{
+  cursor: pointer;
 }
 </style>
 

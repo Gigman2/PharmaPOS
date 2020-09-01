@@ -6,8 +6,8 @@
                 <input type="text" placeholder="Search ..." v-model="q"  @keyup="searchData()">
             </div>
             <div class="table-buttons pull-right">
-                <el-button round type="primary" size="medium" icon="el-icon-plus"  @click="$router.push({name: 'office-inventory_product^add'})" class="pull-left"> Add Product</el-button>
-                <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')" class="pull-left"> Export Data</el-button>
+                <el-button round type="" size="medium" icon="el-icon-plus"  @click="$router.push({name: 'office-inventory_product^add'})" class="pull-right"> Add Product</el-button>
+                <!-- <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')" class="pull-left"> Export Data</el-button> -->
             </div>
         </div>
         <div class="clearfix"></div>

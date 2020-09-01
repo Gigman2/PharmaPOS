@@ -40,9 +40,10 @@
                                 </div>
                             </el-col>
                         </el-row>
-                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Save Category</div>
-                        <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-                        <div class="btn btn-primary" @click="submit" v-else>Save Category</div>
+                        <el-button round size="medium" v-if="$v.$anyError" class="disabled">Save Category</el-button>
+                        <el-button round size="medium" v-else-if="submitting" class="disabled"><loader/></el-button>
+                        <el-button round size="medium" v-else @click="submit">Save Category</el-button>
+
                    </div>
                 </el-col>
             </el-row>

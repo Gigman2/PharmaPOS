@@ -33,7 +33,7 @@
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 75%; margin-top: 10px" v-else>
+                                            <img src="@/assets/images/pills.svg" alt="" style="width: 75%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
@@ -43,17 +43,17 @@
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 75%; margin-top: 10px" v-else>
+                                            <img src="@/assets/images/pills.svg" alt="" style="width: 75%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
                                     <div class="product-price">Ghc {{item.price}}.00</div>
                                 </div>
-                                <div class="product shadow-1 shortage" @click="addItem(item)" v-else>
+                                <div class="product shadow-1 shortage" @click="showDrugDialog = true;" v-else>
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/cosmetics.png" alt="" style="width: 75%; margin-top: 10px" v-else>
+                                            <img src="@/assets/images/pills.svg" alt="" style="width: 75%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
@@ -131,6 +131,32 @@
                 <div class="checkout-reset" @click="resetOrder">Reset</div>
            </div>
         </div>
+
+        <el-dialog
+            title="Add Drug"
+            :visible.sync="showDrugDialog"
+            width="30%">
+            <div class="form-box">
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <div class="input-label">Pack Quantity</div>
+                        <div class="input-box">
+                            <input type="text" placeholder="Pack Quantity" v-model="pack">
+                        </div>
+                    </el-col>
+                    <el-col :span="24">
+                        <div class="input-label">Loose Quantity</div>
+                        <div class="input-box">
+                            <input type="text" placeholder="Pack Quantity" v-model="loose">
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showDrugDialog = false">Cancel</el-button>
+                <el-button type="primary" @click="showDrugDialog = false">Confirm</el-button>
+            </span>
+        </el-dialog>
 
         <el-dialog
             title="Attach Customer"

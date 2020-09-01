@@ -6,7 +6,7 @@
                 <input type="text" placeholder="Search ...">
             </div>
              <router-link :to="{name: 'office-inventory_stock^add'}">
-                <div class="btn btn-primary pull-right"><i class="fe-plus"></i> Update Stock</div>
+                <el-button round type="" size="medium" icon="el-icon-plus" class="pull-right"> Update Stock</el-button>
             </router-link>
         </div>
         <div class="clearfix"></div>

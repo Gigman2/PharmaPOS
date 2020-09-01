@@ -138,7 +138,7 @@
         .topbar{
             width: 100%;
             height: 60px;
-            background-color: #6751de;
+            background-color: #43cea2;
             .actions{
                 float: right;
                 ul{
@@ -228,7 +228,7 @@
                     box-sizing: border-box;
                     width: 100%;
                     height: calc(100vh * 0.152);
-                    color: #7966e7;
+                    color: rgb(140, 147, 155);
                     font-size: .9em;
                     &.active{
                         background-color: #e7ecf3;

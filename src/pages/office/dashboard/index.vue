@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">products in shortage
+                    <div class="card-footer">drugs in shortage
                         <span>
                             {{salesWorth.shortage}}
                         </span>
@@ -83,7 +83,7 @@
                 </el-col>
                 <el-col :span="8">
                     <div class="card graph-card" >
-                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Product shortage list</div>
+                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Drug shortage list</div>
                         <div class="card-body">
                             <table  cellspacing="0" cellpadding="0" class="card-table">
                                 <thead>
