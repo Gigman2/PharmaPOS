@@ -29,7 +29,7 @@
                             <el-tooltip class="item" effect="dark" placement="bottom-end"
                                 v-for="(item, i) in row" :key="i">
                                 <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item)">
+                                <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item)">
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
@@ -37,7 +37,7 @@
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
-                                    <div class="product-price">Ghc {{item.price}}.00</div>
+                                    <div class="product-price">Ghc {{item.displayPrice}}</div>
                                 </div>
                                 <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
                                     <div class="product-image">
@@ -47,9 +47,9 @@
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
-                                    <div class="product-price">Ghc {{item.price}}.00</div>
+                                    <div class="product-price">Ghc {{item.displayPrice}}</div>
                                 </div>
-                                <div class="product shadow-1 shortage" @click="showDrugDialog = true;" v-else>
+                                <div class="product shadow-1 shortage"  @click="addItem(item)" v-else>
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
@@ -57,7 +57,7 @@
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
-                                    <div class="product-price">Ghc {{item.price}}.00</div>
+                                    <div class="product-price">Ghc {{item.displayPrice}}</div>
                                 </div>
                             </el-tooltip>
                         </div>
@@ -70,12 +70,43 @@
                 <div class="checkout-title">
                     <div class="pull-left checkout-title--title">Purchase Detail</div>
                     <div class="pull-right checkout-title--actions">
-                        <span @click="checkout('hold')">Hold</span>
-                        <i class="fe-user-plus" v-if="customer === null" @click="showCustomerDialog = true"></i>
-                        <i class="fe-user-minus" v-else @click="customer = null"></i>
-                        <!-- <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
-                        <span  v-else>{{discount}} <em class="fe-percent"></em></span> -->
-                        <i class="fe-slash " @click="resetOrder"></i>
+                        <el-tooltip class="item" effect="dark" placement="bottom-end">
+                            <div slot="content">Puts the transaction on hold</div>
+                            <span @click="checkout('hold')">Hold</span>
+                        </el-tooltip>
+
+                        <el-tooltip class="item" effect="dark" placement="bottom-end"  v-if="customer === null">
+                            <div slot="content">Attach a customer to transaction</div>
+                            <div class="d-inline">
+                                <i class="fe-user-plus" @click="showCustomerDialog = true"></i>
+                            </div>
+                        </el-tooltip>
+
+                        <el-tooltip class="item" effect="dark" placement="bottom-end"  v-else>
+                            <div slot="content">remove attach customer from transaction</div>
+
+                           <div class="d-inline">
+                                <i class="fe-user-minus" @click="customer = null"></i>
+                           </div>
+                        </el-tooltip>
+
+                        <!-- <el-tooltip class="item" effect="dark" placement="bottom-end">
+                            <div slot="content">apply discount</div>
+
+                            <div class="d-inline">
+                                <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
+                            <span  v-else>{{discount}} <em class="fe-percent"></em></span>
+                            </div>
+                        </el-tooltip> -->
+
+                        
+                        <el-tooltip class="item" effect="dark" placement="bottom-end">
+                            <div slot="content">clear transaction</div>
+
+                           <div class="d-inline">
+                                <i class="fe-slash " @click="resetOrder"></i>
+                           </div>
+                        </el-tooltip>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -95,32 +126,24 @@
                                 <td><i class="fe-trash-2 delete" @click="deleteItem(e)"></i></td>
                                 <td width="45%">{{item.name}}</td>
                                 <td>
-                                    <div class="circle-outline" @click="counter('minus', e)">
-                                        <span class="dripicons-minus"></span>
-                                    </div>
-                                    <span>{{item.quantity}}</span>
-                                    <div class="circle-outline" @click="counter('add', e)">
-                                        <span class="dripicons-plus"></span>
-                                    </div>
+                                    <span class="pointer" @click="openDrugModal(e, item)">
+                                        {{(item.pack == 0 && item.loose == 0) ? '--' : ''}}
+
+                                        {{(item.pack > 0) ? item.pack+'pck' : ''}}
+
+                                        {{(item.loose > 0) ? item.loose+'pcs' : ''}}
+                                    </span>
                                 </td>
-                                <td>{{item.price}}.00</td>
+                                <td>{{item.totalprice}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </vue-custom-scrollbar>
-                <!-- <table class="checkout-subtotal">
-                    <tbody>
-                        <tr>
-                            <th align="left">Tax (0.015%)</th>
-                            <td>Ghc {{tax}}</td>
-                        </tr>
-                    </tbody>
-                </table> -->
                 <table class="checkout-total">
                     <tbody>
                         <tr>
                             <th align="left">Total </th>
-                            <td width="100px" align="right">Ghc{{grossTotal}}.00</td>
+                            <td width="100px" align="right">Ghc{{grossTotal}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -133,28 +156,46 @@
         </div>
 
         <el-dialog
-            title="Add Drug"
+            :title="selectedProduct.name"
             :visible.sync="showDrugDialog"
             width="30%">
             <div class="form-box">
                 <el-row :gutter="20">
-                    <el-col :span="24">
-                        <div class="input-label">Pack Quantity</div>
-                        <div class="input-box">
-                            <input type="text" placeholder="Pack Quantity" v-model="pack">
+                    <el-col :span="24"  v-if="selectedProduct.hasloose != false">
+                        <div class="drug-purchase-type">
+                            <div class="purchase-image">
+                                <img src="@/assets/images/medicine.svg" alt="">
+                            </div>
+                            <div class="purchase-content">
+                                <div class="purchase-content__heading">Indicate number of pieces</div>
+                                <div class="purchase-content__counter">
+                                    <div class="counter" @click="counter('add', selectedIndex, 'loose')"><span class="fe-plus"></span></div>
+                                    <div class="count">{{selectedProduct.loose}}</div>
+                                     <div class="counter" @click="counter('minus', selectedIndex, 'loose')"><span class="fe-minus"></span></div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="clearfix"></div>
                     </el-col>
                     <el-col :span="24">
-                        <div class="input-label">Loose Quantity</div>
-                        <div class="input-box">
-                            <input type="text" placeholder="Pack Quantity" v-model="loose">
+                        <div class="drug-purchase-type">
+                            <div class="purchase-image">
+                                <img src="@/assets/images/pharmacy.svg" alt="">
+                            </div>
+                            <div class="purchase-content">
+                                <div class="purchase-content__heading">Indicate number of packs</div>
+                                <div class="purchase-content__counter">
+                                    <div class="counter" @click="counter('add', selectedIndex, 'pack')"><span class="fe-plus"></span></div>
+                                    <div class="count">{{selectedProduct.pack}}</div>
+                                    <div class="counter" @click="counter('minus', selectedIndex, 'pack')"><span class="fe-minus"></span></div>
+                                </div>
+                            </div>
                         </div>
                     </el-col>
                 </el-row>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="showDrugDialog = false">Cancel</el-button>
-                <el-button type="primary" @click="showDrugDialog = false">Confirm</el-button>
+                <el-button type="primary" @click="showDrugDialog = false">Done</el-button>
             </span>
         </el-dialog>
 
@@ -270,6 +311,7 @@
     import vueCustomScrollbar from 'vue-custom-scrollbar'
     import {mapGetters} from 'vuex';
     import { required, helpers, decimal } from 'vuelidate/lib/validators'
+    import formatMoney from '@/components/formatmoney.js'
 
     export default {
         components: {
@@ -281,9 +323,13 @@
                     maxScrollbarLength: 60
                 },
 
+                selectedProduct: {},
+                selectedIndex: null,
+
                 showCustomerDialog: false,
                 showDiscountDialog: false,
                 showPaymentDialog: false,
+                showDrugDialog: false,
                 activateNewCustomer: false,
                 
                 newCustomer: {
@@ -295,6 +341,9 @@
 
                 cash: 0,
                 momo: 0,
+
+                pack: 0,
+                loose: 0,
                 
                 q: '',
                 id: null,
@@ -359,6 +408,7 @@
                     var newData = [];
                     var index = 0;
                     this.products.forEach((element,i )=> {
+                        element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
                         if((i+1)% 6 == 0){
                             index  = index + 1;
                             console.log(index)
@@ -391,6 +441,7 @@
                     var newData = [];
                     var index = 0;
                     this.products.forEach((element,i )=> {
+                        element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
                         if((i+1)% 6 == 0){
                             index  = index + 1;
                         }
@@ -455,15 +506,32 @@
             ***************************************/
             addItem(item){
                 var orderProducts = [...this.orderProducts]
+
+                console.log(item)
+                if(!item.pack){
+                    item.pack = 0
+                }
+
+                if(!item.loose){
+                    item.loose = 0
+                }
                 var product = {
                     id: item.id,
                     name: item.name,
+                    totalprice: item.totalprice,
                     price: item.price,
+                    lprice: item.lprice,
+                    lquantity: item.lquantity,
                     left: item.left,
-                    quantity: 1,
+                    quantity: item.quantity,
+                    pack: item.pack,
+                    loose: item.loose,
                     selected: false,
-                    saleId: null
+                    saleId: null,
+                    hasloose: item.hasloose
                 }
+
+                console.log(product)
 
                 product.index = orderProducts.length
                 let existIndex = orderProducts.find(item => product.id === item.id)
@@ -477,40 +545,73 @@
                 }
                 orderProducts.push(product)
                 this.orderProducts = orderProducts
-
+                this.openDrugModal(orderProducts.length - 1, product)
                 localStorage.setItem('orderProducts', JSON.stringify(orderProducts))
-                this.updatePrice()
+                this.updateProductTotalPrice(product.index)
+                this.updateTotalPrice()
+            },
+            openDrugModal(i, item){
+                this.selectedProduct = item
+                this.selectedIndex = i
+                this.showDrugDialog = true
             },
             deleteItem(i){
                 this.orderProducts.splice(i, 1);
-                this.updatePrice()
+                this.updateTotalPrice()
             },
-            counter(type, i){
-                let quantity = this.orderProducts[i].quantity;
+            counter(type, i, packaging){
+                let quantity = this.orderProducts[i][packaging];
                 if(type == 'add'){
-                    if(quantity < this.orderProducts[i].left){
-                        quantity++
+                    if(packaging == 'pack'){
+                        if(quantity < this.orderProducts[i].quantity){
+                            quantity++
+                        }
+                    }else if(packaging == 'loose'){
+                        if(quantity < (Number(this.orderProducts[i].lquantity) * Number(this.orderProducts[i].quantity))){
+                            quantity++
+                        }
                     }
                 }else if(type == 'minus'){
-                    if(quantity > 1){
+                    if(quantity > 0){
                         quantity--
                     }
                 }
-                this.orderProducts[i].quantity = quantity
-                this.updatePrice()
+                this.orderProducts[i][packaging] = quantity
+                localStorage.setItem('orderProducts', JSON.stringify(this.orderProducts))
+                this.updateProductTotalPrice(i)
+                this.updateTotalPrice()
             },
-            updatePrice(){
+            updateProductTotalPrice(i){
+                let loose = this.orderProducts[i].loose
+                let pack = this.orderProducts[i].pack
+                let lprice = this.orderProducts[i].lprice
+                let price = this.orderProducts[i].price
+
+                let looseTotalPrice = 0;
+                if(lprice != '' && !isNaN(lprice)){
+                    looseTotalPrice = parseInt(loose) * parseFloat(lprice)
+                } 
+
+                let packTotalPrice = 0;
+                if(price != '' && !isNaN(price)){
+                    packTotalPrice = parseInt(pack) * parseFloat(price) 
+                }
+
+                let totalPrice = looseTotalPrice + packTotalPrice;
+                this.orderProducts[i].totalprice = formatMoney(totalPrice, ',', '.')
+            },
+            updateTotalPrice(){
                 let grosstotal = 0;
                 let tax = 0.015 
                 this.orderProducts.forEach((item, i) => {
                     let itemtotal = 0;
-                    itemtotal =  (item.price * item.quantity)
+                    itemtotal =  parseFloat(item.totalprice)
                     grosstotal = grosstotal + itemtotal
                 })
 
                 this.tax = (grosstotal * tax).toFixed(2);
                 this.netTotal = grosstotal - this.tax
-                this.grossTotal = grosstotal
+                this.grossTotal = formatMoney(grosstotal, ',', '.')
             },
             resetOrder(){ 
                 this.orderProducts = []
@@ -518,7 +619,7 @@
                 this.discount = null
                 this.cash = 0;
                 this.momo = 0;
-                this.updatePrice()
+                this.updateTotalPrice()
                 localStorage.removeItem('orderProducts')
             },
             checkout(type){
@@ -538,9 +639,11 @@
                 if(this.orderProducts.length > 0){
                     this.orderProducts.forEach(item => {
                         let product = {
-                            quantity: item.quantity,
-                            unit: item.price,
-                            total: item.quantity * item.price,
+                            packBought: item.pack,
+                            looseBought: item.loose,
+                            packPrice: item.price,
+                            loosePrice: item.lprice,
+                            total: item.totalprice,
                             productId: item.id,
                             id: item.saleId
                         }
@@ -563,6 +666,13 @@
                         this.$notify({
                             title: 'Success',
                             message: "Transaction on hold",
+                            type: 'success'
+                        });
+                    }
+                    if(postData.state == 'processing'){
+                        this.$notify({
+                            title: 'Success',
+                            message: "Checkout successful",
                             type: 'success'
                         });
                     }
@@ -619,6 +729,7 @@
                 }
             },
             setRetrieved(data){
+                console.log(data)
                 this.id = data.id
                 this.cash = data.cashAmount
                 this.momo = data.momoAmount
@@ -627,15 +738,22 @@
                 data.products.forEach(item => {
                     let product = {
                         name: item.product.name,
-                        quantity: item.quantity,
-                        price: item.total,
+                        loose: item.looseBought,
+                        pack: item.packBought,
+                        totalprice: item.total,
+                        price: item.product.price,
+                        lprice: item.product.lprice,
+                        lquantity: item.product.lquantity,
+                        quantity: item.product.quantity,
+                        left: item.product.left,
                         id: item.product.id,
                         selected: false,
-                        saleId: item.id
+                        saleId: item.id,
+                        hasloose: item.product.hasloose
                     }
                     product.index = this.orderProducts.length
                     this.orderProducts.push(product)
-                    this.updatePrice()
+                    this.updateTotalPrice()
                 })
             },
             quickPay(){
@@ -684,6 +802,7 @@
                 if(orderProductsInStorage !== null){
                     orderProductsInStorage.forEach(item => {
                         this.addItem(item)
+                        this.showDrugDialog = false
                     })
                 }
             }
@@ -700,5 +819,62 @@
         float: left;
         font-weight: bold;
         line-height: 40px;
+    }
+    .drug-purchase-type{
+        .purchase-image{
+            width: 80px;
+            height: 80px;
+            background-color: rgb(238, 238, 238);
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            display: inline-block;
+            vertical-align: top;
+            img{
+                width: 100%;
+                color: silver;
+            }
+        }
+        .purchase-content{
+            width: calc(100% - 102px);
+            display: inline-block;
+            text-align: left;
+            margin-left: 20px;
+            &__heading{
+                color: rgb(183, 188, 192);
+            }
+            &__counter{
+                padding-top: 17px;
+                .count{
+                    display: inline-block;
+                    line-height: 45px;
+                    text-align: center;
+                    width: calc(100% - 91px);
+                    font-size: 30px;
+                    color: rgb(148, 148, 148)
+                }
+                .counter{
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 2px;
+                    background-color: rgb(233, 233, 233);
+                    display: inline-block;
+                    text-align: center;
+                    line-height: 55px;
+                    cursor: pointer;
+                    &:first-child{
+                        float: right;
+                    }
+                    &:last-child{
+                        float: left;
+                    }
+                    span{
+                        font-size: 25px;
+                        color: rgb(148, 148, 148);
+                    }
+                }
+            }
+        }
     }
 </style>

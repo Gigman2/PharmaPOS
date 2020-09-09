@@ -13,12 +13,12 @@
                             </div>
                         </div> 
                     </div>
-                    <div class="card-footer">net sales today
+                    <!-- <div class="card-footer">net sales today
                         <span>
-                            <!-- <i class="fe-trending-up green"></i>  -->
+                            <i class="fe-trending-up green"></i>
                             {{sales.netTotal}}
                         </span>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="card mini-card">
                     <div class="mini-card-row">
@@ -32,17 +32,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">drugs in shortage
+                    <!-- <div class="card-footer">drugs in shortage
                         <span>
                             {{salesWorth.shortage}}
                         </span>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="card mini-card">
                     <div class="mini-card-row">
                         <div class="card-col">
-                            <div class="card-title">Account admins</div>
-                            <div class="card-content">{{account.admins}}</div>
+                            <div class="card-title">Accounts</div>
+                            <div class="card-content">{{account.all}}</div>
                         </div>
                         <div class="card-col">
                             <div class="icon-box">
@@ -50,11 +50,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">employees 
+                    <!-- <div class="card-footer">employees 
                         <span>
                             {{account.employees}}
                         </span>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="card mini-card">
                     <div class="mini-card-row">

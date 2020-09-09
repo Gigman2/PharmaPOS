@@ -109,7 +109,7 @@
                             item.initialStock = item.firstStock.initialStock
                         }
                         item.price = formatMoney(item.price, ',','.')
-                        item.quantitysold = formatMoney(item.quantitysold, ',','.')
+                        item.quantitysold = item.quantitysold
                     })
                     this.result = data
                     this.fetching = false

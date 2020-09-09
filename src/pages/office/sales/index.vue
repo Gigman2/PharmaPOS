@@ -28,6 +28,8 @@
                         <el-button size="mini" @click="drawer = true; selectedTransaction = scope.row">View</el-button>
                         
                          <el-button size="mini" type="primary" v-if="scope.row.state == 'holding'">On Hold</el-button>
+                         <el-link class="ml-20" type="warning" :underline="false" v-else-if="scope.row.state == 'returned'">returned</el-link>
+                         <el-link class="ml-20" type="warning" :underline="false" v-else-if="scope.row.state == 'refunded'">refunded</el-link>
                          <el-link class="ml-20" type="success" :underline="false" v-else>complete</el-link>
                     </template>
                 </el-table-column>
@@ -35,7 +37,6 @@
         </div>
 
         <el-drawer
-            title="Transaction breakdown"
             :visible.sync="drawer"
             :direction="'rtl'" size="35%">
             <div class="transaction-breakdown">
@@ -107,14 +108,12 @@
 
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar';
-    import lineChart from '@/components/chart/lineChart.vue'
     import Moment from 'moment'
     import formatMoney from '@/components/formatmoney.js'
 
     export default {
         components: {
             vueCustomScrollbar,
-            lineChart
         },
         data() {
             return {

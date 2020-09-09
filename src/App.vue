@@ -112,6 +112,11 @@ body {
     font-size: .9em;
     color: slategrey;
     font-weight: bold;
+    span{
+      color: silver;
+      font-weight: normal;
+      font-size: 13px;
+    }
   }
   .form-input-group{
       margin-top: 30px;

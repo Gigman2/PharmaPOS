@@ -132,7 +132,7 @@
          validations: {
             username: {
                 required,
-            },
+            }, 
             firstname: {
                 required,
             },

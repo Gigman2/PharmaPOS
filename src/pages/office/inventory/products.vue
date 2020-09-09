@@ -6,7 +6,7 @@
                 <input type="text" placeholder="Search ..." v-model="q"  @keyup="searchData()">
             </div>
             <div class="table-buttons pull-right">
-                <el-button round type="" size="medium" icon="el-icon-plus"  @click="$router.push({name: 'office-inventory_product^add'})" class="pull-right"> Add Product</el-button>
+                <el-button type="" size="medium" icon="el-icon-plus"  @click="$router.push({name: 'office-inventory_product^add'})" class="pull-right"> Add Product</el-button>
                 <!-- <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')" class="pull-left"> Export Data</el-button> -->
             </div>
         </div>
@@ -14,10 +14,10 @@
         <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="result" style="width: 100%">
                 <el-table-column prop="name" label="Product Name"></el-table-column>
-                <el-table-column prop="category" label="Category"> </el-table-column>
-                <el-table-column prop="barcode" label="Barcode ID"> </el-table-column>
-                <el-table-column prop="left" label="In Stock" width="100px"> </el-table-column>
-                <el-table-column prop="price" label="Price (Ghc)" width="120px"> </el-table-column>
+                <el-table-column prop="manufacturer" label="Manufacturer"> </el-table-column>
+                <el-table-column prop="lprice" label="Price per piece (Ghc)"> </el-table-column>
+                 <el-table-column prop="price" label="Pack Price (Ghc)"> </el-table-column>
+                <el-table-column prop="left" label="Packs Left" width="100px"> </el-table-column>
                 <el-table-column width="220px">
                     <template slot-scope="scope">
                             <el-button size="mini" @click="triggerAdd(scope.row.id)">Add</el-button>
@@ -59,6 +59,7 @@
                             i.category = i.category.name
                         }
                         i.price = formatMoney(i.price,',','.')
+                        i.lprice = formatMoney(i.lprice,',','.')
                     })
                     this.result = data;
                     this.fetching = false

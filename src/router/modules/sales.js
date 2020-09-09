@@ -22,7 +22,7 @@ export default {
             path: 'office-sales_customer'
           },
           {
-            name: 'Discount & Promo',
+            name: 'Discounts',
             path: 'office-sales_discount'
           },
         ]

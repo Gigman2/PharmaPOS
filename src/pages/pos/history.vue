@@ -32,9 +32,9 @@
                                         <span>retrieve</span>
                                     </el-button>
                                     
-                                    <el-button  v-else-if="scope.row.state == 'complete'" size="mini" type="success">
-                                        <span>{{scope.row.state}}</span>
-                                    </el-button>
+                                    <el-link class="ml-20" type="success" :underline="false"  v-else-if="scope.row.state == 'complete'" >
+                                            {{scope.row.state}}
+                                    </el-link>
 
                                     <el-button  v-else-if="scope.row.state == 'returned'" size="mini" type="warning">
                                         <span>{{scope.row.state}}</span>
@@ -97,9 +97,15 @@
                             <tr class="checkout-item-row" v-for="(item, i) in transaction.products" :key="i">
                                 <td style="text-align: left">{{item.product.name}}</td>
                                 <td>
-                                    <span>{{item.quantity}}</span>
+                                    <span>  
+                                        {{(item.packBought == 0 && item.looseBought == 0) ? '--' : ''}}
+
+                                        {{(item.packBought > 0) ? item.packBought+'pck' : ''}}
+
+                                        {{(item.looseBought > 0) ? item.looseBought+'pcs' : ''}}
+                                    </span>
                                 </td>
-                                <td>{{item.unit}}</td>
+                                <td>{{item.total}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -110,10 +116,10 @@
                             <th align="left">Total </th>
                             <td width="100px" align="right">Ghc {{transaction.grossTotal}}</td>
                         </tr>
-                        <!-- <tr>
+                        <tr v-if="transaction.boughtBy">
                             <th align="left">Bought By </th>
-                            <!-- <td width="200px" align="right">{{(transaction !== null) ? transaction.boughtBy.firstname+' '+transaction.boughtBy.lastname : ' -- '}}</td> -->
-                        </tr> -->
+                            <td width="200px" align="right">{{(transaction.boughtBy !== undefined) ? transaction.boughtBy.firstname+' '+transaction.boughtBy.lastname : ' -- '}}</td>
+                        </tr>
                     </tbody>
                 </table>
            </div>
@@ -332,7 +338,8 @@
                 }
                 this.$http.post('sales/customer-attach', payload)
                 .then(res => {
-                     this.$notify({
+                    this.getTransaction()
+                    this.$notify({
                         title: 'Success',
                         message: "Customer attached",
                         type: 'success'

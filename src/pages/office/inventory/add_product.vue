@@ -3,7 +3,7 @@
         <div class="clearfix"></div>
         <div class="dashboard-top">
             <div class="table-buttons pull-right">
-                <el-button round type="success" size="medium" icon="el-icon-upload2" @click="openImportDialog = true" class="pull-right"> Import Data</el-button>
+                <el-button type="success" size="medium" icon="el-icon-upload2" @click="openImportDialog = true" class="pull-right"> Import Data</el-button>
             </div>
         </div>
         <div class="dashboard-content p-20">
@@ -25,7 +25,7 @@
                                     <input type="text" placeholder="" v-model.trim.lazy="$v.name.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="12">
                                 <div class="input-label">Category </div>
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.category.$error }">
                                     <i class="fe-layers"></i>
@@ -39,28 +39,11 @@
                                     </el-select>
                                 </div>
                             </el-col>
-                            <el-col :span="14">
-                                <div class="input-label">Genetics </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.generics.$error }">
-                                    <i class="fe-tag"></i>
-                                    <input type="text" placeholder="e.g Paracetamol" v-model.trim.lazy="$v.generics.$model">
-                                </div>
-                            </el-col>
-                        </el-row>
-                        <div class="hoz-line dark"></div>
-                        <el-row :gutter="20" class="mt-20">
-                            <el-col :span="14">
-                                <div class="input-label">Manufacturer </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.sku.$error }">
-                                    <i class="fe-square"></i>
-                                    <input type="text" placeholder="Manufacturer" v-model.trim.lazy="$v.sku.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="10">
-                                <div class="input-label">Supplier </div>
+                            <el-col :span="12">
+                                <div class="input-label">Supplier <span class="pull-right">optional</span></div>
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.supplier.$error }">
                                     <i class="fe-layers"></i>
-                                        <el-select v-model="supplier" filterable placeholder=" ">
+                                        <el-select v-model="supplier" filterable placeholder=" Select the supplier">
                                         <el-option
                                         v-for="item in suppliers"
                                          :key="item.key"
@@ -70,19 +53,18 @@
                                     </el-select>
                                 </div>
                             </el-col>
+                        </el-row>
+                        <div class="hoz-line dark"></div>
+                        <el-row :gutter="20" class="mt-20">
                             <el-col :span="12">
-                                <div class="input-label">Batch Date </div>
-                                <div class="input-box-el" :class="{ 'input-box--error': $v.batch.$error }">
-                                    <!-- <i class="fe-bold"></i> -->
-                                    <el-date-picker
-                                        v-model.trim.lazy="$v.batch.$model"
-                                        type="date"
-                                        placeholder="Pick a day">
-                                    </el-date-picker>
+                                <div class="input-label">Manufacturer <span class="pull-right">optional</span></div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.manufacturer.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="text" placeholder="Manufacturer's name here" v-model.trim.lazy="$v.manufacturer.$model">
                                 </div>
                             </el-col>
                             <el-col :span="12">
-                                <div class="input-label">Expiry</div>
+                                <div class="input-label">Expiry <span class="pull-right">optional</span></div>
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.expiry.$error }">
                                     <!-- <i class="fe-clock"></i> -->
                                     <el-date-picker
@@ -93,7 +75,7 @@
                                 </div>
                             </el-col>
                              <el-col :span="13">
-                                <div class="input-label">Barcode </div>
+                                <div class="input-label">Barcode  <span class="pull-right">optional</span></div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.barcode.$error }">
                                     <i class="fe-tag"></i>
                                     <input type="text" placeholder="xxxxxxxxxxxxxxxxxxx" v-model.trim.lazy="$v.barcode.$model">
@@ -106,64 +88,60 @@
                                 <div class="input-label">Pack Quantity </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-package"></i>
-                                    <input type="text" placeholder="Quantity e.g 25" v-model.trim.lazy="$v.quantity.$model">
+                                    <input type="text" placeholder="Total packs in stock" v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
                             <el-col :span="10">
                                 <div class="input-label">Pack Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
                                     <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Price" v-model.trim.lazy="$v.price.$model">
+                                    <input type="text" placeholder="Price per pack" v-model.trim.lazy="$v.price.$model">
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <div class="pull-left mb-20 mt-10 ">
+                                    <el-checkbox v-model="hasl"><strong style="color: #43cea2">Can be sold in pieces</strong></el-checkbox>
                                 </div>
                             </el-col>
                         </el-row>
-                        <el-row :gutter="20">
-                            <el-col :span="8" >
-                                <div class="input-label">Loose Quantity </div>
+                        <el-row :gutter="20" v-if="hasl">
+                            <el-col :span="12" >
+                                <div class="input-label">Quantity per Pack </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.l_quantity.$error }">
                                     <i class="fe-server"></i>
-                                    <input type="text" placeholder="Loose Quanity " v-model.trim.lazy="$v.l_quantity.$model">
-                                    <i class="input-suffix">pcs</i>
+                                    <input type="text" placeholder="Total pieces in pack " v-model.trim.lazy="$v.l_quantity.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="8">
-                                <div class="input-label">Loose Price </div>
+                            <el-col :span="12">
+                                <div class="input-label">Price Per Piece </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.l_price.$error }">
                                     <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Loose Price" v-model.trim.lazy="$v.l_price.$model">
+                                    <input type="text" placeholder="price for each piece" v-model.trim.lazy="$v.l_price.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="8">
-                                <div class="input-label">Restock </div>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="14">
+                                <div class="input-label">Stock Limit <span class="pull-right">optional</span></div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.restock.$error }">
-                                    <input type="text" placeholder="" v-model.trim.lazy="$v.restock.$model">
+                                    <input type="text" placeholder="level to alert shortage" v-model.trim.lazy="$v.restock.$model">
                                 </div>
                             </el-col>
                         </el-row>
 
-                        <div class="btn btn-primary disabled" v-if="$v.$anyError">Add user</div>
-                        <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
-                        <div class="btn btn-primary" @click="submit" v-else>Add Drug</div>
+                        <el-button type="success" size="medium" icon="el-icon-plus" v-if="$v.$anyError">Add user</el-button>
+                        <el-button type="" size="medium" icon="el-icon-plus" v-else-if="submitting"><loader/></el-button>
+                        <el-button type="success" size="medium" icon="el-icon-plus" @click="submit" v-else>Add Drug</el-button>
                     </el-col>
                 </el-row>
             </div>
         </div>
 
-        <!-- <el-dialog
-            title="Import Products"
+        <el-dialog
+            title="Import Drugs From Excel"
             :visible.sync="openImportDialog"
             width="30%">
             <div  class="form-box">
-                <div class="text-left">
-                    <div class="input-label-el mb-5">File Type</div>
-                    <div class="input-box-el">
-                        <el-select v-model.trim.lazy="fileType" filterable placeholder="Select file type">
-                            <el-option v-for="item in ['Excel', 'CSV']" :key="item" 
-                            :label="item" :value="item"> </el-option>
-                        </el-select>
-                    </div>
-                </div>
-
                 <div class="text-left">
                     <div class="input-label-el mb-5">Rows to skip</div>
                     <div class="input-box">
@@ -190,7 +168,7 @@
                 <el-button @click="openImportDialog = false">Cancel</el-button>
                 <el-button type="primary" @click="openImportDialog = false; importFile()">Confirm</el-button>
             </span>
-        </el-dialog> -->
+        </el-dialog>
     </div>
 </template>
 
@@ -221,10 +199,10 @@
                 l_price: "",
                 quantity: "",
                 l_quantity: "",
-                p_quantity: "",
                 restock: "",
                 shelf: "", 
                 image: null,
+                hasl: false,
                 
                 file: '',
                 row: '',
@@ -247,11 +225,7 @@
             },
             category: "",
             barcode: {
-                required,
-                alphaChar:helpers.regex('alphaChar', /^[a-z0-9_-]*$/i),
-            },
-            sku: {
-                alphaChar:helpers.regex('alphaChar', /^[a-z0-9_-]*$/i),
+               
             },
             supplier: {
             },
@@ -259,9 +233,6 @@
 
             },
             expiry: {
-
-            },
-            generics: {
 
             },
             price: {
@@ -276,17 +247,11 @@
             l_quantity: {
 
             },
-            p_quantity: {
-
-            },
             restock: {
 
             },
             shelf: {
                 
-            },
-            batch: {
-
             },
         },
         computed: {
@@ -306,8 +271,6 @@
                    name: this.name,
                    category: this.category,
                    barcode: this.barcode,
-                   sku: this.sku,
-                   generics: this.generics,
                    supplier: this.supplier,
                    manufacturer: this.manufacturer,
                    price: this.price,
@@ -315,9 +278,9 @@
                    restock: this.restock,
                    shelf: this.shelf,
                    expiry: this.expiry,
-                   batch: this.batch,
                    lprice: this.l_price,
-                   lquantity: this.l_quantity
+                   lquantity: this.l_quantity,
+                   hasloose: this.hasl
                 }
 
                 if(this.image != null){
@@ -374,7 +337,7 @@
                         }
                         this.categories[i] = unit
                     })
-                    this.categories.push({key:'!', value: 'None'})
+                    this.categories.push({key:'', value: 'Not specified'})
                 })  
             },
              getSuppliers(){
@@ -388,22 +351,22 @@
                         }
                         this.suppliers[i] = unit
                     })
-                    this.suppliers.push({key:'!', value: 'None'})
+                    this.suppliers.push({key:'', value: 'Not Specified'})
                 })
             },
             resetform(){
-                this.name = ""
-                this.category = ""
-                this.barcode = ""
-                this.sku = ""
-                this.supplier = ""
-                this.manufacturer = ""
-                this.price = ""
-                this.quantity = ""
-                this.restock = ""
-                this.shelf = ""
-                this.avatarImage = ""
-                this.avatar = null
+                this.name = '',
+                this.category = '',
+                this.barcode = '',
+                this.supplier = '',
+                this.manufacturer = '',
+                this.price = '',
+                this.quantity = '',
+                this.restock = '',
+                this.shelf = '',
+                this.expiry = '',
+                this.lprice = '',
+                this.lquantity = ''
 
                 this.$nextTick(() => { this.$v.$reset() })
             },
@@ -539,7 +502,7 @@
     .input-box-file{
         border: 1px solid #dadada;
         .file-button{
-            background-color: #8471e8;
+            background-color: #42b983;
             width: 90px;
             padding: 0 10px;
             border-radius: 5px;
