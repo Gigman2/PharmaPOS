@@ -13,7 +13,11 @@
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="result" style="width: 100%">
-                <el-table-column prop="name" label="Product Name"></el-table-column>
+                <el-table-column label="Product Name">
+                    <template slot-scope="scope">
+                        <div :class="{'table-cell-warning': scope.row.expiration == 'expiring', 'table-cell-danger': scope.row.expiration == 'expired'}">{{scope.row.name}}</div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="manufacturer" label="Manufacturer"> </el-table-column>
                 <el-table-column prop="lprice" label="Price per piece (Ghc)"> </el-table-column>
                  <el-table-column prop="price" label="Pack Price (Ghc)"> </el-table-column>
@@ -35,6 +39,7 @@
     import lineChart from '@/components/chart/lineChart.vue'
     import categoryVue from './category.vue';
     import formatMoney from '@/components/formatmoney.js'
+    import Moment from 'moment'
 
     export default {
         components: {
@@ -55,6 +60,22 @@
                 .then(res => {
                     let data =  res.body.result
                     data.map(i => {
+                        let expiry = Moment(i.expiry).format('YYYY-MM-DD')
+                        let now = Moment().format('YYYY-MM-DD')
+
+                        i.expiry = Moment(i.expiry).format('Do MMM YYYY')
+                        
+                        let expired = Moment().isAfter(expiry)
+                        if(expired){
+                            i.expiration = 'expired'
+                        }else{
+                            var exirationDifference = Moment(expiry).diff(now, 'days');
+                            if(exirationDifference <= 90){
+                                i.expiration = 'expiring'
+                            }else{
+                                i.expiration = 'ok'
+                            }
+                        }
                         if(i.category){
                             i.category = i.category.name
                         }
@@ -152,8 +173,11 @@
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
     .table-buttons{
         width: 300px;
+    }
+    .el-table__body td{
+        padding: 0 !important;
     }
 </style>

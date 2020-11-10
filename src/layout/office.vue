@@ -6,12 +6,12 @@
                 <ul class="action-menu">
                     <li class="mt-10" @click="sell"> <i class="fe-dollar-sign"></i> Sell</li>
                     <li class="mt-10" @click="lock"> <i class="fe-power"></i> Logout</li>
-                    <li>
+                    <li class="mt-10">
                         <div class="user-account">
-                            <div class="avatar">
+                            <!-- <div class="avatar">
                                 <img :src="avatar" alt="">
-                            </div>
-                            <span>{{fullname}}</span>
+                            </div> -->
+                            <strong>{{fullname}}</strong>
                         </div>
                     </li>
                 </ul>

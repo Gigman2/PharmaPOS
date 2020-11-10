@@ -100,7 +100,7 @@
                             </el-col>
                             <el-col :span="24">
                                 <div class="pull-left mb-20 mt-10 ">
-                                    <el-checkbox v-model="hasl"><strong style="color: #43cea2">Can be sold in pieces</strong></el-checkbox>
+                                    <el-checkbox v-model="hasl"><strong style="color: #43cea2">Can be sold as loose pieces</strong></el-checkbox>
                                 </div>
                             </el-col>
                         </el-row>
@@ -117,6 +117,28 @@
                                 <div class="input-box" :class="{ 'input-box--error': $v.l_price.$error }">
                                     <i class="fe-dollar-sign"></i>
                                     <input type="text" placeholder="price for each piece" v-model.trim.lazy="$v.l_price.$model">
+                                </div>
+                            </el-col>
+                             <el-col :span="24">
+                                <div class="pull-left mb-20 mt-10 ">
+                                    <el-checkbox v-model="hast"><strong style="color: #43cea2">Can be sold in tabs</strong></el-checkbox>
+                                </div>
+                            </el-col>
+                        </el-row>
+
+                        <el-row :gutter="20" v-if="hast">
+                            <el-col :span="12">
+                                <div class="input-label">Tabs Per Strip</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.t_quantity.$error }">
+                                    <i class="fe-server"></i>
+                                    <input type="text" placeholder="Total tabs is a strip" v-model.trim.lazy="$v.t_quantity.$model">
+                                </div>
+                            </el-col>
+                            <el-col :span="12">
+                                <div class="input-label">Price Per Tab </div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.t_price.$error }">
+                                    <i class="fe-dollar-sign"></i>
+                                    <input type="text" placeholder="price for each piece" v-model.trim.lazy="$v.t_price.$model">
                                 </div>
                             </el-col>
                         </el-row>
@@ -197,12 +219,15 @@
                 expiry:"",
                 price: "",
                 l_price: "",
+                t_price: "",
                 quantity: "",
                 l_quantity: "",
+                t_quantity: "",
                 restock: "",
                 shelf: "", 
                 image: null,
                 hasl: false,
+                hast: false,
                 
                 file: '',
                 row: '',
@@ -241,11 +266,15 @@
             l_price: {
 
             },
+            t_price: {
+            },
             quantity: {
 
             },
             l_quantity: {
 
+            },
+            t_quantity: {
             },
             restock: {
 
@@ -280,7 +309,22 @@
                    expiry: this.expiry,
                    lprice: this.l_price,
                    lquantity: this.l_quantity,
-                   hasloose: this.hasl
+                   hasloose: this.hasl,
+                   hastabs: this.hast
+                }
+                
+                if(this.hasl){
+                    postdata.lprice = this.l_price
+                    postdata.lquantity = this.l_quantity
+                }
+
+                if(this.hast){
+                    postdata.tprice = this.t_price
+                    postdata.tquantity = this.t_quantity
+                }
+
+                if(this.expiry){
+                    postdata.expiry = this.expiry
                 }
 
                 if(this.image != null){
@@ -355,18 +399,22 @@
                 })
             },
             resetform(){
-                this.name = '',
-                this.category = '',
-                this.barcode = '',
-                this.supplier = '',
-                this.manufacturer = '',
-                this.price = '',
-                this.quantity = '',
-                this.restock = '',
-                this.shelf = '',
-                this.expiry = '',
-                this.lprice = '',
+                this.name = ''
+                this.category = ''
+                this.barcode = ''
+                this.supplier = ''
+                this.manufacturer = ''
+                this.price = ''
+                this.quantity = ''
+                this.restock = ''
+                this.shelf = ''
+                this.expiry = ''
+                this.lprice = ''
                 this.lquantity = ''
+                this.tprice = ''
+                this.tquantity = ''
+                this.hasloose = false
+                this.hastabs = false
 
                 this.$nextTick(() => { this.$v.$reset() })
             },

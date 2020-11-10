@@ -30,30 +30,48 @@
                                 v-for="(item, i) in row" :key="i">
                                 <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
                                 <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item)">
+                                    <div class="expiration-box"  
+                                            :class="{'red': item.expiration == 'expired',
+                                            'orange': item.expiration == 'expiring'}"
+                                            
+                                            v-if="item.expiration">{{item.expiration}}
+                                    </div>
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/pills.svg" alt="" style="width: 75%; margin-top: 10px" v-else>
+                                            <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
                                     <div class="product-price">Ghc {{item.displayPrice}}</div>
                                 </div>
                                 <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
+                                    <div class="expiration-box"  
+                                            :class="{'red': item.expiration == 'expired',
+                                            'orange': item.expiration == 'expiring'}"
+                                            
+                                            v-if="item.expiration">{{item.expiration}}
+                                    </div>
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/pills.svg" alt="" style="width: 75%; margin-top: 10px" v-else>
+                                            <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
                                     <div class="product-price">Ghc {{item.displayPrice}}</div>
                                 </div>
                                 <div class="product shadow-1 shortage"  @click="addItem(item)" v-else>
+                                    <div class="expiration-box"  
+                                            :class="{'red': item.expiration == 'expired',
+                                            'orange': item.expiration == 'expiring'}"
+                                            
+                                            v-if="item.expiration">{{item.expiration}}
+                                    </div>
                                     <div class="product-image">
                                         <div class="image">
                                             <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/pills.svg" alt="" style="width: 75%; margin-top: 10px" v-else>
+                                            <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
                                         </div>
                                     </div>
                                     <div class="product-title">{{item.name}}</div>
@@ -127,7 +145,7 @@
                                 <td width="45%">{{item.name}}</td>
                                 <td>
                                     <span class="pointer" @click="openDrugModal(e, item)">
-                                        {{(item.pack == 0 && item.loose == 0) ? '--' : ''}}
+                                        {{(item.pack == 0 && item.loose == 0) ? '0' : ''}}
 
                                         {{(item.pack > 0) ? item.pack+'pck' : ''}}
 
@@ -161,6 +179,21 @@
             width="30%">
             <div class="form-box">
                 <el-row :gutter="20">
+                     <el-col :span="24">
+                        <div class="drug-purchase-type">
+                            <div class="purchase-image">
+                                <img src="@/assets/images/pharmacy.svg" alt="">
+                            </div>
+                            <div class="purchase-content">
+                                <div class="purchase-content__heading">Indicate number of packs</div>
+                                <div class="purchase-content__counter">
+                                    <div class="counter" @click="counter('add', selectedIndex, 'pack')"><span class="fe-plus"></span></div>
+                                    <div class="count">{{selectedProduct.pack}}</div>
+                                    <div class="counter" @click="counter('minus', selectedIndex, 'pack')"><span class="fe-minus"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </el-col>
                     <el-col :span="24"  v-if="selectedProduct.hasloose != false">
                         <div class="drug-purchase-type">
                             <div class="purchase-image">
@@ -177,20 +210,21 @@
                         </div>
                         <div class="clearfix"></div>
                     </el-col>
-                    <el-col :span="24">
+                     <el-col :span="24"  v-if="selectedProduct.hastabs != false">
                         <div class="drug-purchase-type">
                             <div class="purchase-image">
-                                <img src="@/assets/images/pharmacy.svg" alt="">
+                                <img src="@/assets/images/capsule.svg" alt="">
                             </div>
                             <div class="purchase-content">
-                                <div class="purchase-content__heading">Indicate number of packs</div>
+                                <div class="purchase-content__heading">Indicate number of tabs</div>
                                 <div class="purchase-content__counter">
-                                    <div class="counter" @click="counter('add', selectedIndex, 'pack')"><span class="fe-plus"></span></div>
-                                    <div class="count">{{selectedProduct.pack}}</div>
-                                    <div class="counter" @click="counter('minus', selectedIndex, 'pack')"><span class="fe-minus"></span></div>
+                                    <div class="counter" @click="counter('add', selectedIndex, 'tabs')"><span class="fe-plus"></span></div>
+                                    <div class="count">{{selectedProduct.tabs}}</div>
+                                     <div class="counter" @click="counter('minus', selectedIndex, 'tabs')"><span class="fe-minus"></span></div>
                                 </div>
                             </div>
                         </div>
+                        <div class="clearfix"></div>
                     </el-col>
                 </el-row>
             </div>
@@ -308,6 +342,7 @@
 
 <script>
     import BarcodeScanner from "simple-barcode-scanner";
+    import Moment from 'moment'
     import vueCustomScrollbar from 'vue-custom-scrollbar'
     import {mapGetters} from 'vuex';
     import { required, helpers, decimal } from 'vuelidate/lib/validators'
@@ -404,6 +439,28 @@
                 this.$http.get('product/list')
                 .then(res => {
                     let data =  res.body.result
+                     data.map(i => {
+                        if(i.expiry != null){
+                            let expiry = Moment(i.expiry).format('YYYY-MM-DD')
+                            let now = Moment().format('YYYY-MM-DD')
+                            
+                            let expired = Moment().isAfter(expiry)
+                            if(expired){
+                                i.expiration = 'expired'
+                            }else{
+                                 var exirationDifference = Moment(expiry).diff(now, 'days');
+                                if(exirationDifference <= 90){
+                                    i.expiration = 'expiring'
+                                }else{
+                                    i.expiration = 'ok'
+                                }
+                            }
+                        }else{
+                            i.expiry = '--'
+                        }
+                    
+                    })
+
                     this.products = data;
                     var newData = [];
                     var index = 0;
@@ -411,7 +468,6 @@
                         element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
                         if((i+1)% 6 == 0){
                             index  = index + 1;
-                            console.log(index)
                         }
                         if(newData[index] === undefined){
                             newData[index] = []
@@ -506,14 +562,16 @@
             ***************************************/
             addItem(item){
                 var orderProducts = [...this.orderProducts]
-
-                console.log(item)
                 if(!item.pack){
                     item.pack = 0
                 }
 
                 if(!item.loose){
                     item.loose = 0
+                }
+
+                if(!item.tabs){
+                    item.tabs = 0
                 }
                 var product = {
                     id: item.id,
@@ -522,16 +580,18 @@
                     price: item.price,
                     lprice: item.lprice,
                     lquantity: item.lquantity,
+                    tprice: item.tprice,
+                    tquantity: item.tquantity,
                     left: item.left,
                     quantity: item.quantity,
                     pack: item.pack,
                     loose: item.loose,
+                    tabs: item.tabs,
                     selected: false,
                     saleId: null,
-                    hasloose: item.hasloose
+                    hasloose: item.hasloose,
+                    hastabs: item.hastabs
                 }
-
-                console.log(product)
 
                 product.index = orderProducts.length
                 let existIndex = orderProducts.find(item => product.id === item.id)
@@ -543,7 +603,7 @@
                     }, 3000);
                     return;
                 }
-                orderProducts.push(product)
+                orderProducts.unshift(product)
                 this.orderProducts = orderProducts
                 this.openDrugModal(orderProducts.length - 1, product)
                 localStorage.setItem('orderProducts', JSON.stringify(orderProducts))
@@ -562,13 +622,36 @@
             counter(type, i, packaging){
                 let quantity = this.orderProducts[i][packaging];
                 if(type == 'add'){
+                    let packLeft = this.orderProducts[i].quantity;
+
+                    let looseAdded = (parseInt(this.orderProducts[i]['tabs']/this.orderProducts[i].tquantity) + Number(this.orderProducts[i]['loose']))
+                    let looseLeft =  Number(this.orderProducts[i].lquantity) - looseAdded
+                    
+                    if(looseLeft < 0){
+                        packLeft = Number(this.orderProducts[i].quantity - (looseAdded + Number(this.orderProducts[i]['pack'])))
+                    }
+
                     if(packaging == 'pack'){
-                        if(quantity < this.orderProducts[i].quantity){
+                        if(quantity < packLeft){
                             quantity++
                         }
                     }else if(packaging == 'loose'){
-                        if(quantity < (Number(this.orderProducts[i].lquantity) * Number(this.orderProducts[i].quantity))){
+                        if(quantity < (looseLeft * Number(this.orderProducts[i].quantity))){
                             quantity++
+                        }else{
+                           this.$message({
+                                message: 'You are out of stock is out of stock',
+                                type: 'error'
+                            }); 
+                        }
+                    }else if(packaging == 'tabs'){
+                        if(quantity < (Number(this.orderProducts[i].tquantity) * Number(this.orderProducts[i].lquantity) * Number(this.orderProducts[i].quantity))){
+                            quantity++
+                        }else{
+                            this.$message({
+                                message: 'You are out of stock is out of stock',
+                                type: 'error'
+                            });
                         }
                     }
                 }else if(type == 'minus'){
@@ -584,8 +667,17 @@
             updateProductTotalPrice(i){
                 let loose = this.orderProducts[i].loose
                 let pack = this.orderProducts[i].pack
+                let tabs  = this.orderProducts[i].tabs
+
+                let tprice = this.orderProducts[i].tprice
                 let lprice = this.orderProducts[i].lprice
                 let price = this.orderProducts[i].price
+
+                let tabsTotalPrice = 0;
+                if(tprice != '' && !isNaN(tprice)){
+                    console.log(tprice)
+                    tabsTotalPrice = parseInt(tabs) * parseFloat(tprice)
+                } 
 
                 let looseTotalPrice = 0;
                 if(lprice != '' && !isNaN(lprice)){
@@ -597,7 +689,7 @@
                     packTotalPrice = parseInt(pack) * parseFloat(price) 
                 }
 
-                let totalPrice = looseTotalPrice + packTotalPrice;
+                let totalPrice = tabsTotalPrice + looseTotalPrice + packTotalPrice;
                 this.orderProducts[i].totalprice = formatMoney(totalPrice, ',', '.')
             },
             updateTotalPrice(){
@@ -729,7 +821,6 @@
                 }
             },
             setRetrieved(data){
-                console.log(data)
                 this.id = data.id
                 this.cash = data.cashAmount
                 this.momo = data.momoAmount
@@ -822,8 +913,8 @@
     }
     .drug-purchase-type{
         .purchase-image{
-            width: 80px;
-            height: 80px;
+            width: 66px;
+            height: 66px;
             background-color: rgb(238, 238, 238);
             border-radius: 3px;
             padding: 10px;
@@ -845,7 +936,7 @@
                 color: rgb(183, 188, 192);
             }
             &__counter{
-                padding-top: 17px;
+                padding-top: 7px;
                 .count{
                     display: inline-block;
                     line-height: 45px;
@@ -875,6 +966,21 @@
                     }
                 }
             }
+        }
+    }
+     .expiration-box{
+        position: absolute;
+        left: 10%;
+        transform: translateX(50%);
+        border-radius: 3px;
+        padding: 2px 5px;
+        font-size: 14px;
+        color: white;
+        &.red{
+            background-color: rgb(238, 58, 58);
+        }
+        &.orange{
+            background-color: rgb(238, 154, 58);
         }
     }
 </style>

@@ -235,7 +235,7 @@
             }
             .product{
                 width: calc(20% - 46px);
-                min-height: 150px;
+                min-height: 135px;
                 height: auto;
                 border-radius: 4px;
                 padding: 10px;
@@ -243,6 +243,7 @@
                 margin-top: 3px;
                 float: left;
                 cursor: pointer;
+                position: relative;
                 // box-sizing: b;
                 &.disabled{
                     cursor: not-allowed;
@@ -260,7 +261,7 @@
 
                 .product-image{
                     width: 80%;
-                    height: 70px;
+                    height: 65px;
                     margin: 0 auto 30px auto;
                     .image  {
                         width: 100%;
