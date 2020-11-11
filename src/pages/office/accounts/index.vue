@@ -5,7 +5,7 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ...">
             </div>
-            <router-link :to="{name: 'office-accounts_add'}">
+            <router-link :to="{name: 'office-accounts_user^add'}">
                 <div class="btn btn-primary pull-right"><i class="fe-user"></i> New Account</div>
             </router-link>
         </div>
@@ -53,16 +53,21 @@
                         if(i.lastLogin){
                             i.login = moment(i.lastLogin).format('MMMM Do YYYY, H:mm')
                         }
+                        let role = ''
+                        if(i.userrole !== undefined && i.userrole !== null){
+                            role = i.userrole.name
+                        }
+                        i.role = role
                     })
 
                     this.accountData = data;
                 })
-                .catch(() => {
-
+                .catch(err => {
+                    console.log(err)
                 })
             },
             triggerEdit(id){
-                this.$router.push({name: 'office-accounts_edit', params: {id}})
+                this.$router.push({name: 'office-accounts_user^edit', params: {id}})
             },
             async triggerDelete(index, id){
                 if(this.accountData.length > 1){
@@ -74,7 +79,6 @@
                             }
                         })
                     )
-
                     if(this.accountData[index].role == 'tech'){
                         this.$notify({
                             title: 'Warning',
@@ -104,7 +108,7 @@
             deleteAccount(i, id){
                 this.$http.post('users/remove', {id})
                 .then(res => {
-                     this.accountData.splice(i, 1);
+                    this.accountData.splice(i, 1);
                     this.$notify({
                         title: 'Success',
                         message: "account deleted",
