@@ -2,7 +2,7 @@
     <div class="dashboard-wrapper mt-15">
         <div class="dashboard-top">
             <div class="pull-left">
-                <router-link :to="{name: 'office-accounts'}">
+                <router-link :to="{name: 'office-accounts_user'}">
                     <i class="fe-arrow-left back-icon pull-left"></i>
                 </router-link>
             </div>
@@ -21,7 +21,7 @@
                                 </div>
                             </el-col>
                             <el-col :span="24">
-                                <div class="input-label">Account ID</div>
+                                <div class="input-label">Username</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.username.$error }">
                                     <i class="fe-hexagon"></i>
                                     <input type="text" placeholder="" v-model.trim.lazy="$v.username.$model">
@@ -55,13 +55,13 @@
                             <el-col :span="10">
                                 <div class="input-label">Account role</div>
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.mail.$error }">
-                                    <i class="fe-mail"></i>
+                                    <!-- <i class="fe-mail"></i> -->
                                     <el-select v-model.trim.lazy="$v.role.$model" placeholder="Role here ...">
-                                        <el-option
-                                        v-for="item in ['admin', 'employee']"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        <el-option class="text-left"
+                                        v-for="item in roles"
+                                        :key="item.key"
+                                        :label="item.value"
+                                        :value="item.key">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -117,6 +117,7 @@
                 avatar: null,
                 
                 account:{},
+                roles: [],
                 
                 avatarImage: '',
                 submitting: false,
@@ -157,7 +158,7 @@
                     firstname: this.firstname,
                     lastname: this.lastname,
                     email: this.mail,
-                    role: this.role,
+                    roleId: this.role,
                     phone: this.phone,
                     id: this.$route.params.id
                 }
@@ -205,6 +206,10 @@
                     this.role = account.role
                     this.phone = account.phone
                     this.avatar = null;
+
+                    if(account.userrole !== undefined){
+                        this.role = account.userrole.id
+                    }
 
                     if(account.avatar != null){
                         this.avatarImage = this.bucket+account.avatar;
