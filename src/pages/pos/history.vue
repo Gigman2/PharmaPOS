@@ -59,11 +59,11 @@
                 <div class="checkout-title pull-left" >Purchase Detail</div>
 
                 <div class="pull-right mt-10 mr-10" v-if="Object.keys(transaction).length === 0 && transaction.constructor === Object">
-                    <el-button size="mini">
+                    <el-button size="mini" v-if="userPermission && userPermission[6] && userPermission[6].state">
                         <span>Refund</span>
                     </el-button>
 
-                    <el-button size="mini">
+                    <el-button size="mini" v-if="userPermission && userPermission[7] && userPermission[7].state">
                         <span>Return</span>
                     </el-button>
                 </div>
@@ -73,11 +73,11 @@
                         <span>Add Customer</span>
                     </el-button>
 
-                    <el-button size="mini" type="primary" @click="refundModal">
+                     <el-button size="mini" type="primary" @click="refundModal" v-if="userPermission && userPermission[6] && userPermission[6].state">
                         <span>Refund</span>
                     </el-button>
 
-                    <el-button size="mini" type="primary" @click="returnModal">
+                    <el-button size="mini" type="primary" @click="returnModal" v-if="userPermission && userPermission[7] && userPermission[7].state">
                         <span>Return</span>
                     </el-button>
                 </div>
@@ -178,6 +178,8 @@
 <script>
     import Moment from 'moment'
     import vueCustomScrollbar from 'vue-custom-scrollbar'
+    import {mapGetters} from 'vuex'
+    
     export default {
         components: {
             vueCustomScrollbar
@@ -203,6 +205,11 @@
                 customers: [],
                 customer: null,
             }
+        },
+        computed: {
+            ...mapGetters({
+                userPermission: 'PERMISSIONS'
+            }),
         },
         methods: {
             getCategories(){

@@ -5,7 +5,7 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ...">
             </div>
-            <router-link :to="{name: 'office-sales_customer^add'}">
+            <router-link :to="{name: 'office-sales_customer^add'}" v-if="userPermission && userPermission[14] && userPermission[14].state">
                 <el-button type="" icon="el-icon-plus" size="medium" class="pull-right" round>Add Customer</el-button>
             </router-link>
         </div>
@@ -24,8 +24,8 @@
                 </el-table-column>
                 <el-table-column  label="Actions">
                     <template>
-                        <el-button size="mini">Edit</el-button>
-                        <el-button size="mini" type="danger">Remove</el-button>
+                        <el-button size="mini" v-if="userPermission && userPermission[15] && userPermission[15].state">Edit</el-button>
+                        <el-button size="mini" type="danger" v-if="userPermission && userPermission[16] && userPermission[16].state">Remove</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -35,17 +35,19 @@
 
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar';
-    import lineChart from '@/components/chart/lineChart.vue'
+    import { mapGetters } from 'vuex';
 
     export default {
         components: {
-            vueCustomScrollbar,
-            lineChart
+            vueCustomScrollbar
         },
         data() {
             return {
                 tableData: [],
             }
+        },
+        computed: {
+            ...mapGetters({ userPermission: 'PERMISSIONS'})
         },
         methods: {
             getCustomers(){

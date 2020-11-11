@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard-wrapper">
-            <div class="card-wrapper">
+            <div class="card-wrapper" v-if="userPermission && userPermission[1] && userPermission[1].state">
                 <div class="card mini-card">
                     <div class="mini-card-row"> 
                         <div class="card-col">
@@ -114,6 +114,7 @@
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import lineChart from '@/components/chart/lineChart.vue'
     import formatMoney from '@/components/formatmoney.js'
+    import {mapGetters} from 'vuex'
     
     export default {
         components: {
@@ -134,6 +135,9 @@
                 },
                 graphLabel: []
             }
+        },
+        computed: {
+            ...mapGetters({userPermission: 'PERMISSIONS'})
         },
         methods: {
             getSales(){

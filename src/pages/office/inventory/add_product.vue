@@ -81,6 +81,13 @@
                                     <input type="text" placeholder="xxxxxxxxxxxxxxxxxxx" v-model.trim.lazy="$v.barcode.$model">
                                 </div>
                             </el-col>
+                             <el-col :span="11">
+                                <div class="input-label">Product Variant  <span class="pull-right">optional</span></div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.variant.$error }">
+                                    <i class="fe-sm"></i>
+                                    <input type="text" placeholder="200ml" v-model.trim.lazy="$v.variant.$model">
+                                </div>
+                            </el-col>
                         </el-row>
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
@@ -218,6 +225,7 @@
                 generics: "",
                 expiry:"",
                 price: "",
+                variant: "",
                 l_price: "",
                 t_price: "",
                 quantity: "",
@@ -282,6 +290,9 @@
             shelf: {
                 
             },
+            variant: {
+
+            }
         },
         computed: {
             ...mapGetters({
@@ -310,7 +321,12 @@
                    lprice: this.l_price,
                    lquantity: this.l_quantity,
                    hasloose: this.hasl,
-                   hastabs: this.hast
+                   hastabs: this.hast,
+                   variant: this.variant
+                }
+
+                if(this.variant != ''){
+                    this.name = this.name + ' '+ this.variant
                 }
                 
                 if(this.hasl){

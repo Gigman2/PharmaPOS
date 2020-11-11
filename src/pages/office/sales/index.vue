@@ -1,14 +1,14 @@
 <template>
     <div class="dashboard-wrapper mt-15">
         <div class="dashboard-top">
-            <div class="search-box pull-left"> 
+            <div class="search-box pull-left" v-if="userPermission && userPermission[3] && userPermission[3].state"> 
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ..." v-model="q" @keyup="search()">
             </div>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
-            <el-table :data="tableData" style="width: 100%">
+            <el-table :data="tableData" style="width: 100%" v-if="userPermission && userPermission[3] && userPermission[3].state">
                 <el-table-column prop="id" label="ID">
                     <template slot-scope="scope">
                          <div> TR-{{scope.row.id}}</div>
@@ -34,73 +34,91 @@
                     </template>
                 </el-table-column>
             </el-table>
+
+            <no-access v-else></no-access>
         </div>
 
         <el-drawer
             :visible.sync="drawer"
             :direction="'rtl'" size="35%">
             <div class="transaction-breakdown">
-                <table class="transaction-info mb-10">
-                    <tr>
-                        <td>
-                            <div>
-                                Status:  
-                                <el-link class="ml-20" type="primary" :underline="false" v-if="selectedTransaction.state == 'holding'">Holding</el-link>
-                                <el-link class="ml-20" type="success" :underline="false" v-else>Complete</el-link>
-                            </div>
-                        </td>
-                        <td>
-                            <div>Date: 
-                                <span> <el-link class="ml-20" type="info" :underline="false">{{selectedTransaction.createdAt}}</el-link></span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                           <div>
-                                Employee:  
-                                <el-link class="ml-20" type="info" :underline="false" >{{selectedTransaction.by}}</el-link>
-                            </div>
-                        </td>
-                        <td>
-                            <div>Customer: 
-                                <span> <el-link class="ml-20" type="info" :underline="false">{{(selectedTransaction.to)? selectedTransaction.to: '--'}}</el-link></span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-               <table class="transaction-table" cellspacing="0" cellpadding="0">
-                  <thead>
-                       <tr>
-                            <th>Name</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                        </tr>
-                  </thead>
-                  <tbody>
-                        <tr v-for="(item, i) in selectedTransaction.products" :key="i">
-                            <td>{{item.product.name}}</td>
-                            <td>{{item.quantity}}</td>
-                            <td>{{item.unit}}</td>
-                        </tr>
-                  </tbody>
-               </table>
-                <div class="leftright-box">
-                    <div class="left-box"><strong>Total</strong></div>
-                    <div class="right-box"><strong>Ghc {{selectedTransaction.grossTotal}}</strong></div>
+                <h2>Invoice No. {{selectedTransaction.id}}</h2>
+                <div class="drawer-double mt-20">
+                    <div class="drawer-item">Issured by <strong>{{selectedTransaction.by}}</strong></div>
+                    <div class="drawer-item light">{{selectedTransaction.date}}</div>
                 </div>
-                <!-- <div class="leftright-box">
-                    <div class="left-box">Tax(15%)</div>
-                    <div class="right-box">Ghc 100.00</div>
-                </div> -->
-                <!-- <div class="leftright-box">
-                    <div class="left-box">Discount(20%)</div>
-                    <div class="right-box">Ghc 100.00</div>
-                </div> -->
-                <div class="leftright-box">
-                    <div class="left-box">Cash: <strong>Ghc {{selectedTransaction.cashAmount}}</strong></div>
-                    <div class="right-box">Mobile Money:  <strong>Ghc {{selectedTransaction.momoAmount}}</strong></div>
+                <div class="drawer-double mt-20">
+                    <div class="drawer-item">Bought by <strong>{{(!selectedTransaction.to) ? 'Guest' : selectedTransaction.to}}</strong></div>
+                    <div class="drawer-item">
+                        <el-button size="mini" type="primary" v-if="selectedTransaction.state == 'holding'">On Hold</el-button>
+                        <el-button size="mini" type="info" v-else-if="selectedTransaction.state == 'returned'">Returned</el-button>
+                        <el-button size="mini" type="primary" v-else-if="selectedTransaction.state == 'refunded'">Refunded</el-button>
+                        <el-button size="mini" type="primary" v-else>complete</el-button>
+                    </div>
                 </div>
+
+                <div class="drawer-inner">
+                    <div class="checkout-table">
+                        <table class="transaction-table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                        <th>Name</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                    </tr>
+                            </thead>
+                            <tbody>
+                                    <tr v-for="(item, i) in selectedTransaction.products" :key="i">
+                                        <td>{{item.product.name}}</td>
+                                        <td>{{item.quantity}}</td>
+                                        <td>{{item.unit}}</td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="drawer-double mt-10 pl-15 pr-15">
+                        <div class="drawer-item"><strong>Total</strong></div>
+                        <div class="drawer-item"><strong>{{selectedTransaction.grossTotal}}</strong></div>
+                    </div>
+                </div>
+
+                <div class="drawer-double mt-20">
+                    <div class="drawer-item">Tax (inclusive)</div>
+                    <div class="drawer-item">Ghc {{selectedTransaction.tax}}</div>
+                </div>
+
+                <div class="drawer-double mt-20">
+                    <div class="drawer-item">Discount {{selectedTransaction.discount}}</div>
+                    <div class="drawer-item">{{(selectedTransaction.discount / 100) * selectedTransaction.formatTotal}}</div>
+                </div>
+
+                <div class="drawer-double mt-20" v-if="parseFloat(selectedTransaction.cashAmount) == selectedTransaction.formatTotal">
+                    <div class="drawer-item"><strong>Paid all by cash</strong></div>
+                </div>
+
+                <div class="drawer-double mt-20" v-else-if="parseFloat(selectedTransaction.momoAmount) == selectedTransaction.formatTotal">
+                    <div class="drawer-item"><strong>Paid all by momo</strong></div>
+                </div>
+
+                <div class="drawer-double mt-20" v-else>
+                    <div class="drawer-item"><strong>Paid {{selectedTransaction.cashAmount}} by cash</strong></div>
+                    <div class="drawer-item"><strong>Paid {{selectedTransaction.momoAmount}} by momo</strong></div>
+                </div>
+
+                 <div class="drawer-double mt-10" v-if="selectedTransaction.changeGiven != 0">
+                    <div class="drawer-item"><strong>With a change of Ghc {{selectedTransaction.changeGiven}}</strong></div>
+                </div>
+
+
+                <div class="drawer-double mt-50">
+                    <div class="drawer-item">
+                        <el-button size="small" v-if="userPermission && userPermission[4] && userPermission[4].state">Edit</el-button>
+                    </div>
+                    <div class="drawer-item"> 
+                        <el-button size="small" type="danger" v-if="userPermission && userPermission[5] && userPermission[5].state">Delete</el-button>
+                    </div>
+                </div>
+
             </div>
         </el-drawer>
     </div>
@@ -110,6 +128,7 @@
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import Moment from 'moment'
     import formatMoney from '@/components/formatmoney.js'
+    import { mapGetters } from 'vuex';
 
     export default {
         components: {
@@ -123,6 +142,9 @@
                 drawer: false,
                 selectedTransaction: {}
             }
+        },
+        computed: {
+            ...mapGetters({userPermission: 'PERMISSIONS'})
         },
         methods:{
             setData(data){
@@ -193,6 +215,7 @@
         }
     }
 
+   
     .transaction-info{
         width: 100%;
         tr > td{
@@ -211,8 +234,32 @@
     }
 
     .transaction-breakdown{
-        .leftright-box:first-child{
-            border-top: none;;
+        padding: 0 30px;
+        h2{
+            color: rgb(85, 95, 105);
+            font-size: 25px;
+        }
+
+        .drawer-double{
+            display: flex;
+            justify-content: space-between;
+            // margin-top: 30px;
+            .drawer-item{
+                font-size: 17px;
+                color: rgb(85, 95, 105);
+            }
+            .light{
+                color: silver;
+            }
+        }
+        .drawer-inner{
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e6e6e6;
+            border-radius: 2px;
+            .drawer-double{
+                margin-top: 10px;
+            }
         }
     }
 </style>

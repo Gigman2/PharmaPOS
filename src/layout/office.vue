@@ -4,7 +4,7 @@
             <div class="brand">SluxiPOS</div>
             <div class="actions">
                 <ul class="action-menu">
-                    <li class="mt-10" @click="sell"> <i class="fe-dollar-sign"></i> Sell</li>
+                    <li class="mt-10" @click="sell" v-if="userPermission && userPermission[2] && userPermission[2].state"> <i class="fe-dollar-sign"></i> Sell</li>
                     <li class="mt-10" @click="lock"> <i class="fe-power"></i> Logout</li>
                     <li class="mt-10">
                         <div class="user-account">
@@ -50,7 +50,7 @@
                             </div>
                         </router-link>
                     </li>
-                    <li>
+                    <li v-if="userPermission && userPermission[35]  && userPermission[35].state">
                        <router-link :to="{name: 'office-report_sales'}">
                             <div class="sidebar-item" :class="{'active': baseRoute() == 'office-report'}">
                                 <div class="sidebar-icon">
@@ -100,7 +100,7 @@
             }
         },
         computed: {
-            ...mapGetters({user: 'USER', fullname: 'FULLNAME', avatar:'AVATAR'})
+            ...mapGetters({user: 'USER', fullname: 'FULLNAME', avatar:'AVATAR', userPermission: 'PERMISSIONS'})
         },
         methods: {
             lock(){

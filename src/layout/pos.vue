@@ -6,9 +6,9 @@
             <div class="actions">
                 <ul class="action-menu">
                     <li class="" v-if="$route.name == 'pos-home'"> <router-link :to="{name: 'pos-history'}"><i class="fe-archive"></i>History</router-link></li>
-                     <li class="" v-if="$route.name == 'pos-history'"> <router-link :to="{name: 'pos-home'}"><i class="fe-monitor"></i>Sell</router-link></li>
+                     <li class="" v-if="$route.name == 'pos-history' && userPermission && userPermission[2] && userPermission[2].state" > <router-link :to="{name: 'pos-home'}"><i class="fe-monitor"></i>Sell</router-link></li>
                     <li @click="lock"> <i class="fe-lock"></i> Lock</li>
-                    <li> <router-link :to="{name: 'office-dashboard'}"><i class="fe-trending-up"></i> Office</router-link></li>
+                    <li v-if="userPermission && userPermission[38] && userPermission[38].state"> <router-link :to="{name: 'office-dashboard'}"><i class="fe-trending-up"></i> Office</router-link></li>
                     <li>
                         <div class="user-account">
                             <div class="avatar">
@@ -40,7 +40,7 @@
             }
         },
         computed: {
-            ...mapGetters({user: 'USER', fullname: 'FULLNAME', avatar:'AVATAR'})
+            ...mapGetters({user: 'USER', fullname: 'FULLNAME', avatar:'AVATAR', userPermission: 'PERMISSIONS'})
         },
         methods: {
             lock(){

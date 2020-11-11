@@ -1,177 +1,181 @@
 <template>
     <div class="main-wrapper">
-        <div class="product-box">
-            <div class="inner-box">
-                <div class="form-box">
-                    <div class="input-box">
-                        <i class="fe-search"></i>
-                        <input type="text" placeholder="Search ..." v-model="q" @keyup="search()">
+        <div v-if="userPermission && userPermission[2] &&userPermission[2].state">
+            <div class="product-box">
+                <div class="inner-box">
+                    <div class="form-box">
+                        <div class="input-box">
+                            <i class="fe-search"></i>
+                            <input type="text" placeholder="Search ..." v-model="q" @keyup="search()">
+                        </div>
+                    </div>
+                    <div class="filter-box">
+                        <!-- <i class="fe-filter"></i> -->
+                        <ul class="filters">
+                            <li class="shadow-1 active" @click="filerByCategory('all', $event)">
+                                <span>All</span>
+                            </li>
+                            <li class="shadow-1" v-for="(item, i) in categories" :key="i" 
+                            @click="filerByCategory(item, $event)">
+                                <span>{{item.name}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="products-box">
+                        <div class="products-title">Products</div>
+                        <vue-custom-scrollbar class="scroll-area products" :settings="settings" v-loading="loading">
+                            <div class="product-row" v-for="(row, index) in products" :key="index">
+                                <el-tooltip class="item" effect="dark" placement="bottom-end"
+                                    v-for="(item, i) in row" :key="i">
+                                    <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
+                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item)">
+                                        <div class="expiration-box"  
+                                                :class="{'red': item.expiration == 'expired',
+                                                'orange': item.expiration == 'expiring'}"
+                                                
+                                                v-if="item.expiration">{{item.expiration}}
+                                        </div>
+                                        <div class="product-image">
+                                            <div class="image">
+                                                <img :src="bucket+item.image" alt="" v-if="item.image">
+                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                            </div>
+                                        </div>
+                                        <div class="product-title">{{item.name}}</div>
+                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
+                                    </div>
+                                    <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
+                                        <div class="expiration-box"  
+                                                :class="{'red': item.expiration == 'expired',
+                                                'orange': item.expiration == 'expiring'}"
+                                                
+                                                v-if="item.expiration">{{item.expiration}}
+                                        </div>
+                                        <div class="product-image">
+                                            <div class="image">
+                                                <img :src="bucket+item.image" alt="" v-if="item.image">
+                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                            </div>
+                                        </div>
+                                        <div class="product-title">{{item.name}}</div>
+                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
+                                    </div>
+                                    <div class="product shadow-1 shortage"  @click="addItem(item)" v-else>
+                                        <div class="expiration-box"  
+                                                :class="{'red': item.expiration == 'expired',
+                                                'orange': item.expiration == 'expiring'}"
+                                                
+                                                v-if="item.expiration">{{item.expiration}}
+                                        </div>
+                                        <div class="product-image">
+                                            <div class="image">
+                                                <img :src="bucket+item.image" alt="" v-if="item.image">
+                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                            </div>
+                                        </div>
+                                        <div class="product-title">{{item.name}}</div>
+                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
+                                    </div>
+                                </el-tooltip>
+                            </div>
+                        </vue-custom-scrollbar>
                     </div>
                 </div>
-                <div class="filter-box">
-                    <!-- <i class="fe-filter"></i> -->
-                    <ul class="filters">
-                        <li class="shadow-1 active" @click="filerByCategory('all', $event)">
-                             <span>All</span>
-                        </li>
-                        <li class="shadow-1" v-for="(item, i) in categories" :key="i" 
-                           @click="filerByCategory(item, $event)">
-                            <span>{{item.name}}</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="clearfix"></div>
+            </div> 
+            <div class="checkout-box">
+            <div class="checkout-invoice">
+                    <div class="checkout-title">
+                        <div class="pull-left checkout-title--title">Purchase Detail</div>
+                        <div class="pull-right checkout-title--actions">
+                            <el-tooltip class="item" effect="dark" placement="bottom-end">
+                                <div slot="content">Puts the transaction on hold</div>
+                                <span @click="checkout('hold')">Hold</span>
+                            </el-tooltip>
 
-                <div class="products-box">
-                    <div class="products-title">Products</div>
-                    <vue-custom-scrollbar class="scroll-area products" :settings="settings" v-loading="loading">
-                        <div class="product-row" v-for="(row, index) in products" :key="index">
-                            <el-tooltip class="item" effect="dark" placement="bottom-end"
-                                v-for="(item, i) in row" :key="i">
-                                <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item)">
-                                    <div class="expiration-box"  
-                                            :class="{'red': item.expiration == 'expired',
-                                            'orange': item.expiration == 'expiring'}"
-                                            
-                                            v-if="item.expiration">{{item.expiration}}
-                                    </div>
-                                    <div class="product-image">
-                                        <div class="image">
-                                            <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
-                                        </div>
-                                    </div>
-                                    <div class="product-title">{{item.name}}</div>
-                                    <div class="product-price">Ghc {{item.displayPrice}}</div>
-                                </div>
-                                <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
-                                    <div class="expiration-box"  
-                                            :class="{'red': item.expiration == 'expired',
-                                            'orange': item.expiration == 'expiring'}"
-                                            
-                                            v-if="item.expiration">{{item.expiration}}
-                                    </div>
-                                    <div class="product-image">
-                                        <div class="image">
-                                            <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
-                                        </div>
-                                    </div>
-                                    <div class="product-title">{{item.name}}</div>
-                                    <div class="product-price">Ghc {{item.displayPrice}}</div>
-                                </div>
-                                <div class="product shadow-1 shortage"  @click="addItem(item)" v-else>
-                                    <div class="expiration-box"  
-                                            :class="{'red': item.expiration == 'expired',
-                                            'orange': item.expiration == 'expiring'}"
-                                            
-                                            v-if="item.expiration">{{item.expiration}}
-                                    </div>
-                                    <div class="product-image">
-                                        <div class="image">
-                                            <img :src="bucket+item.image" alt="" v-if="item.image">
-                                            <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
-                                        </div>
-                                    </div>
-                                    <div class="product-title">{{item.name}}</div>
-                                    <div class="product-price">Ghc {{item.displayPrice}}</div>
+                            <el-tooltip class="item" effect="dark" placement="bottom-end"  v-if="customer === null">
+                                <div slot="content">Attach a customer to transaction</div>
+                                <div class="d-inline">
+                                    <i class="fe-user-plus" @click="showCustomerDialog = true"></i>
                                 </div>
                             </el-tooltip>
+
+                            <el-tooltip class="item" effect="dark" placement="bottom-end"  v-else>
+                                <div slot="content">remove attach customer from transaction</div>
+
+                            <div class="d-inline">
+                                    <i class="fe-user-minus" @click="customer = null"></i>
+                            </div>
+                            </el-tooltip>
+
+                            <!-- <el-tooltip class="item" effect="dark" placement="bottom-end">
+                                <div slot="content">apply discount</div>
+
+                                <div class="d-inline">
+                                    <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
+                                <span  v-else>{{discount}} <em class="fe-percent"></em></span>
+                                </div>
+                            </el-tooltip> -->
+
+                            
+                            <el-tooltip class="item" effect="dark" placement="bottom-end">
+                                <div slot="content">clear transaction</div>
+
+                            <div class="d-inline">
+                                    <i class="fe-slash " @click="resetOrder"></i>
+                            </div>
+                            </el-tooltip>
                         </div>
-                    </vue-custom-scrollbar>
-                </div>
-            </div>
-        </div> 
-        <div class="checkout-box">
-           <div class="checkout-invoice">
-                <div class="checkout-title">
-                    <div class="pull-left checkout-title--title">Purchase Detail</div>
-                    <div class="pull-right checkout-title--actions">
-                        <el-tooltip class="item" effect="dark" placement="bottom-end">
-                            <div slot="content">Puts the transaction on hold</div>
-                            <span @click="checkout('hold')">Hold</span>
-                        </el-tooltip>
-
-                        <el-tooltip class="item" effect="dark" placement="bottom-end"  v-if="customer === null">
-                            <div slot="content">Attach a customer to transaction</div>
-                            <div class="d-inline">
-                                <i class="fe-user-plus" @click="showCustomerDialog = true"></i>
-                            </div>
-                        </el-tooltip>
-
-                        <el-tooltip class="item" effect="dark" placement="bottom-end"  v-else>
-                            <div slot="content">remove attach customer from transaction</div>
-
-                           <div class="d-inline">
-                                <i class="fe-user-minus" @click="customer = null"></i>
-                           </div>
-                        </el-tooltip>
-
-                        <!-- <el-tooltip class="item" effect="dark" placement="bottom-end">
-                            <div slot="content">apply discount</div>
-
-                            <div class="d-inline">
-                                <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
-                            <span  v-else>{{discount}} <em class="fe-percent"></em></span>
-                            </div>
-                        </el-tooltip> -->
-
-                        
-                        <el-tooltip class="item" effect="dark" placement="bottom-end">
-                            <div slot="content">clear transaction</div>
-
-                           <div class="d-inline">
-                                <i class="fe-slash " @click="resetOrder"></i>
-                           </div>
-                        </el-tooltip>
                     </div>
-                </div>
-                <div class="clearfix"></div>
-                <vue-custom-scrollbar class="checkout-table-wrapper">
-                    <table class="checkout-table" cellspacing="0" cellpadding="0">
-                        <thead class="checkout-headings">
-                            <tr>
-                                <th width="30px"></th>
-                                <th>Name</th>
-                                <th>QTY</th>
-                                <th width="60px">Price</th>
-                            </tr>
-                        </thead>
+                    <div class="clearfix"></div>
+                    <vue-custom-scrollbar class="checkout-table-wrapper">
+                        <table class="checkout-table" cellspacing="0" cellpadding="0">
+                            <thead class="checkout-headings">
+                                <tr>
+                                    <th width="30px"></th>
+                                    <th>Name</th>
+                                    <th>QTY</th>
+                                    <th width="60px">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="checkout-item-row" :class="{'selected': item.selected}"
+                                    v-for="(item, e) in orderProducts" :key="e">
+                                    <td><i class="fe-trash-2 delete" @click="deleteItem(e)"></i></td>
+                                    <td width="45%">{{item.name}}</td>
+                                    <td>
+                                        <span class="pointer" @click="openDrugModal(e, item)">
+                                            {{(item.pack == 0 && item.loose == 0) ? '0' : ''}}
+
+                                            {{(item.pack > 0) ? item.pack+'pck' : ''}}
+
+                                            {{(item.loose > 0) ? item.loose+'pcs' : ''}}
+                                        </span>
+                                    </td>
+                                    <td>{{item.totalprice}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </vue-custom-scrollbar>
+                    <table class="checkout-total">
                         <tbody>
-                            <tr class="checkout-item-row" :class="{'selected': item.selected}"
-                                v-for="(item, e) in orderProducts" :key="e">
-                                <td><i class="fe-trash-2 delete" @click="deleteItem(e)"></i></td>
-                                <td width="45%">{{item.name}}</td>
-                                <td>
-                                    <span class="pointer" @click="openDrugModal(e, item)">
-                                        {{(item.pack == 0 && item.loose == 0) ? '0' : ''}}
-
-                                        {{(item.pack > 0) ? item.pack+'pck' : ''}}
-
-                                        {{(item.loose > 0) ? item.loose+'pcs' : ''}}
-                                    </span>
-                                </td>
-                                <td>{{item.totalprice}}</td>
+                            <tr>
+                                <th align="left">Total </th>
+                                <td width="100px" align="right">Ghc{{grossTotal}}</td>
                             </tr>
                         </tbody>
                     </table>
-                </vue-custom-scrollbar>
-                <table class="checkout-total">
-                    <tbody>
-                        <tr>
-                            <th align="left">Total </th>
-                            <td width="100px" align="right">Ghc{{grossTotal}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-           </div>
-           <div class="checkout-pay-section">
-                <div class="checkout-payout disabled" v-if="Number(grossTotal) < 1" ><span>Pay</span> (Ghc {{grossTotal}})</div>
-                <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{grossTotal}})</div>
-                <div class="checkout-reset" @click="resetOrder">Reset</div>
-           </div>
+            </div>
+            <div class="checkout-pay-section">
+                    <div class="checkout-payout disabled" v-if="Number(grossTotal) < 1" ><span>Pay</span> (Ghc {{grossTotal}})</div>
+                    <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{grossTotal}})</div>
+                    <div class="checkout-reset" @click="resetOrder">Reset</div>
+            </div>
+            </div>
         </div>
+
+        <no-access v-else></no-access>
 
         <el-dialog
             :title="selectedProduct.name"
@@ -412,7 +416,8 @@
             ...mapGetters({
                 bucket: 'GET_BUCKET',
                 barcode_online: 'BARCODE_ONLINE_STATE',  
-                scanner: 'GET_BARCODE'
+                scanner: 'GET_BARCODE',
+                userPermission: 'PERMISSIONS',
             }),
         },
         mounted() {

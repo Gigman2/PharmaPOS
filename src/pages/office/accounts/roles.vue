@@ -5,18 +5,27 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ...">
             </div>
-            <router-link :to="{name: 'office-accounts_add'}">
-                <div class="btn btn-primary pull-right"><i class="fe-user"></i> New Account</div>
+            <router-link :to="{name: 'office-accounts_role^add'}">
+                <div class="btn btn-primary pull-right"><i class="fe-user"></i> New Role</div>
             </router-link>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
-            <el-table :data="obj" style="width: 100%">
-                <el-table-column prop="name" label="Account Role"></el-table-column>
-                <el-table-column prop="permissions" label="Permissions"> </el-table-column>
-                <el-table-column>
+            <el-table :data="roles" style="width: 100%">
+                <el-table-column prop="name" label="Account Role" width="200"></el-table-column>
+                <el-table-column label="Assigned Accounts" :resizable="true"> 
                     <template slot-scope="scope">
-                            <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
+                        <div>
+                            <el-tag type="info" size="small"
+                                v-for="(a, i) in scope.row.accounts" :key="i"
+                                class="mr-5 mt-5">{{a.firstname+" "+a.lastname}}
+                            </el-tag>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column width="200">
+                    <template slot-scope="scope"  v-if="scope.row.deletable == false">
+                            <el-button size="mini" @click="triggerEdit(scope.row)">Edit</el-button>
                             <el-button size="mini" type="danger" @click="triggerDelete(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
                 </el-table-column>
@@ -32,91 +41,59 @@
     export default {
         data() {
             return {
-                obj: [
-                    {
-                        name: 'Admin',
-                        permissions: 'all'
-                    },
-                    {
-                        name: 'Employee',
-                        permissions: 'sales'
-                    }
-                ]
+                roles: [],
             }
         },
         components: {
             ...mapGetters({user: 'USER', roler: 'ROLE'})
         },
         methods: {
-            getAccounts(){
-                this.$http.get('users/list')
+            getRole(){
+                this.$http.get('users/roles')
                 .then(res => {
                     let data =  res.body.result
                     data.map(i => {
-                        i.name = i.firstname+' '+i.lastname
-                        i.login = 'never'
-                        if(i.lastLogin){
-                            i.login = moment(i.lastLogin).format('MMMM Do YYYY, H:mm')
-                        }
+                        i.name = i.name[0].toUpperCase() +  i.name.slice(1)
                     })
-
-                    this.accountData = data;
+                    this.roles = data
                 })
                 .catch(() => {
 
                 })
             },
-            triggerEdit(id){
-                this.$router.push({name: 'office-accounts_edit', params: {id}})
+            triggerEdit(i){
+                let selectedRole = i
+                localStorage.setItem('selectedRole', JSON.stringify(selectedRole))
+                this.$router.push({name: 'office-accounts_role^add'})
             },
-            async triggerDelete(index, id){
-                if(this.accountData.length > 1){
-                    let totalAdmins = 0;
-                    await Promise.all(
-                        this.accountData.map(item => {
-                            if(item.role == 'admin'){
-                                totalAdmins = totalAdmins + 1;
-                            }
-                        })
-                    )
-
-                    if(totalAdmins == 1 && this.accountData[index].role == 'admin'){
-                        this.$notify({
-                            title: 'Warning',
-                            message: "Can't delete last admin account",
-                            type: 'warning'
-                        });
-                    }else{
-                        this.deleteAccount(index, id)
-                    }
-                }else{
-                    this.$notify({
-                        title: 'Warning',
-                        message: "Can't delete ony account",
-                        type: 'warning'
-                    });
-                }
+            triggerDelete(i, id){
+                this.$confirm('This will permanently delete the role. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+                })
+                .then(() => {
+                    this.delete(i, id)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: 'Delete canceled'
+                    });          
+                });
             },
-            deleteAccount(i, id){
+            delete(){
                 this.$http.post('users/remove', {id})
                 .then(res => {
-                     this.accountData.splice(i, 1);
-                    this.$notify({
-                        title: 'Success',
-                        message: "account deleted",
-                        type: 'success'
-                    });
+
                 })
                 .catch(err => {
-                    this.$notify({
-                        title: 'Failed',
-                        message: "Unable to delete account",
-                        type: 'error'
-                    });
+                    
                 })
             }
         },
         created() {
+            this.getRole()
+            localStorage.setItem('selectedRole', null)
         },
     }
 </script>

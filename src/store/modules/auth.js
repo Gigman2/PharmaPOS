@@ -7,6 +7,7 @@ const state = {
     user : JSON.parse(localStorage.getItem("user")) || {},
     fullname: "",
     avatar: "",
+    permission: null
 }
 
 const mutations = {
@@ -18,6 +19,9 @@ const mutations = {
       localStorage.clear();
       state.token = "";
       state.user = {};
+    },
+    SET_PERMISSION: (state) => {
+      state.permission = JSON.parse(localStorage.getItem("account_permissions"))
     }
 }
 
@@ -58,6 +62,11 @@ const getters = {
   ROLE: (state) => {
     if(state.user != null){
       return state.user.role
+    }
+  },
+  PERMISSIONS: () => {
+    if(state.permission != null){
+      return state.permission
     }
   }
 }

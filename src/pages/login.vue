@@ -79,6 +79,50 @@
                     this.errorMessage = err.body.message
                     this.submitting =  false;
                 })
+            },
+            getPermission(){
+                this.$http.get('users/user-permission')
+                .then(async res => {
+                    let result = res.body.result,
+                    permissions = {}
+                    await Promise.all(result.map(item => {
+                        delete item.createdAt
+                        delete item.updatedAt
+                        delete item.roleId
+                        delete item.userId
+                        if(item.state == '1'){
+                            item.state = true
+                        }else{
+                            item.state = false
+                        }
+                        permissions[item.resourceId] = item
+                    }))
+
+                    localStorage.setItem('account_permissions', JSON.stringify(permissions))
+                    this.$store.commit('SET_PERMISSION')
+                    console.log(permissions[38])
+
+                    this.$router.push({name: 'pos-home'}) 
+
+                })
+            },
+            getBusiness(){
+                this.$http.get('setup/business-info')
+                .then(res => {
+                    let data =  res.body.result
+                    if(data != null){
+                        localStorage.setItem('business', JSON.stringify(data))
+                        this.$store.commit('SET_BUSINESS')
+                        this.setData(data)
+                    }
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Failed',
+                        message: "Unable to load data",
+                        type: 'error'
+                    });
+                })
             }
         },
         created() {

@@ -4,6 +4,7 @@ import ElementUI from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 import VueResource from 'vue-resource';
 import VuePageTransition from 'vue-page-transition'
+import noAccess from './components/noAccess.vue'
 import Vuelidate from 'vuelidate'
 
 import './element-variables.scss'
@@ -11,6 +12,7 @@ import './spacing.scss'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import permission from './permissions'
 
 Vue.config.productionTip = false
 
@@ -24,8 +26,6 @@ if(localStorage.getItem('access_token') != ''){
   isLoggedIn = store.getters['ISLOGGED'] 
 }
 
-console.log(process.env.SERVER)
-
 Vue.http.options.root = 'http://localhost:4001/api/';
 Vue.http.interceptors.push((request, next) => {
   request.headers.set('Authorization', store.getters['TOKEN'])
@@ -37,13 +37,10 @@ Vue.http.interceptors.push((request, next) => {
   })
 })
 
-// var pages = {
-//   office: 'office-',
-//   pos: 'pos-'
-// }
-
 router.beforeEach((to, from, next) => {
   isLoggedIn = store.getters['ISLOGGED'] 
+  var userPermission = store.getters['PERMISSIONS']
+
   var role = store.getters['ROLE'] 
 
   if(to.name === null){
@@ -53,6 +50,8 @@ router.beforeEach((to, from, next) => {
   if(to.name != 'login'){
     if(!isLoggedIn){
       return next({name: 'login'})
+    }else{
+      permission.check()
     }
   }
 
@@ -63,8 +62,11 @@ router.beforeEach((to, from, next) => {
       return  next({name: 'office-dashboard'})
     }
   }
+
   next(vm => vm.setData(err, post))
 })
+
+Vue.component('no-access', noAccess)
 
 new Vue({
   router,
