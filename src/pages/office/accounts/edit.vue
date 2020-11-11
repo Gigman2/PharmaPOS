@@ -215,10 +215,30 @@
                 let file = e.target.files[0]
                 this.avatarImage = URL.createObjectURL(file);
                 this.avatar = file
-            }
+            },
+            getRole(){
+                this.$http.get('users/roles')
+                .then(res => {
+                    let roles = [];
+                    let data =  res.body.result
+
+                    data.forEach(item => {
+                        let u = {
+                            key: item.id,
+                            value: item.name[0].toUpperCase() +  item.name.slice(1)
+                        }
+                        roles.push(u)
+                    })
+                    this.roles = roles
+                })
+                .catch(() => {
+
+                })
+            },
         },
         created() {
             this.getAccount()
+            this.getRole()
         },
     }
 </script>
