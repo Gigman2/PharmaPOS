@@ -74,7 +74,7 @@
                 })
                 .then(() => {
                     this.delete(i, id)
-                }).catch(() => {
+                }).catch(() => { 
                     this.$message({
                         type: 'info',
                         message: 'Delete canceled'
