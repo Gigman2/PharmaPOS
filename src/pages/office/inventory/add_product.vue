@@ -81,7 +81,7 @@
                                     <input type="text" placeholder="xxxxxxxxxxxxxxxxxxx" v-model.trim.lazy="$v.barcode.$model">
                                 </div>
                             </el-col>
-                             <el-col :span="11">
+                            <el-col :span="11">
                                 <div class="input-label">Product Variant  <span class="pull-right">optional</span></div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.variant.$error }">
                                     <i class="fe-sm"></i>
@@ -317,7 +317,6 @@
                    quantity: this.quantity,
                    restock: this.restock,
                    shelf: this.shelf,
-                   expiry: this.expiry,
                    lprice: this.l_price,
                    lquantity: this.l_quantity,
                    hasloose: this.hasl,
@@ -431,6 +430,7 @@
                 this.tquantity = ''
                 this.hasloose = false
                 this.hastabs = false
+                this.variant = ''
 
                 this.$nextTick(() => { this.$v.$reset() })
             },

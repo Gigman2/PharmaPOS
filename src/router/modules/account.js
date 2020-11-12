@@ -56,7 +56,7 @@ export default {
     },
     {
       path: ':id',
-      name: 'office-accounts_edit',
+      name: 'office-accounts_user^edit',
       component: Office_Account_Edit,
       meta: {
         title: "Edit Account" 

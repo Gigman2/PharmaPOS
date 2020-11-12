@@ -2,7 +2,7 @@
      <div class="dashboard-wrapper mt-15">
         <div class="dashboard-top">
             <div class="pull-left">
-                <router-link :to="{name: 'office-accounts_role'}">
+                <router-link :to="{name: 'office-accounts-role'}">
                     <i class="fe-arrow-left back-icon pull-left"></i>
                 </router-link>
             </div>

@@ -76,6 +76,13 @@
                                     <input type="text" placeholder="xxxxxxxxxxxxxxxxxxx" v-model.trim.lazy="$v.barcode.$model">
                                 </div>
                             </el-col>
+                            <el-col :span="11">
+                                <div class="input-label">Product Variant  <span class="pull-right">optional</span></div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.variant.$error }">
+                                    <i class="fe-sm"></i>
+                                    <input type="text" placeholder="200ml" v-model.trim.lazy="$v.variant.$model">
+                                </div>
+                            </el-col>
                         </el-row>
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
@@ -156,6 +163,7 @@
                 generics: "",
                 expiry:"",
                 price: "",
+                variant: "",
                 l_price: "",
                 quantity: "",
                 l_quantity: "",
@@ -189,23 +197,19 @@
 
             },
             price: {
-
             },
             l_price: {
-
             },
             quantity: {
-
             },
             l_quantity: {
-
             },
             restock: {
-
             },
             shelf: {
-                
             },
+            variant: {
+            }
         },
         computed: {
             ...mapGetters({bucket: 'GET_BUCKET'})
@@ -317,6 +321,7 @@
                     this.l_price = data.lprice
                     this.l_quantity = data.lquantity
                     this.restock = data.restock
+                    this.variant = data.variant
 
                     if(data.image != null){
                         this.itemImage = this.bucket+data.image;
