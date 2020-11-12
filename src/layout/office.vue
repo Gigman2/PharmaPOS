@@ -1,7 +1,7 @@
 <template>
     <div class="office">
         <div class="topbar shadow-1">
-            <div class="brand">SluxiPOS</div>
+            <div class="brand">SluxiPOS-Pharma</div>
             <div class="actions">
                 <ul class="action-menu">
                     <li class="mt-10" @click="lock"> <i class="fe-power"></i> Logout</li>
@@ -163,6 +163,7 @@
                 .user-account{
                     margin-right: 30px;
                     margin-top: -5px;
+                    padding: 8px;
                     .avatar{
                         width: 40px;
                         height: 40px;

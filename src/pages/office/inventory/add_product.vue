@@ -91,18 +91,25 @@
                         </el-row>
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
+                            <el-col :span="12">
+                                <div class="input-label">Cost Price </div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
+                                    <i class="fe-dollar-sign"></i>
+                                    <input type="text" placeholder="Cost price" v-model.trim.lazy="$v.cprice.$model">
+                                </div>
+                            </el-col>
+                            <el-col :span="12">
+                                <div class="input-label">Selling Price </div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
+                                    <i class="fe-dollar-sign"></i>
+                                    <input type="text" placeholder="Price per pack" v-model.trim.lazy="$v.price.$model">
+                                </div>
+                            </el-col>
                             <el-col :span="14">
                                 <div class="input-label">Pack Quantity </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Total packs in stock" v-model.trim.lazy="$v.quantity.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="10">
-                                <div class="input-label">Pack Price </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Price per pack" v-model.trim.lazy="$v.price.$model">
                                 </div>
                             </el-col>
                             <el-col :span="24">
@@ -224,6 +231,7 @@
                 batch: "",
                 generics: "",
                 expiry:"",
+                cprice: "",
                 price: "",
                 variant: "",
                 l_price: "",
@@ -266,6 +274,9 @@
 
             },
             expiry: {
+
+            },
+            cprice: {
 
             },
             price: {
@@ -323,7 +334,10 @@
                    hastabs: this.hast,
                    variant: this.variant
                 }
-
+                if(this.cprice != ""){
+                    postdata.cprice = this.cprice
+                }
+                
                 if(this.variant != ''){
                     this.name = this.name + ' '+ this.variant
                 }
@@ -471,6 +485,8 @@
                 this.$http.post('data/import', formData)
                 .then(res => {
                     this.importing = false
+                    this.filename = ""
+                    this.file = ""
                      this.$notify({
                         title: 'Success',
                         message: "File Imported and saved",
@@ -479,6 +495,8 @@
                 })
                 .catch(err => {
                     this.importing = false
+                     this.filename = ""
+                    this.file = ""
                      this.$notify({
                         title: 'Success',
                         message: "Import could'nt complete",
