@@ -73,7 +73,7 @@
                 </div>
             </div>
             <el-row :gutter="20" class="card-wrapper">
-                <el-col :span="16">
+                <el-col :span="24">
                     <div class="card graph-card">
                         <div class="card-title pt-15 pb-15 pr-15 pl-15">Sales over the day</div>
                         <div class="card-content pt-15 pb-15 pr-15 pl-15">
@@ -81,10 +81,37 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="8">
-                    <div class="card graph-card" >
-                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Drug shortage list</div>
-                        <div class="card-body">
+            </el-row>
+            <el-row :gutter="20" class="card-wrapper">
+                 <el-col :span="12">
+                    <div class="card dash-card" >
+                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Drugs expiring</div>
+                        <vue-custom-scrollbar class="card-body">
+                            <table  cellspacing="0" cellpadding="0" class="card-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, i) in salesWorth.products" :key="i">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.left}}</td>
+                                        <td>
+                                            <!-- <el-button size="mini" round @click="$router.push({name: 'office-inventory_product'})">View</el-button> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </vue-custom-scrollbar>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="card dash-card" >
+                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Drugs out of stock</div>
+                        <vue-custom-scrollbar class="card-body">
                             <table  cellspacing="0" cellpadding="0" class="card-table">
                                 <thead>
                                     <tr>
@@ -98,12 +125,12 @@
                                         <td>{{item.name}}</td>
                                         <td>{{item.left}}</td>
                                         <td>
-                                            <el-button size="mini" round @click="$router.push({name: 'office-inventory_product'})">View</el-button>
+                                            <el-button size="mini" round @click="$router.push({name: 'office-inventory_product'})">Add</el-button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </vue-custom-scrollbar>
                     </div>
                 </el-col>
             </el-row>
@@ -329,5 +356,24 @@
             border-bottom: 1px solid rgba(235, 235, 235, 0.795);
         }
     }
-    
+    .dash-card{ 
+        height: 500px;
+        .card-title{
+            text-align: left;
+            color: slategray;
+            font-weight: bold;
+        }
+        .card-body{
+            height: 450px;
+            overflow: hidden;
+        }
+        table{
+            thead{
+                background-color: #d3f7eb;
+                th{
+                    color: #43cea2;
+                }
+            }
+        }
+    }
 </style>

@@ -4,13 +4,13 @@
             <div class="product-box">
                 <div class="inner-box">
                     <div class="form-box">
-                        <div class="input-box">
-                            <i class="fe-search"></i>
+                        <div class="search-input">
+                            <!-- <i class="fe-search"></i> -->
                             <input type="text" placeholder="Search ..." v-model="q" @keyup="search()">
                         </div>
+                        <div class="filter-btn" @click="showFilter = true">Filter</div>
                     </div>
-                    <div class="filter-box">
-                        <!-- <i class="fe-filter"></i> -->
+                    <!-- <div class="filter-box">
                         <ul class="filters">
                             <li class="shadow-1 active" @click="filerByCategory('all', $event)">
                                 <span>All</span>
@@ -20,7 +20,7 @@
                                 <span>{{item.name}}</span>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                     <div class="clearfix"></div>
 
                     <div class="products-box">
@@ -80,6 +80,34 @@
                                     </div>
                                 </el-tooltip>
                             </div>
+                            
+                            <el-drawer
+                                title=""
+                                :visible.sync="showFilter"
+                                direction="rtl">
+                                <div class="filter-container">
+                                    <div class="title">Filter by categories</div>
+                                    <div class="body">
+                                        <div class="category-container">
+                                            <div class="category-item" @click="filerByCategory('all', $event)">
+                                                <div class="category-item__icon">
+                                                    <img src="@/assets/images/pills.svg" alt="">
+                                                </div>
+                                                <div class="category-item__content">All</div>
+                                                <div class="category-item__products"></div>
+                                            </div>
+                                            <div class="category-item" v-for="(item, i) in categories" :key="i"
+                                            @click="filerByCategory(item, $event)">
+                                                <div class="category-item__icon">
+                                                    <img src="@/assets/images/pills.svg" alt="">
+                                                </div>
+                                                <div class="category-item__content">{{item.name}}</div>
+                                                <div class="category-item__products">{{item.products.length}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </el-drawer>
                         </vue-custom-scrollbar>
                     </div>
                 </div>
@@ -401,6 +429,7 @@
                 discountId: null,
 
                 loading: true,
+                showFilter: false
             }
         },
         validations: {
@@ -425,7 +454,7 @@
         },
         methods: {
             getCategories(){
-                this.$http.get('product/category/list?type=simple')
+                this.$http.get('product/category/list')
                 .then(res => {
                     let data =  res.body.result
                     this.categories = data
@@ -472,7 +501,7 @@
                     this.products.forEach((element,i )=> {
                         element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
                         if((i+1)% 6 == 0){
-                            index  = index + 1;
+                            // index  = index + 1;
                         }
                         if(newData[index] === undefined){
                             newData[index] = []
@@ -504,7 +533,7 @@
                     this.products.forEach((element,i )=> {
                         element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
                         if((i+1)% 6 == 0){
-                            index  = index + 1;
+                            // index  = index + 1;
                         }
                         if(newData[index] === undefined){
                             newData[index] = []
@@ -555,6 +584,8 @@
                 })
 
                 element.classList.add('active');
+                 
+                this.loading = true;
                 if(i == 'all'){
                     this.getProducts()
                 }else{
@@ -986,6 +1017,47 @@
         }
         &.orange{
             background-color: rgb(238, 154, 58);
+        }
+    }
+
+        .filter-container{
+        .title{
+            font-weight: bold;
+            font-size: 19px ;
+        }
+
+        .body{
+            text-align: left;
+            padding: 20px;
+            .category-container{
+                height: 80vh;
+                overflow-y: scroll;
+            }
+            .category-item{
+                width: 100%;
+                border-bottom: 1px solid rgb(243, 243, 243);
+                padding-bottom: 5px;
+                cursor: pointer;
+                &__icon{
+                    width: 25px;
+                    display: inline-block;
+                    vertical-align: middle;
+                    img{
+                        width: 100%;
+                    }
+                }
+
+                &__content{
+                    display: inline-block;
+                    margin-left: 20px;
+                    vertical-align: middle;
+                    width: 70%;
+                }
+
+                &__products{
+                    display: inline-block;
+                }
+            }
         }
     }
 </style>

@@ -18,10 +18,10 @@
                         <div :class="{'table-cell-warning': scope.row.expiration == 'expiring', 'table-cell-danger': scope.row.expiration == 'expired'}">{{scope.row.name}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="manufacturer" label="Manufacturer"> </el-table-column>
-                <el-table-column prop="lprice" label="Price per piece (Ghc)"> </el-table-column>
-                 <el-table-column prop="price" label="Pack Price (Ghc)"> </el-table-column>
-                <el-table-column prop="left" label="Packs Left" width="100px"> </el-table-column>
+                <el-table-column prop="category" label="Category"> </el-table-column>
+                <el-table-column prop="quantity" label="Quantity left"> </el-table-column>
+                 <el-table-column prop="lprice" label="Strip Price"> </el-table-column>
+                <el-table-column prop="price" label="Packs Price" width="100px"> </el-table-column>
                 <el-table-column width="220px">
                     <template slot-scope="scope">
                             <el-button size="mini" @click="triggerAdd(scope.row.id)">Add</el-button>

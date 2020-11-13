@@ -171,6 +171,46 @@
             }
         }
     }
+    .search-input{
+        margin-right: auto !important;
+        width: calc(100% - 160px);
+        margin-left: 20px;
+        display: inline-block;
+        i{
+            position: absolute;
+            top: 11px;
+            left: 15px;
+            font-size: 1.1em;
+            color: rgb(137, 147, 155);
+        }
+        input{
+            background-color: rgb(219, 219, 219);
+            width: 100%;
+            padding: 13px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            border-radius: 5px;
+            padding-left: 20px;
+            color:#2c3e50;
+            &::placeholder{
+                color: rgb(137, 147, 155);
+            }
+        }
+    }
+
+    .filter-btn{
+        display: inline-block;
+        width: 90px;
+        margin-left: 10px;
+        background-color: #40cfa2;
+        padding: 10px;
+        color: white;
+        font-size: 16px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
     .filter-box{
         .filter-icon{
             width: 22px;
