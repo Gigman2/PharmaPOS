@@ -320,5 +320,13 @@ body {
   background-color: rgb(255, 242, 225) !important;
   padding: 2px 15px;
 }
+
+.text-green{
+  color: #40cfa2;
+}
+
+.text-purple{
+  color: #7c1d68;
+}
 </style>
 

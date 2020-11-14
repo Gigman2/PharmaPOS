@@ -3,7 +3,7 @@
         <div class="clearfix"></div>
         <div class="dashboard-top">
             <div class="table-buttons pull-right">
-                <el-button type="success" size="medium" icon="el-icon-upload2" @click="openImportDialog = true" class="pull-right"> Import Data</el-button>
+                <el-button type="success" size="medium" @click="openImportDialog = true" class="pull-right"> Import Data</el-button>
             </div>
         </div>
         <div class="dashboard-content p-20">

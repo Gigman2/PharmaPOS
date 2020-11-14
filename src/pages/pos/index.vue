@@ -4,28 +4,76 @@
             <div class="product-box">
                 <div class="inner-box">
                     <div class="form-box">
+                        <div class="view-selectors">
+                            <img src="@/assets/images/list.svg" alt="" v-if="layout == 'grid'" @click="switchLayout('grid')">
+                            <img src="@/assets/images/grid.svg" alt="" v-else  @click="switchLayout('list')">
+
+                        </div>
                         <div class="search-input">
                             <!-- <i class="fe-search"></i> -->
                             <input type="text" placeholder="Search ..." v-model="q" @keyup="search()">
                         </div>
                         <div class="filter-btn" @click="showFilter = true">Filter</div>
                     </div>
-                    <!-- <div class="filter-box">
-                        <ul class="filters">
-                            <li class="shadow-1 active" @click="filerByCategory('all', $event)">
-                                <span>All</span>
-                            </li>
-                            <li class="shadow-1" v-for="(item, i) in categories" :key="i" 
-                            @click="filerByCategory(item, $event)">
-                                <span>{{item.name}}</span>
-                            </li>
-                        </ul>
-                    </div> -->
                     <div class="clearfix"></div>
 
                     <div class="products-box">
-                        <div class="products-title">Products</div>
-                        <vue-custom-scrollbar class="scroll-area products" :settings="settings" v-loading="loading">
+                        <div class="products-title">Recent Products</div>
+                        <vue-custom-scrollbar class="scroll-area products grid" :settings="settings" v-loading="loading" v-if="layout == 'grid'">
+                            <div class="product-row recent" v-for="(row, e) in recentProducts" :key="e">
+                                <el-tooltip class="item" effect="dark" placement="bottom-end"
+                                    v-for="(item, f) in row" :key="f">
+                                    <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
+                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item)">
+                                        <div class="expiration-box"  
+                                                :class="{'red': item.expiration == 'expired',
+                                                'orange': item.expiration == 'expiring'}"
+                                                
+                                                v-if="item.expiration">{{item.expiration}}
+                                        </div>
+                                        <div class="product-image">
+                                            <div class="image">
+                                                <img :src="bucket+item.image" alt="" v-if="item.image">
+                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                            </div>
+                                        </div>
+                                        <div class="product-title">{{item.name}}</div>
+                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
+                                    </div>
+                                    <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
+                                        <div class="expiration-box"  
+                                                :class="{'red': item.expiration == 'expired',
+                                                'orange': item.expiration == 'expiring'}"
+                                                
+                                                v-if="item.expiration">{{item.expiration}}
+                                        </div>
+                                        <div class="product-image">
+                                            <div class="image">
+                                                <img :src="bucket+item.image" alt="" v-if="item.image">
+                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                            </div>
+                                        </div>
+                                        <div class="product-title">{{item.name}}</div>
+                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
+                                    </div>
+                                    <div class="product shadow-1 shortage"  @click="addItem(item)" v-else>
+                                        <div class="expiration-box"  
+                                                :class="{'red': item.expiration == 'expired',
+                                                'orange': item.expiration == 'expiring'}"
+                                                
+                                                v-if="item.expiration">{{item.expiration}}
+                                        </div>
+                                        <div class="product-image">
+                                            <div class="image">
+                                                <img :src="bucket+item.image" alt="" v-if="item.image">
+                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                            </div>
+                                        </div>
+                                        <div class="product-title">{{item.name}}</div>
+                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
+                                    </div>
+                                </el-tooltip>
+                            </div>
                             <div class="product-row" v-for="(row, index) in products" :key="index">
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, i) in row" :key="i">
@@ -109,97 +157,148 @@
                                 </div>
                             </el-drawer>
                         </vue-custom-scrollbar>
+
+                        <div class="products list" v-else-if="layout == 'list'">
+                              <el-table :data="listdata" height="600" style="width: 100%"
+                                 :row-class-name="styleRows"
+                              >
+                                <el-table-column
+                                prop="name"
+                                label="Name"
+                                width="250"
+                                >
+                                    <template slot-scope="scope">
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' " >{{scope.row.name}}</div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                prop="price"
+                                label="Price">
+                                    <template slot-scope="scope">
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' ">{{scope.row.price}}</div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                prop="lprice"
+                                label="Strip Price">
+                                    <template slot-scope="scope">
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' ">{{scope.row.lprice}}</div>
+                                    </template>
+                                </el-table-column>
+                                 <el-table-column
+                                prop="expiration"
+                                label="Expired">
+                                    <template slot-scope="scope">
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' " 
+                                            :class="{
+                                                'text-red': scope.row.expiration == 'expired', 
+                                                'text-green': scope.row.expiration == 'good',
+                                                'text-purple': scope.row.expiration == 'expiring'
+                                            }">{{scope.row.expiration}}</div>
+                                    </template>
+                                </el-table-column>
+                                 <el-table-column
+                                prop="left"
+                                label="Left" width="50">
+                                    <template slot-scope="scope">
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' " :class="{'text-red': scope.row.left <= 0}">{{scope.row.left}}</div>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
                     </div>
                 </div>
             </div> 
             <div class="checkout-box">
-            <div class="checkout-invoice">
-                    <div class="checkout-title">
-                        <div class="pull-left checkout-title--title">Purchase Detail</div>
-                        <div class="pull-right checkout-title--actions">
-                            <el-tooltip class="item" effect="dark" placement="bottom-end">
-                                <div slot="content">Puts the transaction on hold</div>
-                                <span @click="checkout('hold')">Hold</span>
-                            </el-tooltip>
+                <div class="checkout-invoice">
+                        <div class="checkout-title">
+                            <div class="pull-left checkout-title--title">Purchase Detail</div>
+                            <div class="pull-right checkout-title--actions">
+                                <el-tooltip class="item" effect="dark" placement="bottom-end">
+                                    <div slot="content">Puts the transaction on hold</div>
+                                    <span @click="checkout('hold')">Hold</span>
+                                </el-tooltip>
 
-                            <el-tooltip class="item" effect="dark" placement="bottom-end"  v-if="customer === null">
-                                <div slot="content">Attach a customer to transaction</div>
-                                <div class="d-inline">
-                                    <i class="fe-user-plus" @click="showCustomerDialog = true"></i>
-                                </div>
-                            </el-tooltip>
+                                <el-tooltip class="item" effect="dark" placement="bottom-end"  v-if="customer === null">
+                                    <div slot="content">Attach a customer to transaction</div>
+                                    <div class="d-inline">
+                                        <i class="fe-user-plus" @click="showCustomerDialog = true"></i>
+                                    </div>
+                                </el-tooltip>
 
-                            <el-tooltip class="item" effect="dark" placement="bottom-end"  v-else>
-                                <div slot="content">remove attach customer from transaction</div>
-
-                            <div class="d-inline">
-                                    <i class="fe-user-minus" @click="customer = null"></i>
-                            </div>
-                            </el-tooltip>
-
-                            <!-- <el-tooltip class="item" effect="dark" placement="bottom-end">
-                                <div slot="content">apply discount</div>
+                                <el-tooltip class="item" effect="dark" placement="bottom-end"  v-else>
+                                    <div slot="content">remove attach customer from transaction</div>
 
                                 <div class="d-inline">
-                                    <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
-                                <span  v-else>{{discount}} <em class="fe-percent"></em></span>
+                                        <i class="fe-user-minus" @click="customer = null"></i>
                                 </div>
-                            </el-tooltip> -->
+                                </el-tooltip>
 
-                            
-                            <el-tooltip class="item" effect="dark" placement="bottom-end">
-                                <div slot="content">clear transaction</div>
+                                <!-- <el-tooltip class="item" effect="dark" placement="bottom-end">
+                                    <div slot="content">apply discount</div>
 
-                            <div class="d-inline">
-                                    <i class="fe-slash " @click="resetOrder"></i>
+                                    <div class="d-inline">
+                                        <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
+                                    <span  v-else>{{discount}} <em class="fe-percent"></em></span>
+                                    </div>
+                                </el-tooltip> -->
+
+                                
+                                <el-tooltip class="item" effect="dark" placement="bottom-end">
+                                    <div slot="content">clear transaction</div>
+
+                                <div class="d-inline">
+                                        <i class="fe-slash " @click="resetOrder"></i>
+                                </div>
+                                </el-tooltip>
                             </div>
-                            </el-tooltip>
                         </div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <vue-custom-scrollbar class="checkout-table-wrapper">
-                        <table class="checkout-table" cellspacing="0" cellpadding="0">
-                            <thead class="checkout-headings">
-                                <tr>
-                                    <th width="30px"></th>
-                                    <th>Name</th>
-                                    <th>QTY</th>
-                                    <th width="60px">Price</th>
-                                </tr>
-                            </thead>
+                        <div class="clearfix"></div>
+                        <vue-custom-scrollbar class="checkout-table-wrapper">
+                            <table class="checkout-table" cellspacing="0" cellpadding="0">
+                                <thead class="checkout-headings">
+                                    <tr>
+                                        <th width="30px"></th>
+                                        <th>Name</th>
+                                        <th>QTY</th>
+                                        <th width="60px">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="checkout-item-row" :class="{'selected': item.selected}"
+                                        v-for="(item, e) in orderProducts" :key="e">
+                                        <td><i class="fe-trash-2 delete" @click="deleteItem(e)"></i></td>
+                                        <td width="45%">
+                                            <span class="pointer"  @click="openDrugModal(e, item)">{{item.name}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="pointer" @click="openDrugModal(e, item)">
+                                                {{(item.pack == 0 && item.loose == 0) ? '0' : ''}}
+
+                                                {{(item.pack > 0) ? item.pack+'pck' : ''}}
+
+                                                {{(item.loose > 0) ? item.loose+'pcs' : ''}}
+                                            </span>
+                                        </td>
+                                        <td>{{item.totalprice}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </vue-custom-scrollbar>
+                        <table class="checkout-total">
                             <tbody>
-                                <tr class="checkout-item-row" :class="{'selected': item.selected}"
-                                    v-for="(item, e) in orderProducts" :key="e">
-                                    <td><i class="fe-trash-2 delete" @click="deleteItem(e)"></i></td>
-                                    <td width="45%">{{item.name}}</td>
-                                    <td>
-                                        <span class="pointer" @click="openDrugModal(e, item)">
-                                            {{(item.pack == 0 && item.loose == 0) ? '0' : ''}}
-
-                                            {{(item.pack > 0) ? item.pack+'pck' : ''}}
-
-                                            {{(item.loose > 0) ? item.loose+'pcs' : ''}}
-                                        </span>
-                                    </td>
-                                    <td>{{item.totalprice}}</td>
+                                <tr>
+                                    <th align="left">Total </th>
+                                    <td width="100px" align="right">Ghc{{grossTotal}}</td>
                                 </tr>
                             </tbody>
                         </table>
-                    </vue-custom-scrollbar>
-                    <table class="checkout-total">
-                        <tbody>
-                            <tr>
-                                <th align="left">Total </th>
-                                <td width="100px" align="right">Ghc{{grossTotal}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </div>
-            <div class="checkout-pay-section">
-                    <div class="checkout-payout disabled" v-if="Number(grossTotal) < 1" ><span>Pay</span> (Ghc {{grossTotal}})</div>
-                    <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{grossTotal}})</div>
-                    <div class="checkout-reset" @click="resetOrder">Reset</div>
-            </div>
+                </div>
+                <div class="checkout-pay-section">
+                        <div class="checkout-payout disabled" v-if="Number(grossTotal) < 1" ><span>Pay</span> (Ghc {{grossTotal}})</div>
+                        <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{grossTotal}})</div>
+                        <div class="checkout-reset" @click="resetOrder">Reset</div>
+                </div>
             </div>
         </div>
 
@@ -349,13 +448,49 @@
                             <input type="text" placeholder="0.00" v-model.trim.lazy="$v.cash.$model" @blur="splitPayment('cash')" @change="splitPayment('cash')">
                         </div>
                     </el-col>
-                     <el-col :span="12">
+                    <el-col :span="12" v-if="split">
                         <div class="payment-title">Mobile Money</div>
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="12" v-if="split">
                         <div class="input-box" :class="{ 'input-box--error': $v.momo.$error }">
                             <i class="">Ghc</i>
                             <input type="text" placeholder="0.00" v-model.trim.lazy="$v.momo.$model" @blur="splitPayment('momo')" @change="splitPayment('momo')">
+                        </div>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-link type="primary" class="pull-left mb-10" @click="split = true" v-if="!split">
+                            <strong>split payment</strong>
+                        </el-link>
+                        <el-link type="primary" class="pull-left mb-10" @click="split = false" v-else>
+                            <strong>unsplit payment</strong>
+                        </el-link>
+                        <div class="clearfix"></div>
+                       <div class="horizontal"></div>
+                    </el-col>
+                </el-row>
+                 <el-row :gutter="20" class="mt-20">
+                    <el-col :span="12">
+                        <div class="payment-title">Change</div>
+                    </el-col>
+                    <el-col :span="12">
+                        <div class="input-box">
+                            <i class="">Ghc</i>
+                            <input type="text" placeholder="0.00" v-model="change" readonly>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <div class="alert-box" v-if="parseFloat(change) < 0 ">
+                            The amount paid is lower than the total transaction
+                        </div>
+                    </el-col>
+                </el-row>
+                 <el-row>
+                    <el-col :span="24">
+                        <div class="pull-left mt-10">
+                            <span class="">Print receipt</span>
+                            <el-switch v-model="printReceipt" class="ml-5"></el-switch>
                         </div>
                     </el-col>
                 </el-row>
@@ -364,9 +499,8 @@
                 <el-button style="float: left" @click="quickPay(); showPaymentDialog = false">Quick Pay</el-button>
                 
                 <el-button @click="showPaymentDialog = false">Cancel</el-button>
-                <el-button type="primary" v-if="(Number(cash) + Number(momo)) == grossTotal"
-                 @click="checkout('pay'); showPaymentDialog = false">Checkout</el-button>
-                <el-button v-else type="primary" disabled>Checkout</el-button>
+                <el-button type="primary" @click="checkout('pay'); showPaymentDialog = false">Checkout</el-button>
+                <!-- <el-button v-else type="primary" disabled>Checkout</el-button> -->
             </span>
         </el-dialog>
     </div>
@@ -398,7 +532,8 @@
                 showPaymentDialog: false,
                 showDrugDialog: false,
                 activateNewCustomer: false,
-                
+                split: false,
+
                 newCustomer: {
                     firstname: '',
                     lastname: '',
@@ -408,6 +543,8 @@
 
                 cash: 0,
                 momo: 0,
+                change: 0,
+
 
                 pack: 0,
                 loose: 0,
@@ -419,10 +556,16 @@
                 grossTotal: 0,
                 tax: 0,
                 categories: [],
+
+                results: [],
+                listdata: [],
                 products: [],
+                recentProducts: [],
                 orderProducts: [],
                 customers: [],
                 customer: null,
+                printReceipt: false,
+                layout: 'grid',
 
                 discount: 0,
                 discountCode: '',
@@ -439,6 +582,16 @@
             },
             momo: {
                 decimal
+            }
+        },
+        watch: {
+            results: function(val){
+                if(val.length > 0){
+                    this.recentProducts = val[0] 
+                }
+                if(val.length > 1){
+                    this.products = val[1] 
+                }
             }
         },
         computed: {
@@ -470,48 +623,58 @@
             },
             getProducts(){
                 this.loading = true
-                this.$http.get('product/list')
+                this.$http.get('product/list-top-best')
                 .then(res => {
                     let data =  res.body.result
-                     data.map(i => {
-                        if(i.expiry != null){
-                            let expiry = Moment(i.expiry).format('YYYY-MM-DD')
-                            let now = Moment().format('YYYY-MM-DD')
-                            
-                            let expired = Moment().isAfter(expiry)
-                            if(expired){
-                                i.expiration = 'expired'
-                            }else{
-                                 var exirationDifference = Moment(expiry).diff(now, 'days');
-                                if(exirationDifference <= 90){
-                                    i.expiration = 'expiring'
+                    let dataKeys = Object.values(data)
+                    this.results = dataKeys.map(e => {
+                         e.map(i => {
+                             if(i.expiry != null){
+                                let expiry = Moment(i.expiry).format('YYYY-MM-DD')
+                                let now = Moment().format('YYYY-MM-DD')
+                                
+                                let expired = Moment().isAfter(expiry)
+                                if(expired){
+                                    i.expiration = 'expired'
                                 }else{
-                                    i.expiration = 'ok'
+                                    var exirationDifference = Moment(expiry).diff(now, 'days');
+                                    if(exirationDifference <= 90){
+                                        i.expiration = 'expiring'
+                                    }else{
+                                        i.expiration = 'good'
+                                    }
                                 }
+                            }else{
+                                i.expiry = '--'
                             }
-                        }else{
-                            i.expiry = '--'
-                        }
-                    
-                    })
+                        })
 
-                    this.products = data;
-                    var newData = [];
-                    var index = 0;
-                    this.products.forEach((element,i )=> {
-                        element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
-                        if((i+1)% 6 == 0){
-                            // index  = index + 1;
-                        }
-                        if(newData[index] === undefined){
-                            newData[index] = []
-                        }
-                        newData[index].push(element)
-                    });
-                    this.products = newData
+                        var newData = [];
+                        var index = 0;
+                        e.forEach((element, a)=> {
+                            element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
+                            let modIndex = (a > 4) ? a+ 1 : a;
+                            if(modIndex % 0 == 0){
+                                index  = index + 1; 
+                            }
+                            if(newData[index] === undefined){
+                                newData[index] = []
+                            }
+                            newData[index].push(element)
+                        });
+
+                        e = newData
+
+                        return e
+                    })
+                    
+                    if(this.layout == 'list'){
+                        this.switchLayout('grid')
+                    }
                     this.loading = false
                 })
                 .catch((err) => {
+                    console.log(err)
                     this.loading = false
                     this.$notify({
                         title: 'Failed',
@@ -527,13 +690,40 @@
                 })
                 .then(res => {
                     let data =  res.body.result
+                    if(data.length > 0){
+                        this.recentProducts = []
+                    }
+
                     this.products = data;
+
+                    this.products.map(i => {
+                            if(i.expiry != null){
+                            let expiry = Moment(i.expiry).format('YYYY-MM-DD')
+                            let now = Moment().format('YYYY-MM-DD')
+                            
+                            let expired = Moment().isAfter(expiry)
+                            if(expired){
+                                i.expiration = 'expired'
+                            }else{
+                                var exirationDifference = Moment(expiry).diff(now, 'days');
+                                if(exirationDifference <= 90){
+                                    i.expiration = 'expiring'
+                                }else{
+                                    i.expiration = 'good'
+                                }
+                            }
+                        }else{
+                            i.expiry = '--'
+                        }
+                    })
+                    
                     var newData = [];
                     var index = 0;
                     this.products.forEach((element,i )=> {
                         element.displayPrice = formatMoney((element.hasloose) ? element.lprice : element.price, ',', '.')
-                        if((i+1)% 6 == 0){
-                            // index  = index + 1;
+                        let modIndex = (i > 4) ? i+ 1 : i;
+                        if(modIndex % 0 == 0){
+                            index  = index + 1; 
                         }
                         if(newData[index] === undefined){
                             newData[index] = []
@@ -541,8 +731,13 @@
                         newData[index].push(element)
                     });
                     this.products = newData
+                    
                     if(query.barcode && data !== undefined){
                         this.addItem(data[0])
+                    }
+
+                    if(this.layout == 'list'){
+                        this.switchLayout('grid')
                     }
                     this.loading = false
                 })
@@ -710,18 +905,17 @@
                 let price = this.orderProducts[i].price
 
                 let tabsTotalPrice = 0;
-                if(tprice != '' && !isNaN(tprice)){
-                    console.log(tprice)
+                if(tprice != '' && !isNaN(tprice) && tprice != null){
                     tabsTotalPrice = parseInt(tabs) * parseFloat(tprice)
                 } 
 
                 let looseTotalPrice = 0;
-                if(lprice != '' && !isNaN(lprice)){
+                if(lprice != '' && !isNaN(lprice) && lprice != null){
                     looseTotalPrice = parseInt(loose) * parseFloat(lprice)
                 } 
 
                 let packTotalPrice = 0;
-                if(price != '' && !isNaN(price)){
+                if(price != '' && !isNaN(price) && price != null){
                     packTotalPrice = parseInt(pack) * parseFloat(price) 
                 }
 
@@ -916,6 +1110,44 @@
                     this.errorMessage = err.body.message
                      this.submitting =  false;
                 })
+            },
+            switchLayout(currentLayout){
+                this.loading = true
+                if(currentLayout == 'grid'){
+                    let products = this.products
+                    let recent = this.recentProducts;
+
+                    let flattenProducts = products.flat()
+                    let flattenRecent = recent.flat()
+                    flattenRecent.map(item => {
+                        return item.recent = true
+                    })
+
+                    this.listdata = flattenRecent.concat(flattenProducts);
+                    // this.listdata.unshift(flattenRecent);
+
+                    this.layout = 'list';
+                    this.loading = false
+                }else{
+                    this.loading = true
+                    var newData = [];
+                    var index = 0;
+                    this.layout = 'grid';
+                    this.loading = false
+                }
+
+                // localStorage.setItem('layout', this.layout)
+
+            },
+            styleRows({row}){
+                if (row.recent == true) {
+                    return 'row recent-row';
+                } 
+
+                if(row.left <= 0){
+                    return 'disabled'
+                }
+                return 'row';
             }
         },
         created() {
@@ -933,6 +1165,12 @@
                     })
                 }
             }
+            // let layout = localStorage.getItem('layout')
+            //  if(layout !== undefined){
+            //     this.layout = layout
+            //     // layout = (layout == 'grid') ? 'list': 'grid';
+            //     // this.switchLayout(layout)
+            // }
             this.getCategories()
             this.getProducts()
             this.getCustomers()
@@ -1059,5 +1297,18 @@
                 }
             }
         }
+    }
+    .el-table .recent-row {
+        background: #f4fffa;
+
+    }
+
+    .el-table .row {
+        cursor: pointer;
+    }
+
+    .el-table .disabled {
+        cursor: not-allowed !important;
+        background-color: rgb(240, 240, 240);
     }
 </style>

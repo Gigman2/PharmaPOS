@@ -173,7 +173,7 @@
     }
     .search-input{
         margin-right: auto !important;
-        width: calc(100% - 160px);
+        width: calc(100% - 200px);
         margin-left: 20px;
         display: inline-block;
         i{
@@ -196,6 +196,16 @@
             &::placeholder{
                 color: rgb(137, 147, 155);
             }
+        }
+    }
+
+    .view-selectors{
+        width: 30px;
+        display: inline-block;
+        vertical-align: middle;
+        cursor: pointer;
+        img{
+            width: 30px;
         }
     }
 
@@ -272,6 +282,15 @@
                 width: 100%;
                 height: auto;
                 overflow: hidden;
+                &.recent{
+                    background-color:#f4fffa;
+                    border-radius: 5px;
+                    padding: 15px 0 0 0;
+                    margin-bottom: 10px;
+                }
+                .product{
+                    background-color: white;
+                }
             }
             .product{
                 width: calc(20% - 46px);

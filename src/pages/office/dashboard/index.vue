@@ -91,14 +91,17 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Status</th>
+                                        <th width="100">State</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, i) in salesWorth.products" :key="i">
+                                    <tr v-for="(item, i) in salesWorth.expiring" :key="i">
                                         <td>{{item.name}}</td>
-                                        <td>{{item.left}}</td>
+                                        <td class="text-right">
+                                            <span class="text-red" v-if="item.expiresin == 0">expired</span>
+                                            <span class="text-orange" v-else >{{item.expiresin}}</span>
+                                        </td>
                                         <td>
                                             <!-- <el-button size="mini" round @click="$router.push({name: 'office-inventory_product'})">View</el-button> -->
                                         </td>
@@ -125,7 +128,7 @@
                                         <td>{{item.name}}</td>
                                         <td>{{item.left}}</td>
                                         <td>
-                                            <el-button size="mini" round @click="$router.push({name: 'office-inventory_product'})">Add</el-button>
+                                            <el-button size="mini" round @click="$router.push({name: 'office-inventory_stock^add-id', params: {id: item.id}})">Add</el-button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -138,6 +141,7 @@
 </template>
 
 <script>
+    import Moment from 'moment' 
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import lineChart from '@/components/chart/lineChart.vue'
     import formatMoney from '@/components/formatmoney.js'
@@ -160,7 +164,8 @@
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'transparent'
                 },
-                graphLabel: []
+                graphLabel: [],
+                expiring: []
             }
         },
         computed: {
@@ -209,6 +214,22 @@
                     salesWorth =  res.body.result
                     salesWorth.stockWorth = formatMoney(salesWorth.stockWorth, ',', '.')
                     this.salesWorth = salesWorth
+
+                    let expiry = salesWorth.expiring
+
+                    expiry.map(item => {
+                        let now = Moment().format('YYYY-MM-DD')
+                        let expired = Moment().isAfter(item.expiry)
+
+                        if(expired){
+                            item.expiresin = '0'
+                        }else{
+                            item.expiresin = Moment(item.expiry).fromNow();
+                            item.expiresin = item.expiresin.replace("in ", "")
+                        }
+                    })
+                    this.expiring = expiry
+
                 })
                 .catch(err => {
                     console.log(err)
@@ -375,5 +396,15 @@
                 }
             }
         }
+    }
+
+    .text-red{
+        color: rgb(250, 94, 94);
+        text-transform: capitalize;
+    }
+
+    .text-orange{
+        color: rgb(143, 15, 104);
+        text-transform: capitalize;
     }
 </style>

@@ -63,9 +63,9 @@
                         let expiry = Moment(i.expiry).format('YYYY-MM-DD')
                         let now = Moment().format('YYYY-MM-DD')
 
+                        let expired = Moment().isAfter(expiry)
                         i.expiry = Moment(i.expiry).format('Do MMM YYYY')
                         
-                        let expired = Moment().isAfter(expiry)
                         if(expired){
                             i.expiration = 'expired'
                         }else{
@@ -109,7 +109,7 @@
                 })
             },
             triggerAdd(id){
-                 this.$router.push({name: 'office-inventory_stock^add-id', params: {id}})
+                this.$router.push({name: 'office-inventory_stock^add-id', params: {id}})
             },
             triggerEdit(id){
                 this.$router.push({name: 'office-inventory_product^edit', params: {id}})
