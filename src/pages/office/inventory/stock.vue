@@ -10,7 +10,7 @@
             </router-link>
         </div>
         <div class="clearfix"></div>
-        <div class="dashboard-content mt-10">
+        <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column prop="productName" label="Product Name"></el-table-column>
                 <el-table-column prop="currentStock" label="In Stock"> </el-table-column>
@@ -40,11 +40,13 @@
         },
         data() {
             return {
-                tableData: []
+                tableData: [],
+                fetching: false
             }
         },
         methods: {
             getData(){
+                this.fetching = true
                 this.$http.get('product/stock/list')
                 .then(res => {
                     let data =  res.body.result
@@ -56,10 +58,11 @@
                         }
                     })
 
+                    this.fetching = false
                     this.tableData = data;
                 })
                 .catch(() => {
-
+                    this.fetching = false
                 })
             },
             triggerDelete(i, id) {
