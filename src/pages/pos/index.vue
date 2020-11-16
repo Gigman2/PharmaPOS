@@ -570,6 +570,7 @@
                 discount: 0,
                 discountCode: '',
                 discountId: null,
+                checkingout: false,
 
                 firstEntry: false,
                 loading: true,
@@ -954,7 +955,6 @@
                 localStorage.removeItem('orderProducts')
             },
             checkout(type){
-                this.checkingout = true
                 let transaction = {
                     grossTotal: this.grossTotal,
                     netTotal:  this.netTotal, 
