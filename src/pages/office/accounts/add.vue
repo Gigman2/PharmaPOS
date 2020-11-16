@@ -2,7 +2,7 @@
      <div class="dashboard-wrapper mt-15">
         <div class="dashboard-top">
             <div class="pull-left">
-                <router-link :to="{name: 'office-accounts'}">
+                <router-link :to="{name: 'office-accounts_user'}">
                     <i class="fe-arrow-left back-icon pull-left"></i>
                 </router-link>
             </div>
@@ -13,6 +13,13 @@
                 <el-row>
                     <el-col :span="13">
                         <div class="form-title mb-40">User Account Information</div>
+                        <el-alert
+                            title="Take Note"
+                            type="warning"
+                            effect="dark"
+                            description="All the filleds are required"
+                            :show-icon="false" :closable="false" :center="true">
+                        </el-alert>
                         <el-row :gutter="20">
                             <el-col :span="24">
                                 <div class="input-error-box" v-if="error">
@@ -21,7 +28,7 @@
                                 </div>
                             </el-col>
                             <el-col :span="24">
-                                <div class="input-label">Account ID</div>
+                                <div class="input-label mt-20">Username</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.username.$error }">
                                     <i class="fe-hexagon"></i>
                                     <input type="text" placeholder="" v-model.trim.lazy="$v.username.$model">
@@ -57,17 +64,15 @@
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-mail"></i>
                                     <el-select v-model.trim.lazy="$v.role.$model" placeholder="Role here ...">
-                                        <el-option
-                                        v-for="item in ['admin', 'employee']"
-                                        :key="item"
-                                        :label="item"
-                                        :value="item">
+                                        <el-option class="text-left"
+                                        v-for="item in roles" :key="item.key"
+                                        :label="item.value" :value="item.key">
                                         </el-option>
                                     </el-select>
                                 </div>
                             </el-col>
                             <el-col :span="14">
-                                <div class="input-label">Email</div>
+                                <div class="input-label">Phonenumber</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.mail.$error }">
                                     <i class="fe-phone"></i>
                                     <input type="text" placeholder="Phone number here ..." v-model.trim.lazy="$v.phone.$model">
@@ -118,11 +123,12 @@
                 firstname: "",
                 lastname: "",
                 mail: "",
-                role: "",
+                roleId: "",
                 phone: "",
                 avatar: null,
                 password: '',
                 
+                roles: [], 
                 avatarImage: '',
                 submitting: false,
                 error: false,
@@ -132,7 +138,7 @@
          validations: {
             username: {
                 required,
-            }, 
+            },
             firstname: {
                 required,
             },
@@ -162,7 +168,7 @@
                     firstname: this.firstname,
                     lastname: this.lastname,
                     email: this.mail,
-                    role: this.role,
+                    roleId: this.role,
                     phone: this.phone,
                     password: this.password
                 }
@@ -197,7 +203,7 @@
                 .catch((err) => {
                     this.error = true
                     this.errorMessage = err.body.message
-                     this.submitting =  false;
+                    this.submitting =  false;
                 })
             },
             uploadAvatar(e){
@@ -205,11 +211,30 @@
                 this.avatarImage = URL.createObjectURL(file);
                 this.avatar = file
             },
+            getRole(){
+                this.$http.get('users/roles')
+                .then(res => {
+                    let roles = [];
+                    let data =  res.body.result
+
+                    data.forEach(item => {
+                        let u = {
+                            key: item.id,
+                            value: item.name[0].toUpperCase() +  item.name.slice(1)
+                        }
+                        roles.push(u)
+                    })
+                    this.roles = roles
+                })
+                .catch(() => {
+
+                })
+            },
             resetform(){
                 this.firstname = ""
                 this.lastname = ""
                 this.mail = ""
-                this.role = ""
+                this.roleId = ""
                 this.phone = ""
                 this.avatar = null;
                 this.avatarImage = "";
@@ -219,6 +244,7 @@
             }
         },
         created() {
+            this.getRole()
         },
     }
 </script>

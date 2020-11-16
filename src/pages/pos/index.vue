@@ -571,6 +571,7 @@
                 discountCode: '',
                 discountId: null,
 
+                firstEntry: false,
                 loading: true,
                 showFilter: false
             }
@@ -824,21 +825,29 @@
                     hastabs: item.hastabs
                 }
 
-                product.index = orderProducts.length
-                let existIndex = orderProducts.find(item => product.id === item.id)
+                let existIndex
+                for (let index = 0; index < orderProducts.length; index++) {
+                    if (orderProducts[index].id === product.id) {
+                        existIndex = index;
+                        console.log(existIndex)
+                        break;
+                    }
+                }
+
                 if(existIndex !== undefined){
-                    let index = existIndex.index
-                    orderProducts[index].selected = true
+                    orderProducts[existIndex].selected = true
                         setTimeout(() => {
-                        orderProducts[index].selected = false
+                        orderProducts[existIndex].selected = false
                     }, 3000);
                     return;
                 }
+
                 orderProducts.unshift(product)
                 this.orderProducts = orderProducts
-                this.openDrugModal(orderProducts.length - 1, product)
+                this.openDrugModal(0, product)
+
                 localStorage.setItem('orderProducts', JSON.stringify(orderProducts))
-                this.updateProductTotalPrice(product.index)
+                this.updateProductTotalPrice(0)
                 this.updateTotalPrice()
             },
             openDrugModal(i, item){
@@ -945,6 +954,7 @@
                 localStorage.removeItem('orderProducts')
             },
             checkout(type){
+                this.checkingout = true
                 let transaction = {
                     grossTotal: this.grossTotal,
                     netTotal:  this.netTotal, 
@@ -956,6 +966,7 @@
                     products: [],
                     cashAmount: this.cash,
                     momoAmount: this.momo,
+                    changeGiven: this.change,
                     id : this.id
                 }
                 if(this.orderProducts.length > 0){
@@ -971,6 +982,13 @@
                         }
                         transaction.products.push(product)
                     })  
+
+                    if(this.printReceipt){
+                        transaction.print = true
+                        
+                    }else{
+                        transaction.print = false
+                    }
                     
                     if(type == 'hold'){
                         transaction.state = 'holding';
@@ -982,25 +1000,32 @@
                 }
             },
             createTransaction(postData){
-                this.$http.post('product/transaction/save', postData)
-                .then(res => {
-                    if(postData.state == 'holding'){
-                        this.$notify({
-                            title: 'Success',
-                            message: "Transaction on hold",
-                            type: 'success'
-                        });
-                    }
-                    if(postData.state == 'processing'){
-                        this.$notify({
-                            title: 'Success',
-                            message: "Checkout successful",
-                            type: 'success'
-                        });
-                    }
-                    this.resetOrder()
-                    this.getProducts()
-                })
+                if(this.checkingout == false){
+                    this.checkingout = true
+                    this.$http.post('product/transaction/save', postData)
+                    .then(res => {
+                        this.checkingout = false
+                        if(postData.state == 'holding'){
+                            this.$notify({
+                                title: 'Success',
+                                message: "Transaction on hold",
+                                type: 'success'
+                            });
+                        }
+                        if(postData.state == 'processing'){
+                            this.$notify({
+                                title: 'Success',
+                                message: "Checkout successful",
+                                type: 'success'
+                            });
+                        }
+                        this.resetOrder()
+                        this.getProducts()
+                    })
+                    .catch(err => {
+                        this.checkingout = false
+                    })
+                }
             },
             initScanner(){
                 this.$store.dispatch('GET_BARCODE')
@@ -1039,15 +1064,32 @@
                 if (this.$v.$invalid) {
                    this.submitting = false;
                 }else{
-                    if(type == 'cash'){
-                        if(parseFloat(this.cash) < this.grossTotal){
-                            this.momo = parseFloat(this.grossTotal) - parseFloat(this.cash)   
-                        }
-                    }else{
-                        if(parseFloat(this.momo) < this.grossTotal){
-                            this.cash = parseFloat(this.grossTotal) - parseFloat(this.momo) 
+                    if(this.firstEntry !== false){
+                        this.firstEntry = true
+                    }
+                    if(this.firstEntry ===  true){
+                        this.firstEntry = false
+                        if(type == 'cash'){
+                            if(this.split){
+                                if(parseFloat(this.cash) < this.grossTotal){
+                                    this.momo = parseFloat(this.grossTotal) - parseFloat(this.cash)   
+                                }
+                            }
+                        }else{
+                            if(parseFloat(this.momo) < this.grossTotal){
+                                this.cash = parseFloat(this.grossTotal) - parseFloat(this.momo) 
+                            }
                         }
                     }
+
+                    if(isNaN(parseFloat(this.momo))){
+                        this.momo = 0
+                    }
+
+                    if(isNaN(parseFloat(this.cash))){
+                        this.momo = 0
+                    }
+                    this.change = ((parseFloat(this.cash) + parseFloat(this.momo)) - this.grossTotal).toFixed(2)
                 }
             },
             setRetrieved(data){
@@ -1072,8 +1114,8 @@
                         saleId: item.id,
                         hasloose: item.product.hasloose
                     }
-                    product.index = this.orderProducts.length
-                    this.orderProducts.push(product)
+
+                    this.orderProducts.unshift(product)
                     this.updateTotalPrice()
                 })
             },
@@ -1165,12 +1207,7 @@
                     })
                 }
             }
-            // let layout = localStorage.getItem('layout')
-            //  if(layout !== undefined){
-            //     this.layout = layout
-            //     // layout = (layout == 'grid') ? 'list': 'grid';
-            //     // this.switchLayout(layout)
-            // }
+
             this.getCategories()
             this.getProducts()
             this.getCustomers()
@@ -1297,6 +1334,12 @@
                 }
             }
         }
+    }
+    .alert-box{
+        padding: 10px;
+        background-color: rgba(255, 0, 0, 0.164);
+        border-radius: 5px;
+        color: rgb(218, 49, 49);
     }
     .el-table .recent-row {
         background: #f4fffa;

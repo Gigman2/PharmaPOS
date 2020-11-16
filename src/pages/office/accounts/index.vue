@@ -5,7 +5,7 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ...">
             </div>
-            <router-link :to="{name: 'office-accounts_user^add'}">
+            <router-link :to="{ name: 'office-accounts_add',}">
                 <div class="btn btn-primary pull-right"><i class="fe-user"></i> New Account</div>
             </router-link>
         </div>
