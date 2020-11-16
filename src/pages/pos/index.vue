@@ -553,7 +553,7 @@
                 id: null,
                 barcodeScanned: '',
                 netTotal: 0,
-                grossTotal: 0,
+                grossTotal: 0, 
                 tax: 0,
                 categories: [],
 
