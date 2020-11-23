@@ -66,6 +66,7 @@
                             <thead>
                                 <tr>
                                         <th>Name</th>
+                                        <th>Rate</th>
                                         <th>Qty</th>
                                         <th>Price</th>
                                     </tr>
@@ -73,8 +74,9 @@
                             <tbody>
                                     <tr v-for="(item, i) in selectedTransaction.products" :key="i">
                                         <td>{{item.product.name}}</td>
+                                        <td>{{item.price}}</td>
                                         <td>{{item.quantity}}</td>
-                                        <td>{{item.unit}}</td>
+                                        <td>{{item.total}}</td>
                                     </tr>
                             </tbody>
                         </table>
