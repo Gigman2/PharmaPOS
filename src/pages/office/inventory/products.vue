@@ -19,7 +19,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
-                <el-table-column prop="quantity" label="In Stock"> </el-table-column>
+                <el-table-column prop="left  " label="In Stock"> </el-table-column>
                  <el-table-column prop="dispensation" label="Dispensation"> </el-table-column>
                 <el-table-column prop="price" label="Price" width="100px"> </el-table-column>
                 <el-table-column width="220px">

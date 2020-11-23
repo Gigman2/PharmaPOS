@@ -89,6 +89,7 @@
                             <tr>
                                 <!-- <th width="30px"></th> -->
                                 <th>Name</th>
+                                <th>Disp</th>
                                 <th>Qty</th>
                                 <th width="60px">Price</th>
                             </tr>
@@ -96,13 +97,10 @@
                         <tbody>
                             <tr class="checkout-item-row" v-for="(item, i) in transaction.products" :key="i">
                                 <td style="text-align: left">{{item.product.name}}</td>
+                                <td style="text-align: left">{{item.dispensation}}</td>
                                 <td>
-                                    <span>  
-                                        {{(item.packBought == 0 && item.looseBought == 0) ? '--' : ''}}
-
-                                        {{(item.packBought > 0) ? item.packBought+'pck' : ''}}
-
-                                        {{(item.looseBought > 0) ? item.looseBought+'pcs' : ''}}
+                                    <span> 
+                                        {{item.quantity}}
                                     </span>
                                 </td>
                                 <td>{{item.total}}</td>
