@@ -24,7 +24,7 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, f) in row" :key="f">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item)">
+                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item, false)">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -56,7 +56,7 @@
                                         <div class="product-title">{{item.name}}</div>
                                         <div class="product-price">Ghc {{item.displayPrice}}</div>
                                     </div>
-                                    <div class="product shadow-1 shortage"  @click="addItem(item)" v-else>
+                                    <div class="product shadow-1 shortage"  @click="addItem(item, false)" v-else>
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -78,7 +78,7 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, i) in row" :key="i">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item)">
+                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item, false)">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -110,7 +110,7 @@
                                         <div class="product-title">{{item.name}}</div>
                                         <div class="product-price">Ghc {{item.displayPrice}}</div>
                                     </div>
-                                    <div class="product shadow-1 shortage"  @click="addItem(item)" v-else>
+                                    <div class="product shadow-1 shortage"  @click="addItem(item, false)" v-else>
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -140,21 +140,21 @@
                                 width="250"
                                 >
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' " >{{scope.row.name}}</div>
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="price"
                                 label="Price">
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' ">{{scope.row.price}}</div>
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' ">{{scope.row.price}}</div>
                                     </template>
                                 </el-table-column>
                                  <el-table-column
                                 prop="expiration"
                                 label="Expired">
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' " 
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' " 
                                             :class="{
                                                 'text-red': scope.row.expiration == 'expired', 
                                                 'text-green': scope.row.expiration == 'good',
@@ -166,7 +166,7 @@
                                 prop="left"
                                 label="Left" width="50">
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' " :class="{'text-red': scope.row.left <= 0}">{{scope.row.left}}</div>
+                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' " :class="{'text-red': scope.row.left <= 0}">{{scope.row.left}}</div>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -700,7 +700,7 @@
                     this.products = newData
                     
                     if(query.barcode && data !== undefined){
-                        this.addItem(data[0])
+                        this.addItem(data[0], false)
                     }
 
                     if(this.layout == 'list'){
@@ -758,7 +758,7 @@
             /**************************************
             *     CHECKOUT FUNCTIONS
             ***************************************/
-            addItem(item){
+            addItem(item, retrieved){
                 var orderProducts = [...this.orderProducts]
 
                 if(!item.pack){
@@ -771,13 +771,16 @@
                     totalprice: item.totalprice,
                     price: item.price,
                     left: item.left,
-                    quantity: item.quantity,
+                    quantity: 0,
                     pack_l: item.pack_l,
                     pack_q: item.pack_q,
                     dispensation: item.dispensation,
                     pack: item.pack,
                     selected: false,
                     saleId: null
+                }
+                if(retrieved){
+                    product.quantity = item.quantity
                 }
 
                 let existIndex
@@ -1151,7 +1154,7 @@
                 orderProductsInStorage = JSON.parse(localStorage.getItem('orderProducts'))
                 if(orderProductsInStorage !== null){
                     orderProductsInStorage.forEach(item => {
-                        this.addItem(item)
+                        this.addItem(item, true)
                         this.showDrugDialog = false
                     })
                 }
