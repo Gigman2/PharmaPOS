@@ -217,6 +217,12 @@ body {
       i{
         color: rgb(137, 147, 155);;
       }
+      .image{
+        img{
+          vertical-align: sub;
+          width: 22px;
+        }
+      }
       .el-select{
         width: calc(100% - 60px);
       }

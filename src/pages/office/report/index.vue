@@ -114,7 +114,7 @@
                 })
             },
             getThisMonth(){
-                let payload = [Moment().subtract(6,'days').format('YYYY-MM-DD'), Moment().format('YYYY-MM-DD')]
+                let payload = [Moment().subtract(6,'days').format('YYYY-MM-DD'), Moment().add(1, 'day').format('YYYY-MM-DD')]
                 this.from = payload[0];
                 this.to = payload[1];
                 this.getReport(payload)
@@ -136,6 +136,15 @@
                 ).then(res => {
                     window.open('http://localhost:4000/api/data/download?file='+res.body.file);
                     this.$router.push({name: this.$route.name})
+                })
+                .catch(err => {
+                    if(err.body.message){
+                        this.$notify({
+                            title: 'Alert!',
+                            message: err.body.message,
+                            type: 'error'
+                        });
+                    }
                 })
             }
         },

@@ -32,7 +32,7 @@
                         </el-row>
                         <!-- <div class="hoz-line dark"></div> -->
                         <el-row :gutter="20">
-                            <el-col :span="10">
+                            <el-col :span="14">
                                 <div class="input-label">Product Supplier</div>
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.supplier.$error }">
                                     <i class="fe-server"></i>
@@ -42,29 +42,48 @@
                                     </el-select>
                                 </div>
                             </el-col>
-                            <el-col :span="7">
-                                <div class="input-label">Update Price</div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
-                                    <i class="fe-square"></i>
-                                    <input type="text" placeholder="0.00" v-model.trim.lazy="$v.price.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="7">
-                                <div class="input-label">Quantity</div>
+                            <el-col :span="10">
+                                <div class="input-label">Quantity adding to stock</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="0" v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
                         </el-row>
+
                         <el-row :gutter="20">
-                            <el-col :span="16">
+                            <el-col :span="7">
+                                <div class="input-label">Update Price</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="text" placeholder="Enter price of item" v-model.trim.lazy="$v.price.$model">
+                                </div>
+                            </el-col>
+                             <el-col :span="7">
+                                <div class="input-label">Update Cost Price</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="text" placeholder="Enter cost price" v-model.trim.lazy="$v.cprice.$model">
+                                </div>
+                            </el-col>
+                             <el-col :span="10" v-if="dispensation != 'single'">
+                                <div class="input-label">Update Quantity</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
+                                </div>
+                            </el-col>
+                            <el-col :span="10">
                                 <div class="input-label">Shelf ID / Product Position</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.shelf.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="" v-model.trim.lazy="$v.shelf.$model">
                                 </div>
                             </el-col>
+                        </el-row>
+
+                        <el-row :gutter="20">
+                            
                         </el-row>
             
                         <div class="btn btn-primary disabled" v-if="$v.$anyError">Add Product</div>
@@ -94,9 +113,12 @@
                 product: "",
                 supplier: "",
                 price: "",
+                cprice: "",
+                pack_q: "",
                 quantity: "",
                 restock: "",
                 shelf: "", 
+                dispensation: "",
    
                 suppliers: [],
                 products: [],
@@ -110,21 +132,15 @@
             product: {
                 required,
             },
-            supplier: {
-                
-            },
-            price: {
-                
-            },
+            supplier: {},
             quantity: {
                 required,
             },
-            restock: {
-
-            },
-            shelf: {
-                
-            }
+            price: {},
+            cprice: {},
+            pack_q: {},
+            restock: {},
+            shelf: {}
         },
         computed: {
             // ...mapGetters({
@@ -143,6 +159,8 @@
                     initialStock: this.products[this.product].key.left,
                     currentStock: Number(this.products[this.product].key.left) + Number(this.quantity),
                     price: this.price,
+                    cprice: this.cprice,
+                    pack_q: this.pack_q,
                     quantity: this.quantity,
                     restock: this.restock,
                     shelf: this.shelf
@@ -222,6 +240,9 @@
             productChange(){
                 this.supplier = this.products[this.product].key.supplierId
                 this.price = this.products[this.product].key.price
+                this.cprice = this.products[this.product].key.cprice
+                this.pack_q = this.products[this.product].key.pack_q
+                this.dispensation = this.products[this.product].key.dispensation
                 this.restock = this.products[this.product].key.restock
                 this.shelf = this.products[this.product].key.shelf
             },

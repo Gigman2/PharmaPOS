@@ -19,9 +19,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
-                <el-table-column prop="quantity" label="Quantity left"> </el-table-column>
-                 <el-table-column prop="lprice" label="Strip Price"> </el-table-column>
-                <el-table-column prop="price" label="Packs Price" width="100px"> </el-table-column>
+                <el-table-column prop="quantity" label="In Stock"> </el-table-column>
+                 <el-table-column prop="dispensation" label="Dispensation"> </el-table-column>
+                <el-table-column prop="price" label="Price" width="100px"> </el-table-column>
                 <el-table-column width="220px">
                     <template slot-scope="scope">
                             <el-button size="mini" @click="triggerAdd(scope.row.id)">Add</el-button>
