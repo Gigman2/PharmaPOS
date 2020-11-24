@@ -150,13 +150,6 @@
                                         <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' ">{{scope.row.price}}</div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column
-                                prop="lprice"
-                                label="Strip Price">
-                                    <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row) : '' ">{{scope.row.lprice}}</div>
-                                    </template>
-                                </el-table-column>
                                  <el-table-column
                                 prop="expiration"
                                 label="Expired">
