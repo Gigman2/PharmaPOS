@@ -272,7 +272,7 @@
                                         </td>
                                         <td>
                                             <span class="pointer" @click="openDrugModal(e, item)">
-                                                {{item.pack}}
+                                                {{(item.dispensation == 'single') ? item.quantity :item.pack}}
                                             </span>
                                         </td>
                                         <td>{{item.totalprice}}</td>

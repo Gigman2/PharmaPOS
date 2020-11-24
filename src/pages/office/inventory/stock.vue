@@ -52,7 +52,9 @@
                     let data =  res.body.result
                     data.map(i => {
                         i.updated = Moment(i.updatedAt).format('D MMM YYYY - h:mm a')
-                        i.shelf = i.product.shelf
+                        if(i.product){
+                            i.shelf = i.product.shelf
+                        }
                         if(i.supplier){
                             i.supplier = i.supplier.name
                         }
