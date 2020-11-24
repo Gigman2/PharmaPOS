@@ -759,6 +759,7 @@
             *     CHECKOUT FUNCTIONS
             ***************************************/
             addItem(item, retrieved){
+                this.countInput = 0;
                 var orderProducts = [...this.orderProducts]
 
                 if(!item.pack){
