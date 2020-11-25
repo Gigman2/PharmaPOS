@@ -59,16 +59,19 @@
                 <div class="checkout-title pull-left" >Purchase Detail</div>
 
                 <div class="pull-right mt-10 mr-10" v-if="Object.keys(transaction).length === 0 && transaction.constructor === Object">
-                    <el-button size="mini" v-if="userPermission && userPermission[6] && userPermission[6].state">
+                    <!-- <el-button size="mini" v-if="userPermission && userPermission[6] && userPermission[6].state">
                         <span>Refund</span>
                     </el-button>
 
                     <el-button size="mini" v-if="userPermission && userPermission[7] && userPermission[7].state">
                         <span>Return</span>
-                    </el-button>
+                    </el-button> -->
                 </div>
 
                 <div class="pull-right mt-10 mr-10" v-else>
+                    <el-button size="mini" class="pull-right" @click="printRequest(selectedTransaction.id)">
+                        Print
+                    </el-button>
                     <el-button size="mini" @click="showCustomerDialog = true">
                         <span>Add Customer</span>
                     </el-button>
@@ -312,6 +315,23 @@
                     this.$notify({
                         title: 'Success',
                         message: "This transaction can be returned",
+                        type: 'error'
+                    });
+                })
+            },
+            printRequest(id){
+                this.$http.post('product/transaction/print', {id})
+                .then(res => {
+                    this.$notify({
+                        title: 'Success',
+                        message: "Print job started",
+                        type: 'success'
+                    });
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Error',
+                        message: "Unanble to print these transaction",
                         type: 'error'
                     });
                 })
