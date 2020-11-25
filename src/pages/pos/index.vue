@@ -24,7 +24,7 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, f) in row" :key="f">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item, false)">
+                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -78,7 +78,7 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, i) in row" :key="i">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.quantity > item.restock" @click="addItem(item, false)">
+                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -224,18 +224,7 @@
                                 <div class="d-inline">
                                         <i class="fe-user-minus" @click="customer = null"></i>
                                 </div>
-                                </el-tooltip>
-
-                                <!-- <el-tooltip class="item" effect="dark" placement="bottom-end">
-                                    <div slot="content">apply discount</div>
-
-                                    <div class="d-inline">
-                                        <i class="fe-tag" v-if="discount == 0" @click="showDiscountDialog = true"></i>
-                                    <span  v-else>{{discount}} <em class="fe-percent"></em></span>
-                                    </div>
-                                </el-tooltip> -->
-
-                                
+                                </el-tooltip>                                
                                 <el-tooltip class="item" effect="dark" placement="bottom-end">
                                     <div slot="content">clear transaction</div>
 
@@ -285,7 +274,7 @@
                         </table>
                 </div>
                 <div class="checkout-pay-section">
-                        <div class="checkout-payout disabled" v-if="Number(grossTotal) < 1" ><span>Pay</span> (Ghc {{grossTotal}})</div>
+                        <div class="checkout-payout disabled" v-if="Number(grossTotal) < 0" ><span>Pay</span> (Ghc {{grossTotal}})</div>
                         <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{grossTotal}})</div>
                         <div class="checkout-reset" @click="resetOrder">Reset</div>
                 </div>
@@ -828,11 +817,10 @@
                     }
                 }else{
                     let packTotal = (this.orderProducts[i].pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l;
-                     if(this.countInput > packTotal){
+                    if(this.countInput > packTotal){
                         this.countInput = packTotal
                     }
                 }
-
                 let quantity = this.countInput
 
                 if(type == 'add'){
@@ -841,7 +829,7 @@
                             quantity++
                         }
                     }else if(this.orderProducts[i].dispensation == 'tab' || this.orderProducts[i].dispensation == 'strip'){
-                         if(quantity < (this.orderProducts[i].pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l){
+                        if(quantity < (this.orderProducts[i].pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l){
                             quantity++
                         }
                     }
@@ -902,6 +890,10 @@
                 localStorage.removeItem('orderProducts')
             },
             checkout(type){
+                if(this.cash == 0 && this.momo == 0){
+                    this.cash = this.grossTotal
+                }
+
                 let transaction = {
                     grossTotal: this.grossTotal,
                     netTotal:  this.netTotal, 
@@ -930,7 +922,9 @@
                         if(product.dispensation != 'single'){
                             product.quantity = Number(item.pack)
                         }
-                        transaction.products.push(product)
+                        if(product.quantity > 0){
+                            transaction.products.push(product)
+                        }
                     })  
 
                     if(this.printReceipt){

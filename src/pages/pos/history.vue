@@ -90,9 +90,6 @@
                                 <!-- <th width="30px"></th> -->
                                 <th>Name</th>
                                 <th>Rate</th>
-                                <th>Qty</th>
-                                <th width="60px">Price</th>
-                            </tr>
                         </thead>
                         <tbody>
                             <tr class="checkout-item-row" v-for="(item, i) in transaction.products" :key="i">
@@ -100,7 +97,7 @@
                                 <td>{{item.price}}</td>
                                 <td>
                                     <span>{{item.quantity}} </span> <strong>{{(item.dispensation == 'tab') ? 'T' : (item.dispensation == 'strip') ? 'S': ''}}</strong>
-                                </td>
+
                                 <td>{{item.total}}</td>
                             </tr>
                         </tbody>
