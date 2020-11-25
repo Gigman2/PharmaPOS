@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="pull-right mt-10 mr-10" v-else>
-                    <el-button size="mini" class="pull-right" @click="printRequest(selectedTransaction.id)">
+                    <el-button size="mini" class="mr-5" @click="printRequest">
                         Print
                     </el-button>
                     <el-button size="mini" @click="showCustomerDialog = true">
@@ -319,8 +319,8 @@
                     });
                 })
             },
-            printRequest(id){
-                this.$http.post('product/transaction/print', {id})
+            printRequest(){
+                this.$http.post('product/transaction/print', {id: this.transaction.id})
                 .then(res => {
                     this.$notify({
                         title: 'Success',
