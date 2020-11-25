@@ -15,7 +15,7 @@
             <el-table :data="result" style="width: 100%">
                 <el-table-column label="Product Name" width="350">
                     <template slot-scope="scope">
-                        <div :class="{'table-cell-warning': scope.row.expiration == 'expiring', 'table-cell-danger': scope.row.expiration == 'expired'}">{{scope.row.name}}</div>
+                        <div :class="{'table-cell-warning': scope.row.expiration == 'expiring', 'table-cell-danger': scope.row.expiration == 'expired'}">{{scope.row.name+' '+scope.row.variant}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="variant" label="Strength"> </el-table-column>
