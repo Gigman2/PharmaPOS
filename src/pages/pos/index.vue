@@ -239,7 +239,7 @@
                             <table class="checkout-table" cellspacing="0" cellpadding="0">
                                 <thead class="checkout-headings">
                                     <tr>
-                                        <th width="30px"></th>
+                                        <th width="30px"></th> 
                                         <th>Name</th>
                                         <th>Rate</th>
                                         <th>QTY</th>

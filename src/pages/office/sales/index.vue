@@ -224,7 +224,7 @@
         width: 100%;
         max-height: 300px;
         tr > th{
-            color: #6751de;
+            color: #42b983;
             padding: 10px;
             background-color: rgb(230, 230, 230);
             &:first-child{
