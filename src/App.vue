@@ -147,6 +147,14 @@ body {
       margin: 0 auto;
       margin-bottom: 30px;
       position: relative;
+      &.disabled{
+        cursor: not-allowed;
+        input{
+          background-color: white;
+          cursor: not-allowed;
+          border: 1px solid silver;
+        }
+      }
       i{
         position: absolute;
         top: 11px;
@@ -333,6 +341,12 @@ body {
 
 .text-purple{
   color: #7c1d68;
+}
+
+.horizontal-line{
+  width: 100%;
+  height: 1px;
+  background-color: #f1f1f1;
 }
 </style>
 

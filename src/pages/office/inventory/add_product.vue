@@ -485,7 +485,6 @@
                         if(barcode){
                             let scanner = BarcodeScanner ();
                             scanner.on((code, event) => {
-                                console.log(event)
                                 this.barcode = code
                             });
                         }

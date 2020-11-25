@@ -117,7 +117,7 @@
                 errorMessage: null
             }
         },
-         validations: {
+        validations: {
             firstname: {
                 required,
             },
