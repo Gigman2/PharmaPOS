@@ -189,7 +189,7 @@
                 this.$http.get('dashboard/sales-monthly')
                 .then(res => {
                     this.monthlySales =  res.body.result
-                    this.monthlySales = formatMoney(this.monthlySales, ',', '.')
+                    this.monthlySales = formatMoney(this.monthlySales, 2, '.', ',')
                 })
                 .catch(err => {
                     console.log(err)
@@ -212,7 +212,8 @@
                 .then(res => {
                     let salesWorth =  res.body.result
                     salesWorth =  res.body.result
-                    salesWorth.stockWorth = formatMoney(salesWorth.stockWorth, ',', '.')
+
+                    salesWorth.stockWorth = formatMoney(salesWorth.stockWorth, 2, '.', ',')
                     this.salesWorth = salesWorth
 
                     let expiry = salesWorth.expiring
@@ -268,7 +269,6 @@
             },
             prepareGraphData(data){
                 this.salesData.data = Array(7).fill().map((_, i) => 0);
-                console.log(data)
                 data.forEach((item, i) => {
                     this.salesData.data[i] = item.total
                 })

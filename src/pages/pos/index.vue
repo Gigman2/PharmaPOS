@@ -252,6 +252,7 @@
                                     <tr>
                                         <th width="30px"></th>
                                         <th>Name</th>
+                                        <th>Rate</th>
                                         <th>QTY</th>
                                         <th width="60px">Price</th>
                                     </tr>
@@ -263,6 +264,7 @@
                                         <td width="45%">
                                             <span class="pointer"  @click="openDrugModal(e, item)">{{item.name}}</span>
                                         </td>
+                                        <td>{{item.price}}</td>
                                         <td>
                                             <span class="pointer" @click="openDrugModal(e, item)">
                                                 {{(item.dispensation == 'single') ? item.quantity :item.pack}}
@@ -762,10 +764,6 @@
                 this.countInput = 0;
                 var orderProducts = [...this.orderProducts]
 
-                if(!item.pack){
-                    item.pack = 0
-                }
-
                 var product = {
                     id: item.id,
                     name: item.name,
@@ -1059,6 +1057,7 @@
                         pack_q: item.product.pack_q,
                         price: item.product.price,
                         selected: false,
+                        dispensation: item.dispensation,
                         saleId: this.id,
                     }
 

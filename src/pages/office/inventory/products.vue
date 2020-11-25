@@ -13,14 +13,15 @@
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="result" style="width: 100%">
-                <el-table-column label="Product Name">
+                <el-table-column label="Product Name" width="350">
                     <template slot-scope="scope">
                         <div :class="{'table-cell-warning': scope.row.expiration == 'expiring', 'table-cell-danger': scope.row.expiration == 'expired'}">{{scope.row.name}}</div>
                     </template>
                 </el-table-column>
+                <el-table-column prop="variant" label="Strength"> </el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
                 <el-table-column prop="quantity" label="In Stock"> </el-table-column>
-                 <el-table-column prop="dispensation" label="Dispensation"> </el-table-column>
+                <el-table-column prop="dispensation" label="Dispensation"> </el-table-column>
                 <el-table-column prop="price" label="Price" width="100px"> </el-table-column>
                 <el-table-column width="220px">
                     <template slot-scope="scope">

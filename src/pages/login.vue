@@ -3,7 +3,7 @@
         <h2>SluxiPOS</h2>
         <h4>login in to your dashboard</h4>
         
-        <div class="form-input-group">
+        <form class="form-input-group"  @keyup.enter="submit">
             <div class="input-error-box" v-if="error">
                 <i class="fe-alert-circle"></i>
                 <span>{{errorMessage}}</span>
@@ -21,7 +21,7 @@
             <div class="btn btn-primary disabled" v-if="$v.$anyError">Login</div>
             <div class="btn btn-primary disabled" v-else-if="submitting"><loader/></div>
             <div class="btn btn-primary" @click="submit" @keyup.enter="submit" v-else>Login</div>
-        </div>
+        </form>
     </div>
 </template>
 

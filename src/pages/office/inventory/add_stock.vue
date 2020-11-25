@@ -212,7 +212,7 @@
             },
             getProducts(){
                 this.loading = true
-                this.$http.get('product/list')
+                this.$http.get('product/list?size=all')
                 .then(res => {
                     let data =  res.body.result
                     data.map((item, i) => {
@@ -224,8 +224,10 @@
                     })
 
                     if(this.$route.params.id){
+                        console.log('here ...')
                         for (let i = 0; i < data.length; i++) {
                             if(data[i].id == this.$route.params.id){
+                                console.log(data)
                                 this.product = i;
                                 break;
                             }

@@ -42,7 +42,10 @@
             :visible.sync="drawer"
             :direction="'rtl'" size="35%">
             <div class="transaction-breakdown">
-                <h2>Invoice No. {{selectedTransaction.id}}</h2>
+                <h2>
+                    Invoice No. {{selectedTransaction.id}}
+                    <el-button size="mini" class="pull-right" @click="printRequest(selectedTransaction.id)">Print</el-button>
+                </h2>
                 <div class="drawer-double mt-20">
                     <div class="drawer-item">Issured by <strong>{{selectedTransaction.by}}</strong></div>
                     <div class="drawer-item light">{{selectedTransaction.date}}</div>
@@ -167,6 +170,9 @@
                     let data = res.body.result
                     this.setData(data)
                 })
+                .catch(err => {
+
+                })
 
             },
             search(){
@@ -181,9 +187,29 @@
                     let data =  res.body.result
                     this.setData(data)
                 })
+                .catch(err => {
+                    
+                })
             },
             closeDrawer() {
                 this.dialog = false;
+            },
+            printRequest(id){
+                this.$http.post('product/transaction/print', {id})
+                .then(res => {
+                    this.$notify({
+                        title: 'Success',
+                        message: "Print job started",
+                        type: 'success'
+                    });
+                })
+                .catch(err => {
+                    this.$notify({
+                        title: 'Error',
+                        message: "Unanble to print these transaction",
+                        type: 'error'
+                    });
+                })
             }
 
         },created() {
