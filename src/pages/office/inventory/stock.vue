@@ -18,9 +18,9 @@
                 <el-table-column prop="supplier" label="Supplier"> </el-table-column>
                 <el-table-column prop="updated" label="Last Updated"> </el-table-column>
                 <el-table-column>
-                    <template slot-scope="scope">
+                    <template slot-scope="">
                             <el-button size="mini">Edit</el-button>
-                            <el-button size="mini" type="danger" @click="triggerDelete(scope.$index, scope.row.id)">Delete</el-button>
+                            <!-- <el-button size="mini" type="danger" @click="triggerDelete(scope.$index, scope.row.id)">Delete</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>

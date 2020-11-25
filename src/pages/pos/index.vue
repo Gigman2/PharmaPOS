@@ -24,7 +24,8 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, f) in row" :key="f">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)">
+                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)"
+                                        :class="{'shortage': item.left <= item.restock && item.left > 0}">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -34,7 +35,9 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                                <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                                    alt="" style="width: 65%; margin-top: 10px" v-else
+                                                >
                                             </div>
                                         </div>
                                         <div class="product-title">{{item.name}}</div>
@@ -50,23 +53,9 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
-                                            </div>
-                                        </div>
-                                        <div class="product-title">{{item.name}}</div>
-                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
-                                    </div>
-                                    <div class="product shadow-1 shortage"  @click="addItem(item, false)" v-else>
-                                        <div class="expiration-box"  
-                                                :class="{'red': item.expiration == 'expired',
-                                                'orange': item.expiration == 'expiring'}"
-                                                
-                                                v-if="item.expiration">{{item.expiration}}
-                                        </div>
-                                        <div class="product-image">
-                                            <div class="image">
-                                                <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                                <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                                    alt="" style="width: 65%; margin-top: 10px" v-else
+                                                >
                                             </div>
                                         </div>
                                         <div class="product-title">{{item.name}}</div>
@@ -78,7 +67,8 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, i) in row" :key="i">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)">
+                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)"
+                                         :class="{'shortage': item.left <= item.restock && item.left > 0}">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -88,7 +78,9 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                                <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                                    alt="" style="width: 65%; margin-top: 10px" v-else
+                                                >
                                             </div>
                                         </div>
                                         <div class="product-title">{{item.name}}</div>
@@ -104,23 +96,9 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
-                                            </div>
-                                        </div>
-                                        <div class="product-title">{{item.name}}</div>
-                                        <div class="product-price">Ghc {{item.displayPrice}}</div>
-                                    </div>
-                                    <div class="product shadow-1 shortage"  @click="addItem(item, false)" v-else>
-                                        <div class="expiration-box"  
-                                                :class="{'red': item.expiration == 'expired',
-                                                'orange': item.expiration == 'expiring'}"
-                                                
-                                                v-if="item.expiration">{{item.expiration}}
-                                        </div>
-                                        <div class="product-image">
-                                            <div class="image">
-                                                <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img src="@/assets/images/pills.svg" alt="" style="width: 65%; margin-top: 10px" v-else>
+                                               <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                                    alt="" style="width: 65%; margin-top: 10px" v-else
+                                                >
                                             </div>
                                         </div>
                                         <div class="product-title">{{item.name}}</div>
