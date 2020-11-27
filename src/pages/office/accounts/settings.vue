@@ -17,11 +17,11 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="24">
+                            <el-col :span="24" v-if="!$route.params.id">
                                 <div class="input-label">Enter current Password</div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.old.$error }">
+                                <div class="input-box">
                                     <i class="fe-unlock"></i>
-                                    <input type="password" placeholder="  *****************  " v-model.trim.lazy="$v.old.$model">
+                                    <input type="password" placeholder="  *****************  " v-model="old">
                                     <!-- <i class="fe-eye input-suffix" @click="viewPassword('old')"></i> -->
                                 </div>
                             </el-col>
@@ -75,9 +75,7 @@
             }
         },
         validations: {
-            old: {
-                required
-            },
+            old: {},
             new: {
                 required
             },
@@ -90,6 +88,7 @@
                 this.error = false;
                 this.submitting = true;
                 let postdata = {
+                    userId: this.$route.params.id,
                     old: this.old,
                     password: this.new,
                     c_password: this.c_new

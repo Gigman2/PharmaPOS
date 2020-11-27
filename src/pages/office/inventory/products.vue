@@ -41,6 +41,7 @@
     import categoryVue from './category.vue';
     import formatMoney from '@/components/formatmoney.js'
     import Moment from 'moment'
+    import Fuse from 'fuse.js'
 
     export default {
         components: {
@@ -83,6 +84,8 @@
                         i.price = formatMoney(i.price,',','.')
                         i.lprice = formatMoney(i.lprice,',','.')
                     })
+
+                    // localStorage.setItem('products', data)
                     this.result = data;
                     this.fetching = false
                 })
@@ -90,24 +93,64 @@
                     this.fetching = false
                 })
             },
-            searchData(){
-                this.fetching = true
-                this.$http.get('product/search', {
-                    params: {name: this.q}
-                })
+            getAllProducts(){
+                this.$http.get('product/list?size=all')
                 .then(res => {
                     let data =  res.body.result
                     data.map(i => {
+                        let expiry = Moment(i.expiry).format('YYYY-MM-DD')
+                        let now = Moment().format('YYYY-MM-DD')
+
+                        let expired = Moment().isAfter(expiry)
+                        i.expiry = Moment(i.expiry).format('Do MMM YYYY')
+                        
+                        if(expired){
+                            i.expiration = 'expired'
+                        }else{
+                            var exirationDifference = Moment(expiry).diff(now, 'days');
+                            if(exirationDifference <= 90){
+                                i.expiration = 'expiring'
+                            }else{
+                                i.expiration = 'ok'
+                            }
+                        }
                         if(i.category){
                             i.category = i.category.name
                         }
+                        i.price = formatMoney(i.price,',','.')
+                        i.lprice = formatMoney(i.lprice,',','.')
                     })
-                    this.result = data;
-                    this.fetching = false
+
+                    localStorage.setItem('products', JSON.stringify(data))
                 })
-                .catch(() => {
-                    this.fetching = false
+                .catch(err => {
                 })
+            },
+            searchData(){
+                let q = this.q
+                q = q.trim()
+                if(q != ''  && q.length >= 3){
+                    this.fetching = true
+                    let products = JSON.parse(localStorage.getItem('products'))
+
+                    const fuse = new Fuse(products, {
+                        keys: ['name']
+                    })
+
+                    let result = fuse.search(q, {limit: 100})
+
+                    let fused = result.map(item => {
+                        let product = item.item;
+                        return product
+                    })
+                
+                    this.result = fused
+                    this.fetching = false
+                }
+
+                if(q == ''){
+                    this.getData()
+                }
             },
             triggerAdd(id){
                 this.$router.push({name: 'office-inventory_stock^add-id', params: {id}})
@@ -169,6 +212,7 @@
         },
         created() {
             this.getData()
+            this.getAllProducts()
         },
     }
 </script>

@@ -55,6 +55,14 @@ export default {
       },
     },
     {
+      path: 'security/:id',
+      name: 'office-accounts_user^security',
+      component: Office_Account_Setting,
+      meta: {
+        title: "Change Account Password" 
+      },
+    },
+    {
       path: ':id',
       name: 'office-accounts_user^edit',
       component: Office_Account_Edit,
@@ -62,6 +70,7 @@ export default {
         title: "Edit Account" 
       },
     },
+    
     {
       path: 'roles/add',
       name: 'office-accounts_role^add',

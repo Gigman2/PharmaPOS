@@ -10,6 +10,7 @@ import OfficeLayout from '../layout/office.vue'
 import Login from '../pages/login.vue'
 import POS_Home from '../pages/pos'
 import POS_History from '../pages/pos/history.vue'
+import POS_Settings from '../pages/pos/settings.vue'
 
 import AccountRoutes from './modules/account'
 import DashboardRoutes from './modules/dashboard'
@@ -45,6 +46,11 @@ Vue.use(VueRouter)
         path: 'history',
         name: 'pos-history',
         component: POS_History
+      },
+      {
+        path: 'settings',
+        name: 'pos-settings',
+        component: POS_Settings
       }
     ]
   },

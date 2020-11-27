@@ -17,10 +17,11 @@
                 <el-table-column prop="email" label="Email"> </el-table-column>
                 <el-table-column prop="phone" label="Phone"> </el-table-column>
                 <el-table-column prop="login" label="Last Login"> </el-table-column>
-                <el-table-column>
+                <el-table-column width="250">
                     <template slot-scope="scope">
-                            <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
-                            <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
+                        <el-button size="mini" @click="triggerSecurity(scope.row.id)">Security</el-button>
+                        <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
+                        <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
                 </el-table-column>
         </el-table>
@@ -68,6 +69,9 @@
             },
             triggerEdit(id){
                 this.$router.push({name: 'office-accounts_user^edit', params: {id}})
+            },
+            triggerSecurity(id){
+                this.$router.push({name: 'office-accounts_user^security', params: {id}})
             },
             async triggerDelete(index, id){
                 if(this.accountData.length > 1){
