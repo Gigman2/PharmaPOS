@@ -346,9 +346,7 @@
                    variant: this.variant,
                    dispensation: this.dispensation
                 }       
-                
-                postdata.name = (this.variant != '') ? this.name + ' '+ this.variant : this.name
-                
+                                
                 if(this.pack_q){
                     postdata.pack_q = this.pack_q 
                 }
