@@ -115,7 +115,7 @@
                                 </div>
                             </el-col>
                             <el-col :span="12">
-                                <div class="input-label">In Stock</div>
+                                <div class="input-label">Qauntity In Stock</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Total in stock " v-model.trim.lazy="$v.quantity.$model">
@@ -453,7 +453,7 @@
                     this.expiry = data.expiry
                     this.price = data.price
                     this.cprice = data.cprice
-                    this.quantity = data.quantity
+                    this.quantity = data.left
                     this.restock = data.restock
                     this.variant = data.variant,
                     this.shelf = data.shelf
