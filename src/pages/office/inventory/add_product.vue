@@ -448,6 +448,7 @@
                     this.category = data.categoryId
                     this.barcode = data.barcode
                     this.sku = data.sku
+                    this.dispensation = data.dispensation
                     this.supplier = data.supplierId
                     this.manufacturer = data.manufacturer
                     this.expiry = data.expiry
