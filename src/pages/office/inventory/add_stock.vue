@@ -46,7 +46,7 @@
                                 <div class="input-label">Quantity adding to stock</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="text" placeholder="0" v-model.trim.lazy="$v.quantity.$model">
+                                    <input type="text" :placeholder="pquantity" v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
                         </el-row>
@@ -64,6 +64,13 @@
                                 <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="Enter cost price" v-model.trim.lazy="$v.cprice.$model">
+                                </div>
+                            </el-col>
+                             <el-col :span="10" v-if="dispensation != 'single'">
+                                <div class="input-label">Update Quantity</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
                                 </div>
                             </el-col>
                             <el-col :span="10">
@@ -109,6 +116,7 @@
                 cprice: "",
                 pack_q: "",
                 quantity: "",
+                pquantity: "",
                 restock: "",
                 shelf: "", 
                 dispensation: "",
@@ -177,7 +185,13 @@
                         message: "Product Stock updated",
                         type: 'success'
                     });
-                    this.resetform()
+                    if(!this.$route.params.id){
+                        this.resetform()
+                    }else{
+                        this.pquantity  = this.quantity
+                        this.quantity = 0
+                        
+                    }
                 })
                 .catch((err) => {
                     this.error = true
@@ -235,10 +249,13 @@
                 this.supplier = this.products[this.product].key.supplierId
                 this.price = this.products[this.product].key.price
                 this.cprice = this.products[this.product].key.cprice
-                this.quantity = this.products[this.product].key.quantity
+                this.pack_q = this.products[this.product].key.pack_q
                 this.dispensation = this.products[this.product].key.dispensation
                 this.restock = this.products[this.product].key.restock
-                this.shelf = this.products[this.product].key.shelf
+                this.pquantity = this.products[this.product].key.quantity
+               if(this.products[this.product].key.shelf != 'null'){
+                    this.shelf = this.products[this.product].key.shelf
+                }
             },
             resetform(){
                 this.name = ""
