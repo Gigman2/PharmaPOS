@@ -46,7 +46,7 @@
                                 <div class="input-label">Quantity adding to stock</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-square"></i>
-                                    <input type="text" :placeholder="pquantity" v-model.trim.lazy="$v.quantity.$model">
+                                    <input type="text" placeholder="0" v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
                         </el-row>
