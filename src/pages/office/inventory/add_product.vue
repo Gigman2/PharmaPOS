@@ -358,6 +358,10 @@
                 if(this.expiry){
                     postdata.expiry = this.expiry
                 }
+                
+                if(this.mode == 'edit'){
+                   postdata.left = postdata.quantity
+                }
 
                 this.$v.$touch()
                 if (this.$v.$invalid) {
