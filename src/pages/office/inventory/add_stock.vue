@@ -168,6 +168,7 @@
                 }
 
                 postdata.left = postdata.currentStock
+                postdata.quantity = postdata.left
                 
                 this.$v.$touch()
                 if (this.$v.$invalid) {
