@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard-wrapper">
-            <div class="card-wrapper" v-if="userPermission && userPermission[1] && userPermission[1].state">
+            <div class="card-wrapper"  v-if="userPermission && userPermission[1] && userPermission[1].state">
                 <div class="card mini-card">
                     <div class="mini-card-row"> 
                         <div class="card-col">
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="card-footer">drugs in shortage
+                    <!-- <div class="card-footer">Products in shortage
                         <span>
                             {{salesWorth.shortage}}
                         </span>
@@ -85,7 +85,7 @@
             <el-row :gutter="20" class="card-wrapper">
                  <el-col :span="12">
                     <div class="card dash-card" >
-                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Drugs expiring</div>
+                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Products expiring</div>
                         <vue-custom-scrollbar class="card-body">
                             <table  cellspacing="0" cellpadding="0" class="card-table">
                                 <thead>
@@ -113,7 +113,7 @@
                 </el-col>
                 <el-col :span="12">
                     <div class="card dash-card" >
-                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Drugs out of stock</div>
+                        <div class="card-title pt-15 pb-15 pr-10 pl-10">Products out of stock</div>
                         <vue-custom-scrollbar class="card-body">
                             <table  cellspacing="0" cellpadding="0" class="card-table">
                                 <thead>
@@ -390,9 +390,9 @@
         }
         table{
             thead{
-                background-color: #d3f7eb;
+                background-color: #dddddd;
                 th{
-                    color: #43cea2;
+                    color: #000;
                 }
             }
         }

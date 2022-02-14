@@ -18,7 +18,11 @@
                         <div :class="{'table-cell-warning': scope.row.expiration == 'expiring', 'table-cell-danger': scope.row.expiration == 'expired'}">{{scope.row.name}} {{(scope.row.variant)? scope.row.variant: ''}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="variant" label="Strength"> </el-table-column>
+                <el-table-column prop="variant" label="Variant"> 
+                    <template slot-scope="scope">
+                        <div>{{scope.row.variant ? scope.row.variant: '--'}}</div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
                 <el-table-column prop="left" label="Quantity Left"> </el-table-column>
                 <el-table-column prop="dispensation" label="Dispensation"> </el-table-column>

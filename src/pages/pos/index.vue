@@ -66,8 +66,8 @@
                             <div class="product-row">
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, i) in products" :key="'b'+i">
-                                    <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)"
+                                    <div slot="content">{{item.name}}</div>
+                                    <div class="product shadow-1" v-if="item.left > 0" @click="addItem(item, false)"
                                          :class="{'shortage': item.left <= item.restock && item.left > 0}">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
@@ -237,7 +237,7 @@
                                                 {{(item.dispensation == 'single') ? item.quantity :item.pack}}
                                             </span>
                                         </td>
-                                        <td>{{item.totalprice}}</td>
+                                        <td>{{item.formattedTotal}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -246,20 +246,20 @@
                             <tbody>
                                 <tr>
                                     <th align="left">Total </th>
-                                    <td width="100px" align="right">Ghc{{grossTotal}}</td>
+                                    <td width="100px" align="right">Ghc{{formattedGrossTotal}}</td>
                                 </tr>
                             </tbody>
                         </table>
                 </div>
                 <div class="checkout-pay-section">
-                        <div class="checkout-payout disabled" v-if="Number(grossTotal) < 0" ><span>Pay</span> (Ghc {{grossTotal}})</div>
-                        <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{grossTotal}})</div>
+                        <div class="checkout-payout disabled" v-if="Number(grossTotal) < 0" ><span>Pay</span> (Ghc {{formattedGrossTotal}})</div>
+                        <div class="checkout-payout" v-else @click="showPaymentDialog = true" ><span>Pay</span> (Ghc {{formattedGrossTotal}})</div>
                         <div class="checkout-reset" @click="resetOrder">Reset</div>
                 </div>
             </div>
         </div>
 
-        <no-access v-else></no-access>
+        <!-- <no-access v-else></no-access> -->
 
         <el-dialog
             :title="selectedProduct.name"
@@ -506,6 +506,7 @@
                 barcodeScanned: '',
                 netTotal: 0,
                 grossTotal: 0,
+                formattedGrossTotal: 0,
                 tax: 0,
                 categories: [],
 
@@ -592,10 +593,11 @@
                 })
 
             },
-            getAllProducts(){
-                this.$http.get('product/list?size=all')
-                .then(res => {
+            async getAllProducts(){
+                await this.$http.get('product/list?size=all')
+                .then(async res => {
                     let data =  res.body.result
+                    console.log('fetched data ', data)
                     data.map(i => {
                         i.displayPrice = formatMoney(i.price, ',', '.')
                         if(i.expiry != null){
@@ -617,10 +619,11 @@
                             i.expiry = '--'
                         }
                     })
-
                     localStorage.setItem('products', JSON.stringify(data))
+                    return 'done';
                 })
                 .catch(err => {
+                    reject('failed')
                 })
             },
             getProducts(){
@@ -661,7 +664,8 @@
                     })
                     
                     if(this.layout == 'list'){
-                        this.switchLayout('grid')
+                        let flattenProducts = this.results.flat()
+                        this.listdata = flattenProducts
                     }
                     this.loading = false
                 })
@@ -675,18 +679,22 @@
                     });
                 })
             },
+
             nameSearch(query){
                 this.loading = true
                 let products = JSON.parse(localStorage.getItem('products'))
 
+                console.log(products)
                 const fuse = new Fuse(products, {
                     keys: ['name']
                 })
 
                 let result = fuse.search(query.name, {limit: 100})
+
                 this.setProducts(result)
             },
             setProducts(result){
+                console.log(result)
                 this.recentProducts = []
                 let products = result.map(item => {
                     let product = item.item;
@@ -700,6 +708,8 @@
                     let flattenProducts = products.flat()
                     this.listdata = flattenProducts
                 }
+
+                console.log(this.listdata)
             },
             productSearch(query){
                 this.loading = true
@@ -711,7 +721,6 @@
                     if(data.length > 0){
                         this.recentProducts = []
                     }
-
                     this.products = data;
 
                     this.products.map(i => {
@@ -793,6 +802,21 @@
                 }
                 
             },
+            async resetPurchasedLeft(){
+                let q = this.q
+                q = q.trim();
+
+                await this.getAllProducts()
+                .then(e => {
+                    console.log(e)
+                    if(q != ''){
+                        this.nameSearch({name: q})
+                    }else{
+                        this.getProducts()
+                    }
+                })               
+            },
+
             initScanner(){
                 this.$store.dispatch('GET_BARCODE')
                 .then(res => {
@@ -800,10 +824,11 @@
                     if(barcode_online){
                         let barcode = this.$store.getters['GET_BARCODE']
                         if(barcode){
-                            this.$refs.search.blur()
+                            // this.$refs.search.blur()
                             let scanner = BarcodeScanner ();
                             scanner.on((code, event) => {
                                 event.preventDefault()
+                                // this.$refs.search.blur()
                                 if(code != ''){
                                     if(this.barcodeScanned != code){
                                         this.barcodeScanned = code
@@ -858,7 +883,6 @@
                 for (let index = 0; index < orderProducts.length; index++) {
                     if (orderProducts[index].id === product.id) {
                         existIndex = index;
-                        console.log(existIndex)
                         break;
                     }
                 }
@@ -947,7 +971,8 @@
                         this.countInput = this.orderProducts[i].left
                     }
                 }else{
-                    let packTotal = (this.orderProducts[i].pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l;
+                    let pack_q =  (this.orderProducts[i].pack_q == null) ? 1 : this.orderProducts[i].pack_q;
+                    let packTotal = (pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l;
                     if(this.countInput > packTotal){
                         this.countInput = packTotal
                     }
@@ -960,7 +985,8 @@
                             quantity++
                         }
                     }else if(this.orderProducts[i].dispensation == 'tab' || this.orderProducts[i].dispensation == 'strip'){
-                        if(quantity < (this.orderProducts[i].pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l){
+                        let pack_quantity = (this.orderProducts[i].pack_q == null) ? 1 : this.orderProducts[i].pack_q;
+                        if(quantity < (pack_quantity * this.orderProducts[i].left) + this.orderProducts[i].pack_l){
                             quantity++
                         }
                     }
@@ -982,7 +1008,7 @@
                     quantity = this.orderProducts[i].quantity, 
                     dispensation = this.orderProducts[i].dispensation,
                     price = this.orderProducts[i].price;
-
+                
                 let productTotalPrice = 0;
                 if(price != '' && !isNaN(price) && price != null){
                     if(dispensation == 'single'){
@@ -993,7 +1019,8 @@
                 }
 
                 let totalPrice = productTotalPrice;
-                this.orderProducts[i].totalprice = formatMoney(totalPrice, ',', '.')
+                this.orderProducts[i].totalprice = totalPrice
+                this.orderProducts[i].formattedTotal = formatMoney(totalPrice, ',','.')
             },
             updateTotalPrice(){
                 let grosstotal = 0;
@@ -1006,7 +1033,8 @@
 
                 this.tax = (grosstotal * tax).toFixed(2);
                 this.netTotal = grosstotal - this.tax
-                this.grossTotal = formatMoney(grosstotal, ',', '.')
+                this.grossTotal = grosstotal
+                this.formattedGrossTotal = formatMoney(grosstotal, ',', '.')
             },
             saveCustomer(){
                 let payload = {
@@ -1118,7 +1146,7 @@
                             });
                         }
                         this.resetOrder()
-                        this.getProducts()
+                        this.resetPurchasedLeft()
                     })
                     .catch(err => {
                         this.checkingout = false

@@ -336,7 +336,7 @@ body {
 }
 
 .text-green{
-  color: #40cfa2;
+  color: #000;
 }
 
 .text-purple{

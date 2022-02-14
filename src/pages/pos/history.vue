@@ -76,11 +76,11 @@
                         <span>Add Customer</span>
                     </el-button>
 
-                     <el-button size="mini" type="primary" @click="refundModal" v-if="userPermission && userPermission[6] && userPermission[6].state">
+                     <el-button size="mini" type="primary" @click="refundModal">
                         <span>Refund</span>
                     </el-button>
 
-                    <el-button size="mini" type="primary" @click="returnModal" v-if="userPermission && userPermission[7] && userPermission[7].state">
+                    <el-button size="mini" type="primary" @click="returnModal">
                         <span>Return</span>
                     </el-button>
                 </div>

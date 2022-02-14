@@ -7,12 +7,13 @@
                 <ul class="action-menu">
                     <li v-if="$route.name == 'pos-home' || $route.name == 'pos-history'"> <router-link :to="{name: 'pos-settings'}"><i class="fe-settings"></i>Settings</router-link></li>
                     <li v-if="$route.name == 'pos-settings' && userPermission && userPermission[2] && userPermission[2].state"> <router-link :to="{name: 'pos-home'}"><i class="fe-monitor"></i>Sell</router-link></li>
-
+                    
                     <li v-if="$route.name == 'pos-home'"> <router-link :to="{name: 'pos-history'}"><i class="fe-archive"></i>History</router-link></li>
                     <li v-if="$route.name == 'pos-history' && userPermission && userPermission[2] && userPermission[2].state" > <router-link :to="{name: 'pos-home'}"><i class="fe-monitor"></i>Sell</router-link></li>
                  
                     <li @click="lock"> <i class="fe-lock"></i> Lock</li>
                     <li v-if="userPermission && userPermission[38] && userPermission[38].state"> <router-link :to="{name: 'office-dashboard'}"><i class="fe-trending-up"></i> Office</router-link></li>
+
                     <li>
                         <div class="user-account">
                             <div class="avatar">
@@ -118,7 +119,7 @@
             font-family: Do_Hyeon;
             font-size: 1.6em;
             letter-spacing: 1.1px;
-            color: #40cfa2;
+            color: #000;
             float: left;
         }
 
@@ -217,7 +218,7 @@
         display: inline-block;
         width: 90px;
         margin-left: 10px;
-        background-color: #40cfa2;
+        background-color: #000;
         padding: 10px;
         color: white;
         font-size: 16px;
@@ -255,13 +256,13 @@
             margin-right: 15px;
             background-color: white;
             border-radius: 3px;
-            color: #40cfa2;
+            color: #000;
             cursor: pointer;
-            border: 2px solid #40cfa2;
+            border: 2px solid #000;
             font-weight: bold;
             margin-bottom: 5px;
             &.active{
-                background-color: #40cfa2;
+                background-color: #000;
                 color: white;
             }
         }
@@ -383,7 +384,7 @@
 
         .checkout-headings{
             padding: 10px;
-            background-color: #40cfa2;
+            background-color: #000;
         }
 
         .checkout-table-wrapper{
@@ -432,7 +433,7 @@
                 }
 
                 .circle-outline{
-                    border: 2px solid #40cfa2;
+                    border: 2px solid #000;
                     border-radius: 50%;
                     width: 30px;
                     height: 30px;
@@ -469,7 +470,7 @@
                 padding:15px 10px;
                 padding-right: 25px;
                 text-align: right;
-                color: #40cfa2;
+                color: #000;
                 font-weight: bold;
             }
             th{
@@ -478,7 +479,7 @@
         }
 
         .checkout-payout{
-            background-color: #40cfa2;
+            background-color: #000;
             border-radius: 5px;
             padding: 15px 10px;
             font-family: 'Open sans';
@@ -500,11 +501,11 @@
             width: calc(25%);
             display: inline-block;
             font-family: 'Open sans';
-            border: 2px solid #40cfa2;
+            border: 2px solid #000;
             padding: 12px 10px;
             border-radius: 5px;
             margin-left: 10px;
-            color: #40cfa2;
+            color: #000;
             font-weight: bold;
             background-color: white;
             cursor: pointer;

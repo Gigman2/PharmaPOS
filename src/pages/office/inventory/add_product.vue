@@ -15,7 +15,7 @@
                                 <i class="fe-arrow-left dashboard-top--icon"></i>
                             </router-link>
                         </div>
-                        <div class="form-title mb-40">Drug Information</div>
+                        <div class="form-title mb-40">Product Information</div>
                         <el-row :gutter="20">
                             <el-col :span="24">
                                 <div class="input-error-box" v-if="error">
@@ -24,14 +24,14 @@
                                 </div>
                             </el-col>
                             <el-col :span="24">
-                                <div class="input-label">Drug Name</div>
+                                <div class="input-label">Product Name</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.name.$error }">
                                     <i class="fe-file-plus"></i>
                                     <input type="text" placeholder="" v-model.trim.lazy="$v.name.$model">
                                 </div>
                             </el-col>
                             <el-col :span="12">
-                                <div class="input-label">Dosage Form </div>
+                                <div class="input-label">Category</div>
                                 <div class="input-box-el" :class="{ 'input-box--error': $v.category.$error }">
                                     <i class="fe-layers"></i>
                                         <el-select v-model="category" filterable placeholder="Select a category ">
@@ -169,14 +169,14 @@
                                 <div class="input-label">Cost Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
                                     <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Cost price here" v-model.trim.lazy="$v.price.$model">
+                                    <input type="text" placeholder="Cost price here" v-model.trim.lazy="$v.cprice.$model">
                                 </div>
                             </el-col>
                             <el-col :span="8">
                                 <div class="input-label">Selling Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
                                     <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Enter price here" v-model.trim.lazy="$v.cprice.$model">
+                                    <input type="text" placeholder="Enter price here" v-model.trim.lazy="$v.price.$model">
                                 </div>
                             </el-col>
                             <el-col :span="8">
@@ -204,16 +204,16 @@
                             </el-col>
                         </el-row>
 
-                        <el-button type="success" size="medium" icon="el-icon-plus" v-if="$v.$anyError">Add Drug</el-button>
+                        <el-button type="success" size="medium" icon="el-icon-plus" v-if="$v.$anyError">Add Product</el-button>
                         <el-button type="" size="medium" icon="el-icon-plus" v-else-if="submitting"><loader/></el-button>
-                        <el-button type="success" size="medium" icon="el-icon-plus" @click="submit" v-else>Add Drug</el-button>
+                        <el-button type="success" size="medium" icon="el-icon-plus" @click="submit" v-else>Add Product</el-button>
                     </el-col>
                 </el-row>
             </div>
         </div>
 
         <el-dialog
-            title="Import Drugs From Excel"
+            title="Import Products From Excel"
             :visible.sync="openImportDialog"
             width="30%">
             <div  class="form-box">
@@ -440,9 +440,11 @@
                 })
             },
             getProduct(){
+                console.log('Edit ... ')
                 this.$http.post('product/single?type=simple', {id: this.$route.params.id})
                 .then(res => {
                     let data = res.body.result
+
                     this.id = data.id
                     this.name = data.name
                     this.category = data.categoryId

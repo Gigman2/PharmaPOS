@@ -35,7 +35,7 @@
                 </el-table-column>
             </el-table>
 
-            <no-access v-else></no-access>
+            <!-- <no-access v-else></no-access> -->
         </div>
 
         <el-drawer
@@ -94,14 +94,14 @@
 
                 <div class="drawer-double mt-20">
                     <div class="drawer-item">Discount {{selectedTransaction.discount}}</div>
-                    <div class="drawer-item">{{(selectedTransaction.discount / 100) * selectedTransaction.formatTotal}}</div>
+                    <div class="drawer-item">{{(selectedTransaction.discount / 100) * selectedTransaction.grossTotal}}</div>
                 </div>
 
-                <div class="drawer-double mt-20" v-if="parseFloat(selectedTransaction.cashAmount) == selectedTransaction.formatTotal">
+                <div class="drawer-double mt-20" v-if="parseFloat(selectedTransaction.cashAmount) == selectedTransaction.grossTotal">
                     <div class="drawer-item"><strong>Paid all by cash</strong></div>
                 </div>
 
-                <div class="drawer-double mt-20" v-else-if="parseFloat(selectedTransaction.momoAmount) == selectedTransaction.formatTotal">
+                <div class="drawer-double mt-20" v-else-if="parseFloat(selectedTransaction.momoAmount) == selectedTransaction.grossTotal">
                     <div class="drawer-item"><strong>Paid all by momo</strong></div>
                 </div>
 
@@ -117,10 +117,10 @@
 
                 <div class="drawer-double mt-50">
                     <div class="drawer-item">
-                        <el-button size="small" v-if="userPermission && userPermission[4] && userPermission[4].state">Edit</el-button>
+                        <el-button size="small">Edit</el-button>
                     </div>
                     <div class="drawer-item"> 
-                        <el-button size="small" type="danger" v-if="userPermission && userPermission[5] && userPermission[5].state">Delete</el-button>
+                        <el-button size="small" type="danger">Delete</el-button>
                     </div>
                 </div>
 
