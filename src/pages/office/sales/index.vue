@@ -35,7 +35,7 @@
                 </el-table-column>
             </el-table>
 
-            <!-- <no-access v-else></no-access> -->
+            <no-access v-else></no-access>
         </div>
 
         <el-drawer
@@ -117,10 +117,10 @@
 
                 <div class="drawer-double mt-50">
                     <div class="drawer-item">
-                        <el-button size="small">Edit</el-button>
+                        <el-button size="small" v-if="userPermission && userPermission[4] && userPermission[4].state">Edit</el-button>
                     </div>
                     <div class="drawer-item"> 
-                        <el-button size="small" type="danger">Delete</el-button>
+                        <el-button size="small" type="danger" v-if="userPermission && userPermission[5] && userPermission[5].state">Delete</el-button>
                     </div>
                 </div>
 
