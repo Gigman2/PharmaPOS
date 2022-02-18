@@ -6,6 +6,7 @@ import VueResource from 'vue-resource';
 import VuePageTransition from 'vue-page-transition'
 import noAccess from './components/noAccess.vue'
 import Vuelidate from 'vuelidate'
+import axios from 'axios'
 
 import './element-variables.scss'
 import './spacing.scss'
@@ -14,12 +15,17 @@ import router from './router'
 import store from './store'
 import permission from './permissions'
 
+axios.defaults.headers.common['Authorization'] = store.getters['TOKEN']
+axios.defaults.baseURL =  'http://localhost:4001/api/setup';
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI, { locale })
 Vue.use(VueResource);
 Vue.use(Vuelidate);
 Vue.use(VuePageTransition)
+Vue.use(axios)
+
 let isLoggedIn;
 if(localStorage.getItem('access_token') != ''){
   store.commit('SET_SESSION');

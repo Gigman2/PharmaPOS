@@ -177,7 +177,8 @@
     import Moment from 'moment'
     import vueCustomScrollbar from 'vue-custom-scrollbar'
     import {mapGetters} from 'vuex'
-    
+    import axios from 'axios'
+
     export default {
         components: {
             vueCustomScrollbar
@@ -322,16 +323,20 @@
             printRequest(){
                 this.$http.post('product/transaction/print', {id: this.transaction.id})
                 .then(res => {
-                    this.$notify({
-                        title: 'Success',
-                        message: "Print job started",
-                        type: 'success'
-                    });
+                    axios.post('/print',{...res.data})
+                    .then(printRes => {
+                         this.$notify({
+                            title: 'Printing',
+                            message: "Printing transaction receipt",
+                            type: 'success'
+                        })
+                    })
                 })
                 .catch(err => {
+                    console.log(err)
                     this.$notify({
                         title: 'Error',
-                        message: "Unanble to print these transaction",
+                        message: "Unable to print these transaction",
                         type: 'error'
                     });
                 })

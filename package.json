@@ -10,6 +10,7 @@
     "node": "10.x"
   },
   "dependencies": {
+    "axios": "^0.26.0",
     "chart.js": "^2.9.3",
     "chartjs": "^0.3.24",
     "core-js": "^3.6.5",
@@ -21,7 +22,6 @@
     "moment": "^2.27.0",
     "serve-static": "^1.14.1",
     "simple-barcode-scanner": "^2.0.0",
-    "usb-barcode-scanner": "^1.0.2",
     "v-hotkey": "^0.8.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
