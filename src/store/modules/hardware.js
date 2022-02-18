@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
+
 Vue.use(Vuex); 
 
 const state = {
@@ -29,7 +31,7 @@ const mutations = {
 const actions = {
     GET_BARCODE: ({state, commit}) => {
         return new Promise((resolve, reject) => {
-            Vue.http.get('setup/barcode')
+            axios.get('/barcode')
             .then(res => {
                 let data =  res.body.result
                 commit('SET_BARCODE', data)
@@ -44,7 +46,7 @@ const actions = {
 
     GET_PRINTER: ({state, commit}) => {
         return new Promise((resolve, reject) => {
-            Vue.http.get('setup/printer')
+            axios.get('/printer')
             .then(res => {
                 let data =  res.body.result
                 commit('SET_PRINTER', data)
