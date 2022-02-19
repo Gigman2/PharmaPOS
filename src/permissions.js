@@ -13,10 +13,12 @@ const  permission =  {
                 delete item.updatedAt
                 delete item.roleId
                 delete item.userId
-                if(item.state == '1'){
-                    item.state = true
-                }else{
-                    item.state = false
+                if(process.env.VUE_APP_DB == 'mysql'){
+                    if(item.state == '1'){
+                        item.state = true
+                    }else{
+                        item.state = false
+                    }
                 }
 
                 permissions[item.resourceId] = item
