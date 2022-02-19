@@ -321,25 +321,32 @@
                 })
             },
             printRequest(){
-                this.$http.post('product/transaction/print', {id: this.transaction.id})
-                .then(res => {
-                    axios.post('/print',{...res.data})
-                    .then(printRes => {
-                         this.$notify({
-                            title: 'Printing',
-                            message: "Printing transaction receipt",
-                            type: 'success'
+                if(process.env.VUE_APP_PLATFORM === 'local'){
+                    this.$http.post('product/transaction/print', {id: this.transaction.id})
+                    .then(res => {
+                        axios.post('/print',{...res.data})
+                        .then(printRes => {
+                            this.$notify({
+                                title: 'Printing',
+                                message: "Printing transaction receipt",
+                                type: 'success'
+                            })
                         })
                     })
-                })
-                .catch(err => {
-                    console.log(err)
-                    this.$notify({
+                    .catch(err => {
+                        this.$notify({
+                            title: 'Error',
+                            message: "Unable to print these transaction",
+                            type: 'error'
+                        });
+                    })
+                }else{
+                     this.$notify({
                         title: 'Error',
-                        message: "Unable to print these transaction",
+                        message: "Not printer detected.Issue command from local machine",
                         type: 'error'
                     });
-                })
+                }
             },
             getCustomers(){
                 this.$http.get('sales/customer-list')

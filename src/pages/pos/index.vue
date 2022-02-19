@@ -460,6 +460,7 @@
     import Moment from 'moment'
     import Fuse from 'fuse.js'
     import vueCustomScrollbar from 'vue-custom-scrollbar'
+    import axios from 'axios'
 
     import {mapGetters} from 'vuex';
     import { required, helpers, decimal } from 'vuelidate/lib/validators'
@@ -1139,6 +1140,17 @@
                             });
                         }
                         if(postData.state == 'processing'){
+                            if(process.env.VUE_APP_PLATFORM === 'local'){
+                                axios.post('/print',{...res.data})
+                                .then(printRes => {
+                                    this.$notify({
+                                        title: 'Printing',
+                                        message: "Printing transaction receipt",
+                                        type: 'success'
+                                    })
+                                })
+                            }
+                            
                             this.$notify({
                                 title: 'Success',
                                 message: "Checkout successful",

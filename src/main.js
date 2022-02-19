@@ -15,8 +15,10 @@ import router from './router'
 import store from './store'
 import permission from './permissions'
 
-axios.defaults.headers.common['Authorization'] = store.getters['TOKEN']
-axios.defaults.baseURL =  'http://localhost:4001/api/setup';
+if(process.env.VUE_APP_PLATFORM === 'local'){
+  axios.defaults.headers.common['Authorization'] = store.getters['TOKEN']
+  axios.defaults.baseURL =  'http://localhost:4001/api/setup';
+}
 
 Vue.config.productionTip = false
 
@@ -45,7 +47,6 @@ Vue.http.interceptors.push((request, next) => {
 
 router.beforeEach((to, from, next) => {
   isLoggedIn = store.getters['ISLOGGED'] 
-  var userPermission = store.getters['PERMISSIONS']
 
   var role = store.getters['ROLE'] 
 
