@@ -185,12 +185,7 @@
                 }
             },
             createAccount(payload){
-                let formData = new FormData(); 
-                const fields = Object.entries(payload);
-                for(const index in fields){
-                    formData.append(fields[index][0], fields[index][1]);
-                }
-                this.$http.post('users/new', formData)
+                this.$http.post('users/new', payload)
                 .then(res => {
                     this.submitting = false
                     this.$notify({
