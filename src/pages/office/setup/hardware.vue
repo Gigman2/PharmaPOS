@@ -110,6 +110,7 @@
             },
         },
         created() {
+            console.log('Env data is', process.env.VUE_APP_PLATFORM)
             if(process.env.VUE_APP_PLATFORM === 'local'){
                 this.getPrinter()
                 this.getScanner()

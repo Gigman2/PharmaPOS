@@ -31,6 +31,7 @@ const mutations = {
 const actions = {
     GET_BARCODE: ({state, commit}) => {
         return new Promise((resolve, reject) => {
+            console.log('barcode called here')
             axios.get('/barcode')
             .then(res => {
                 let data =  res.body.result

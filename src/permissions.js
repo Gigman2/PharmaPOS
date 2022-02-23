@@ -14,7 +14,7 @@ const  permission =  {
                 delete item.roleId
                 delete item.userId
                 if(process.env.VUE_APP_DB == 'mysql'){
-                    if(item.state == '1'){
+                    if(item.state == '1' || item.state == 'true'){
                         item.state = true
                     }else{
                         item.state = false
