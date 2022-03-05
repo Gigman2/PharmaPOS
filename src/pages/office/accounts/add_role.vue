@@ -87,6 +87,7 @@
                         if(!groupedResources.hasOwnProperty(group)){
                             groupedResources[group] = []
                         }
+                        
                         groupedResources[group].push(item)
                     })
                     this.resources = groupedResources

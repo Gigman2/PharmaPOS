@@ -8,7 +8,7 @@
                     <li v-if="$route.name == 'pos-home' || $route.name == 'pos-history'"> <router-link :to="{name: 'pos-settings'}"><i class="fe-settings"></i>Settings</router-link></li>
                     <li v-if="$route.name == 'pos-settings' && userPermission && userPermission[2] && userPermission[2].state"> <router-link :to="{name: 'pos-home'}"><i class="fe-monitor"></i>Sell</router-link></li>
                     
-                    <li v-if="$route.name == 'pos-home'"> <router-link :to="{name: 'pos-history'}"><i class="fe-archive"></i>History</router-link></li>
+                    <li v-if="$route.name == 'pos-home' && userPermission && userPermission[39] && userPermission[39].state" > <router-link :to="{name: 'pos-history'}"><i class="fe-archive"></i>History</router-link></li>
                     <li v-if="$route.name == 'pos-history' && userPermission && userPermission[2] && userPermission[2].state" > <router-link :to="{name: 'pos-home'}"><i class="fe-monitor"></i>Sell</router-link></li>
                  
                     <li @click="lock"> <i class="fe-lock"></i> Lock</li>
