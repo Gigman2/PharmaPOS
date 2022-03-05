@@ -175,12 +175,7 @@
                 }
             },
             editAccounts(payload){
-                let formData = new FormData(); 
-                const fields = Object.entries(payload);
-                for(const index in fields){
-                    formData.append(fields[index][0], fields[index][1]);
-                }
-                this.$http.put('users/update', formData)
+                this.$http.put('users/update', payload)
                 .then(res => {
                     this.submitting = false
                     this.$notify({

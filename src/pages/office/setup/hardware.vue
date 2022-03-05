@@ -77,7 +77,6 @@
 <script>
     import vueCustomScrollbar from 'vue-custom-scrollbar';
     import Loader from '@/components/loader.vue'
-    import { required, alpha, helpers } from 'vuelidate/lib/validators'
     import {mapGetters} from 'vuex';
 
     export default {
@@ -111,8 +110,11 @@
             },
         },
         created() {
-            this.getPrinter()
-            this.getScanner()
+            console.log('Env data is', process.env.VUE_APP_PLATFORM)
+            if(process.env.VUE_APP_PLATFORM === 'local'){
+                this.getPrinter()
+                this.getScanner()
+            }
         },
     }
 </script>

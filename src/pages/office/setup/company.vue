@@ -150,7 +150,7 @@
                    manager: this.manager,
                 }
                 if(this.logo != null){
-                    postdata.image = this.logo
+                    postdata.logo = this.logo
                 }
                 this.$v.$touch()
                 if (this.$v.$invalid) {

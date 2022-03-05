@@ -484,19 +484,21 @@
                 this.$nextTick(() => { this.$v.$reset() })
             },
             initScanner(){
-                this.$store.dispatch('GET_BARCODE')
-                .then(res => {
-                    let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
-                    if(barcode_online){
-                        let barcode = this.$store.getters['GET_BARCODE']
-                        if(barcode){
-                            let scanner = BarcodeScanner ();
-                            scanner.on((code, event) => {
-                                this.barcode = code
-                            });
+                 if(process.env.VUE_APP_PLATFORM === 'local'){
+                    this.$store.dispatch('GET_BARCODE')
+                    .then(res => {
+                        let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
+                        if(barcode_online){
+                            let barcode = this.$store.getters['GET_BARCODE']
+                            if(barcode){
+                                let scanner = BarcodeScanner ();
+                                scanner.on((code, event) => {
+                                    this.barcode = code
+                                });
+                            }
                         }
-                    }
-                })
+                    })   
+                }
             },
             importFile(){
                 let postData = {

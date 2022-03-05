@@ -460,6 +460,7 @@
     import Moment from 'moment'
     import Fuse from 'fuse.js'
     import vueCustomScrollbar from 'vue-custom-scrollbar'
+    import axios from 'axios'
 
     import {mapGetters} from 'vuex';
     import { required, helpers, decimal } from 'vuelidate/lib/validators'
@@ -597,7 +598,7 @@
                 await this.$http.get('product/list?size=all')
                 .then(async res => {
                     let data =  res.body.result
-                    console.log('fetched data ', data)
+                    console.log(data)
                     data.map(i => {
                         i.displayPrice = formatMoney(i.price, ',', '.')
                         if(i.expiry != null){
@@ -608,8 +609,8 @@
                             if(expired){
                                 i.expiration = 'expired'
                             }else{
-                                var exirationDifference = Moment(expiry).diff(now, 'days');
-                                if(exirationDifference <= 90){
+                                var expirationDifference = Moment(expiry).diff(now, 'days');
+                                if(expirationDifference <= 90){
                                     i.expiration = 'expiring'
                                 }else{
                                     i.expiration = 'good'
@@ -631,8 +632,9 @@
                 this.$http.get('product/list-top-best')
                 .then(res => {
                     let data =  res.body.result
-                    let dataKeys = Object.values(data)
-                    this.results = dataKeys.map(e => {
+                    if(data){
+                        let dataKeys = Object.values(data)
+                        this.results = dataKeys.map(e => {
                         var e = e.filter(function (el) {
                             return el != null;
                         });
@@ -660,14 +662,15 @@
                             }
                         })
 
-                        return e
-                    })
-                    
-                    if(this.layout == 'list'){
-                        let flattenProducts = this.results.flat()
-                        this.listdata = flattenProducts
+                            return e
+                        })
+                        
+                        if(this.layout == 'list'){
+                            let flattenProducts = this.results.flat()
+                            this.listdata = flattenProducts
+                        }
                     }
-                    this.loading = false
+                     this.loading = false
                 })
                 .catch((err) => {
                     console.log(err)
@@ -818,31 +821,33 @@
             },
 
             initScanner(){
-                this.$store.dispatch('GET_BARCODE')
-                .then(res => {
-                    let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
-                    if(barcode_online){
-                        let barcode = this.$store.getters['GET_BARCODE']
-                        if(barcode){
-                            // this.$refs.search.blur()
-                            let scanner = BarcodeScanner ();
-                            scanner.on((code, event) => {
-                                event.preventDefault()
+                if(process.env.VUE_APP_PLATFORM === 'local'){
+                    this.$store.dispatch('GET_BARCODE')
+                    .then(res => {
+                        let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
+                        if(barcode_online){
+                            let barcode = this.$store.getters['GET_BARCODE']
+                            if(barcode){
                                 // this.$refs.search.blur()
-                                if(code != ''){
-                                    if(this.barcodeScanned != code){
-                                        this.barcodeScanned = code
-                                        this.productSearch({barcode: code})
-                                        setTimeout(()=> {
-                                            this.barcodeScanned = ''
-                                        }, 3000)
+                                let scanner = BarcodeScanner ();
+                                scanner.on((code, event) => {
+                                    event.preventDefault()
+                                    // this.$refs.search.blur()
+                                    if(code != ''){
+                                        if(this.barcodeScanned != code){
+                                            this.barcodeScanned = code
+                                            this.productSearch({barcode: code})
+                                            setTimeout(()=> {
+                                                this.barcodeScanned = ''
+                                            }, 3000)
+                                        }
+                                        this.allActive = false
                                     }
-                                    this.allActive = false
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
-                })
+                    })
+                }
             },
             search(){
                 let q = this.q
@@ -1139,6 +1144,17 @@
                             });
                         }
                         if(postData.state == 'processing'){
+                            if(process.env.VUE_APP_PLATFORM === 'local'){
+                                axios.post('/print',{...res.data})
+                                .then(printRes => {
+                                    this.$notify({
+                                        title: 'Printing',
+                                        message: "Printing transaction receipt",
+                                        type: 'success'
+                                    })
+                                })
+                            }
+                            
                             this.$notify({
                                 title: 'Success',
                                 message: "Checkout successful",
