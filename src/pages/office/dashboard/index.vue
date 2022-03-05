@@ -86,7 +86,7 @@
                  <el-col :span="12">
                     <div class="card dash-card" >
                         <div class="card-title pt-15 pb-15 pr-10 pl-10">Products expiring</div>
-                        <vue-custom-scrollbar class="card-body">
+                        <div class="card-body">
                             <table  cellspacing="0" cellpadding="0" class="card-table">
                                 <thead>
                                     <tr>
@@ -108,13 +108,13 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </vue-custom-scrollbar>
+                        </div>
                     </div>
                 </el-col>
                 <el-col :span="12">
                     <div class="card dash-card" >
                         <div class="card-title pt-15 pb-15 pr-10 pl-10">Products out of stock</div>
-                        <vue-custom-scrollbar class="card-body">
+                        <div class="card-body">
                             <table  cellspacing="0" cellpadding="0" class="card-table">
                                 <thead>
                                     <tr>
@@ -133,7 +133,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </vue-custom-scrollbar>
+                        </div>
                     </div>
                 </el-col>
             </el-row>
@@ -386,7 +386,7 @@
         }
         .card-body{
             height: 450px;
-            overflow: hidden;
+            overflow: scroll;
         }
         table{
             thead{

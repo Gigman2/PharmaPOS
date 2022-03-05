@@ -485,7 +485,7 @@
             },
             initScanner(){
                  if(process.env.VUE_APP_PLATFORM === 'local'){
-                    this.$store.dispatch('GET_BARCODE')
+                    this.s$store.dispatch('GET_BARCODE')
                     .then(res => {
                         let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
                         if(barcode_online){

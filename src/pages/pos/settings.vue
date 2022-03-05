@@ -4,7 +4,7 @@
             <div class="settings-title">Hello {{firstname}} !</div>
             <div class="inner-box">
                 <div class="products-box">
-                    <vue-custom-scrollbar class="settings">
+                    <div class="settings">
                         <div class="form-box">
                             <el-row :gutter="20">
                                 <el-col :span="24">
@@ -93,7 +93,7 @@
                             </div>
 
                         </div>
-                    </vue-custom-scrollbar>
+                    </div>
                 </div>
             </div>
         </div>
@@ -284,7 +284,7 @@
     .products-box{
         .settings{
             height: 500px;
-            overflow: hidden;
+            overflow: scroll;
         }
     }
 

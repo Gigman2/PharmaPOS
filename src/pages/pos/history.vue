@@ -11,7 +11,7 @@
                 <div class="clearfix"></div>
 
                 <div class="products-box">
-                    <vue-custom-scrollbar class="scroll-area products" :settings="settings">
+                    <div class="scroll-area products" :settings="settings">
                         <el-table :data="tableData"
                             style="width: 100%">
                             <el-table-column label="Transaction ID">
@@ -50,7 +50,7 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                    </vue-custom-scrollbar>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="clearfix"></div>
 
-                <vue-custom-scrollbar class="checkout-table-wrapper history">
+                <div class="checkout-table-wrapper history">
                     <table class="checkout-table" cellspacing="0" cellpadding="0">
                         <thead class="checkout-headings">
                             <tr>
@@ -107,7 +107,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </vue-custom-scrollbar> 
+                </div> 
                 <table class="checkout-total">
                     <tbody>
                         <tr>
@@ -435,6 +435,6 @@
     }
     .checkout-box .checkout-table-wrapper.history {
         height: calc(100vh - 257px);
-        overflow: hidden;
+        overflow: scroll;
     }
 </style>

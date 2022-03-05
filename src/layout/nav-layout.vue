@@ -12,10 +12,10 @@
                 </li>
             </ul>
         </div>
-        <vue-custom-scrollbar class="dashboard-main">
+        <div class="dashboard-main">
             <div class="dashboard-title">{{title}}</div>
             <router-view></router-view>
-        </vue-custom-scrollbar>
+        </div>
     </div>
 </template>
 
@@ -101,6 +101,7 @@
         // height: 100%;
     }
     .dashboard-main{
-        height: 90%;
+        max-height: 95%;
+        overflow-y: scroll;
     }
 </style>

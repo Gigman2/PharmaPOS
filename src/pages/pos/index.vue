@@ -19,7 +19,7 @@
 
                     <div class="products-box">
                         <div class="products-title">Recent Products</div>
-                        <vue-custom-scrollbar class="scroll-area products grid" :settings="settings" v-loading="loading" v-if="layout == 'grid'">
+                        <div class="scroll-area products grid" :settings="settings" v-loading="loading" v-if="layout == 'grid'">
                             <div class="product-row recent">
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, f) in recentProducts" :key="'a'+f">
@@ -106,7 +106,7 @@
                                     </div>
                                 </el-tooltip>
                             </div>
-                        </vue-custom-scrollbar>
+                        </div>
 
                         <div class="products list" v-else-if="layout == 'list'">
                               <el-table :data="listdata" height="600" style="width: 100%"
@@ -213,7 +213,7 @@
                             </div>
                         </div>
                         <div class="clearfix"></div>
-                        <vue-custom-scrollbar class="checkout-table-wrapper">
+                        <div class="checkout-table-wrapper">
                             <table class="checkout-table" cellspacing="0" cellpadding="0">
                                 <thead class="checkout-headings">
                                     <tr>
@@ -241,7 +241,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </vue-custom-scrollbar>
+                        </div>
                         <table class="checkout-total">
                             <tbody>
                                 <tr>
