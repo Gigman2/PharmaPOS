@@ -34,8 +34,8 @@ if(localStorage.getItem('access_token') != ''){
   isLoggedIn = store.getters['ISLOGGED'] 
 }
 
-Vue.http.options.root = 'http://localhost:4002/api/';
-// Vue.http.options.root = 'https://nagiland-server.herokuapp.com/api/';
+// Vue.http.options.root = 'http://localhost:4002/api/';
+Vue.http.options.root = 'https://nagiland-server.herokuapp.com/api/';
 Vue.http.interceptors.push((request, next) => {
   request.headers.set('Authorization', store.getters['TOKEN'])
   next(res => {                                                                                                                                                                                                                                                                                                                    
