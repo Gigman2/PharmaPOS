@@ -97,74 +97,16 @@
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
                             <el-col :span="12">
-                                <div class="input-label">Mode of dispensation </div>
-                                <div class="input-box-el" :class="{ 'input-box--error': $v.cprice.$error }">
-                                    <i class="image">
-                                        <img src="@/assets/images/capsule.svg" alt="" v-if="dispensation == 'tab'">
-                                        <img src="@/assets/images/medicine.svg" alt="" v-else-if="dispensation == 'strip'">
-                                        <img src="@/assets/images/drugs.svg" alt="" v-else-if="dispensation == 'single'">
-                                    </i>
-                                    <el-select v-model="dispensation" filterable placeholder=" Mode of dispensation ">
-                                        <el-option class="text-left"
-                                        v-for="item in dispensations"
-                                        :key="item.key"
-                                        :label="item.key"
-                                        :value="item.key">
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                            <el-col :span="12">
-                                <div class="input-label">Qauntity In Stock</div>
+                                <div class="input-label">In Stock (Wholesale)</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Total in stock " v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
                         </el-row>
+                       
 
-                        <el-row :gutter="20" class="mt-20" v-if="dispensation == 'single'">
-                            <el-col :span="12">
-                                <div class="input-label">Cost Price </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Enter cost price" v-model.trim.lazy="$v.cprice.$model">
-                                </div>
-                            </el-col>
-                             <el-col :span="12">
-                                <div class="input-label">Selling Price </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Enter price of item" v-model.trim.lazy="$v.price.$model">
-                                </div>
-                            </el-col>
-                        </el-row>
-
-                        <el-row :gutter="20" class="mt-20" v-else-if="dispensation == 'strip'">
-                             <el-col :span="8">
-                                <div class="input-label">Cost Price </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Cost price here" v-model.trim.lazy="$v.cprice.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
-                                <div class="input-label">Selling Price </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Enter price here" v-model.trim.lazy="$v.price.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
-                                <div class="input-label">Quantity  <span class="pull-right">optional</span></div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
-                                    <i class="fe-package"></i>
-                                    <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
-                                </div>
-                            </el-col>
-                        </el-row>
-
-                        <el-row :gutter="20" class="mt-20" v-if="dispensation == 'tab'">
+                        <el-row :gutter="20" class="mt-20">
                             <el-col :span="8">
                                 <div class="input-label">Cost Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
@@ -180,7 +122,7 @@
                                 </div>
                             </el-col>
                             <el-col :span="8">
-                                <div class="input-label">Quantity </div>
+                                <div class="input-label">Quantity in each package </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
@@ -289,11 +231,6 @@
                 filename: '',
                 categories: [],
                 suppliers: [],
-                dispensations: [
-                    {key: 'tab'},
-                    {key: 'strip'},
-                    {key: 'single'}
-                ],
 
                 importing: false,
                 openImportDialog: false,
@@ -315,7 +252,6 @@
             price: {},
             quantity: {},
             pack_q: {},
-            dispensation: {},
             restock: {},
             shelf: {},
             variant: {}
@@ -344,7 +280,6 @@
                    restock: this.restock,
                    shelf: this.shelf,
                    variant: this.variant,
-                   dispensation: this.dispensation
                 }       
                                  
                 if(this.pack_q){ 
@@ -440,7 +375,6 @@
                 })
             },
             getProduct(){
-                console.log('Edit ... ')
                 this.$http.post('product/single?type=simple', {id: this.$route.params.id})
                 .then(res => {
                     let data = res.body.result
@@ -450,7 +384,6 @@
                     this.category = data.categoryId
                     this.barcode = data.barcode
                     this.sku = data.sku
-                    this.dispensation = data.dispensation
                     this.supplier = data.supplierId
                     this.manufacturer = data.manufacturer
                     this.expiry = data.expiry
