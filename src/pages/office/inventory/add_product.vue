@@ -103,31 +103,32 @@
                                     <input type="text" placeholder="Total in stock " v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
-                        </el-row>
-                       
-
-                        <el-row :gutter="20" class="mt-20">
-                            <el-col :span="8">
-                                <div class="input-label">Cost Price </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Cost price here" v-model.trim.lazy="$v.cprice.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
-                                <div class="input-label">Selling Price </div>
-                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
-                                    <i class="fe-dollar-sign"></i>
-                                    <input type="text" placeholder="Enter price here" v-model.trim.lazy="$v.price.$model">
-                                </div>
-                            </el-col>
-                            <el-col :span="8">
+                            <el-col :span="12">
                                 <div class="input-label">Quantity in each package </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
                                 </div>
                             </el-col>
+                        </el-row>
+                       
+
+                        <el-row :gutter="20" class="mt-20">
+                            <el-col :span="12">
+                                <div class="input-label">Cost Price </div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
+                                    <i class="fe-dollar-sign"></i>
+                                    <input type="text" placeholder="Cost price here" v-model.trim.lazy="$v.cprice.$model">
+                                </div>
+                            </el-col>
+                            <el-col :span="12">
+                                <div class="input-label">Selling Price </div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
+                                    <i class="fe-dollar-sign"></i>
+                                    <input type="text" placeholder="Enter price here" v-model.trim.lazy="$v.price.$model">
+                                </div>
+                            </el-col>
+                            
                         </el-row>
 
                          <el-row :gutter="20">
