@@ -24,14 +24,18 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="category" label="Category"> </el-table-column>
-                <el-table-column prop="left" label="Quantity Left"> </el-table-column>
+                <el-table-column prop="left" label="Quantity Left">
+                     <template slot-scope="scope">
+                        <div>{{scope.row.pack_q === 1 ? Number(scope.row.pack_l) + Number(scope.row.left)+ ' units' : Number(scope.row.left)+ ' packs, '+Number(scope.row.pack_l)+ ' units'}}</div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="dispensation" label="Dispensation"> </el-table-column>
                 <el-table-column prop="price" label="Price" width="100px"> </el-table-column>
                 <el-table-column width="220px">
                     <template slot-scope="scope">
-                            <el-button size="mini" @click="triggerAdd(scope.row.id)">Add</el-button>
-                            <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
-                            <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
+                        <el-button size="mini" @click="triggerAdd(scope.row.id)">Add</el-button>
+                        <el-button size="mini" @click="triggerEdit(scope.row.id)">Edit</el-button>
+                        <el-button size="mini" type="danger" @click="deleteModal(scope.$index, scope.row.id)">Delete</el-button>
                     </template>
                 </el-table-column>
             </el-table>
