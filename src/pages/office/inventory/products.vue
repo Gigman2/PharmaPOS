@@ -29,7 +29,7 @@
                         <div>{{scope.row.pack_q === 1 ? Number(scope.row.pack_l) + Number(scope.row.left)+ ' units' : Number(scope.row.left)+ ' packs, '+Number(scope.row.pack_l)+ ' units'}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="dispensation" label="Dispensation"> </el-table-column>
+                <el-table-column prop="wprice" label="Whole Price"> </el-table-column>
                 <el-table-column prop="price" label="Price" width="100px"> </el-table-column>
                 <el-table-column width="220px">
                     <template slot-scope="scope">
@@ -91,6 +91,7 @@
                         }
                         i.price = formatMoney(i.price,',','.')
                         i.lprice = formatMoney(i.lprice,',','.')
+                        i.wprice = formatMoney(i.wprice,',','.')
                     })
 
                     // localStorage.setItem('products', data)
