@@ -97,7 +97,7 @@
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
                             <el-col :span="12">
-                                <div class="input-label">In Stock (Wholesale)</div>
+                                <div class="input-label">In Stock</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Total in stock " v-model.trim.lazy="$v.quantity.$model">
