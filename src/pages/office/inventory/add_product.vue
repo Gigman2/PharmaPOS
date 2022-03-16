@@ -96,29 +96,35 @@
                         </el-row>
                         <div class="hoz-line dark"></div>
                         <el-row :gutter="20" class="mt-20">
-                            <el-col :span="12">
+                            <el-col :span="8">
                                 <div class="input-label">In Stock</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Total in stock " v-model.trim.lazy="$v.quantity.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="8">
                                 <div class="input-label">Wholesale Price <span class="pull-right">optional</span></div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.wprice.$error }">
                                     <i class="fe-dollar-sign"></i>
                                     <input type="text" placeholder="How much do you sell it as wholesale" v-model.trim.lazy="$v.wprice.$model">
                                 </div>
                             </el-col>
-                        </el-row>
-                       
-
-                        <el-row :gutter="20" class="mt-10">
                              <el-col :span="8">
-                                <div class="input-label">Quantity in each package </div>
+                                <div class="input-label">Quantity in each package   <span class="pull-right">optional</span></div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <div class="hoz-line dark"></div>
+                        <el-row :gutter="20" class="mt-10">
+                             <el-col :span="8">
+                                <div class="input-label">Retailing Quantity</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.pack_l.$error }">
+                                    <i class="fe-package"></i>
+                                    <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_l.$model">
                                 </div>
                             </el-col>
                             <el-col :span="8">
@@ -225,6 +231,7 @@
                 quantity: "",
                 wprice: "",
                 pack_q: "",
+                pack_l: "",
                 variant: "",
                 restock: "",
                 shelf: "", 
@@ -262,6 +269,7 @@
             price: {},
             quantity: {},
             pack_q: {},
+            pack_l: {},
             restock: {},
             shelf: {},
             variant: {}
@@ -294,6 +302,10 @@
                                  
                 if(this.pack_q){ 
                     postdata.pack_q = this.pack_q 
+                }
+
+                if(this.pack_l){ 
+                    postdata.pack_l = this.pack_l 
                 }
 
                 if(this.wprice){ 
