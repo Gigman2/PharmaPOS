@@ -104,24 +104,31 @@
                                 </div>
                             </el-col>
                             <el-col :span="12">
+                                <div class="input-label">Wholesale Price <span class="pull-right">optional</span></div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.wprice.$error }">
+                                    <i class="fe-dollar-sign"></i>
+                                    <input type="text" placeholder="How much do you sell it as wholesale" v-model.trim.lazy="$v.wprice.$model">
+                                </div>
+                            </el-col>
+                        </el-row>
+                       
+
+                        <el-row :gutter="20" class="mt-10">
+                             <el-col :span="8">
                                 <div class="input-label">Quantity in each package </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
                                     <i class="fe-package"></i>
                                     <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
                                 </div>
                             </el-col>
-                        </el-row>
-                       
-
-                        <el-row :gutter="20" class="mt-20">
-                            <el-col :span="12">
+                            <el-col :span="8">
                                 <div class="input-label">Cost Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
                                     <i class="fe-dollar-sign"></i>
                                     <input type="text" placeholder="Cost price here" v-model.trim.lazy="$v.cprice.$model">
                                 </div>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="8">
                                 <div class="input-label">Selling Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
                                     <i class="fe-dollar-sign"></i>
@@ -216,6 +223,7 @@
                 cprice: "",
                 price: "",
                 quantity: "",
+                wprice: "",
                 pack_q: "",
                 variant: "",
                 restock: "",
@@ -250,6 +258,7 @@
             manufacturer: {},
             expiry: {},
             cprice: {},
+            wprice: {},
             price: {},
             quantity: {},
             pack_q: {},
@@ -285,6 +294,10 @@
                                  
                 if(this.pack_q){ 
                     postdata.pack_q = this.pack_q 
+                }
+
+                if(this.wprice){ 
+                    postdata.wprice = this.wprice 
                 }
 
                 if(this.supplier){
@@ -390,6 +403,7 @@
                     this.expiry = data.expiry
                     this.price = data.price
                     this.cprice = data.cprice
+                    this.wprice = data.wprice
                     this.quantity = data.left
                     this.restock = data.restock
                     this.variant = data.variant,
@@ -408,6 +422,7 @@
                 this.manufacturer = ''
                 this.price = ''
                 this.cprice = ''
+                this.wprice = ''
                 this.quantity = ''
                 this.pack_q = ''
                 this.restock = ''
@@ -418,10 +433,10 @@
                 this.$nextTick(() => { this.$v.$reset() })
             },
             initScanner(){
-                 if(process.env.VUE_APP_PLATFORM === 'local'){
-                    this.s$store.dispatch('GET_BARCODE')
-                    .then(res => {
+                this.$store.dispatch('GET_BARCODE')
+                .then(res => {
                         let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
+                        console.log(barcode_online)
                         if(barcode_online){
                             let barcode = this.$store.getters['GET_BARCODE']
                             if(barcode){
@@ -432,7 +447,6 @@
                             }
                         }
                     })   
-                }
             },
             importFile(){
                 let postData = {
