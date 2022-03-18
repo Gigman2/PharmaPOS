@@ -96,7 +96,7 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                               <img :src="(item.dispensation == 'single') ? '/assets/images/plastic.svg' : (item.dispensation == 'tab') ? '/assets/images/plastic-bottle.png' : '/assets/images/plastic-bottle.png'" 
+                                               <img :src="(item.dispensation == 'single') ? '/assets/images/plastic-bottle.png' : (item.dispensation == 'tab') ? '/assets/images/plastic-bottle.png' : '/assets/images/plastic-bottle.png'" 
                                                     alt="" style="width: 65%; margin-top: 10px" v-else
                                                 >
                                             </div>
