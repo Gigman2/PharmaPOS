@@ -445,8 +445,9 @@
                 this.$nextTick(() => { this.$v.$reset() })
             },
             initScanner(){
-                this.$store.dispatch('GET_BARCODE')
-                .then(res => {
+                if(process.env.VUE_APP_PLATFORM === 'local'){
+                    this.$store.dispatch('GET_BARCODE')
+                    .then(res => {
                         let barcode_online = this.$store.getters['BARCODE_ONLINE_STATE'];
                         console.log(barcode_online)
                         if(barcode_online){
@@ -458,7 +459,8 @@
                                 });
                             }
                         }
-                    })   
+                    }) 
+                }  
             },
             importFile(){
                 let postData = {

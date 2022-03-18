@@ -53,7 +53,7 @@
             submit(){
                 this.error = false;
                 this.submitting = true;
-                let postdata = {
+                let postData = {
                     email: this.username,
                     password: this.password
                 }
@@ -62,11 +62,11 @@
                    this.submitting = false;
                 } else {
                     localStorage.setItem('username', this.username)
-                   this.login(postdata)
+                   this.login(postData)
                 }
             },
-            login(formdata){
-                this.$http.post('users/auth', formdata)
+            login(formData){
+                this.$http.post('users/auth', formData)
                 .then(res => {
                     localStorage.setItem('access_token', res.data.token)
                     localStorage.setItem('user', JSON.stringify(res.data.result.result))
@@ -90,19 +90,17 @@
                         delete item.updatedAt
                         delete item.roleId
                         delete item.userId
-                       if(process.env.VUE_APP_DB == 'mysql'){
-                            if(item.state == '1'){
-                                item.state = true
-                            }else{
-                                item.state = false
-                            }
+                        if(item.state === '1' || item.state === 'true'){
+                            console.log('here')
+                            item.state = true
+                        }else{
+                            item.state = false
                         }
                         permissions[item.resourceId] = item
                     }))
 
                     localStorage.setItem('account_permissions', JSON.stringify(permissions))
                     this.$store.commit('SET_PERMISSION')
-                    console.log(permissions[38])
 
                     this.$router.push({name: 'pos-home'}) 
 
@@ -113,7 +111,6 @@
                 .then(res => {
                     let data =  res.body.result
                     if(data != null){
-                        localStorage.setItem('business', JSON.stringify(data))
                         this.$store.commit('SET_BUSINESS')
                         this.setData(data)
                     }

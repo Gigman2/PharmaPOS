@@ -279,9 +279,9 @@
         }
         .products{
             padding-top: 15px;
-            height: calc(100vh - 300px);
-            overflow: hidden;
-            // overflow-y: scroll;
+            height: calc(100vh - 270px);
+            // overflow: hidden;
+            overflow-y: scroll;
             .product-row{
                 width: 100%;
                 height: auto;

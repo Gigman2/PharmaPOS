@@ -19,7 +19,7 @@
 
                     <div class="products-box">
                         <div class="products-title">Recent Products</div>
-                        <div class="scroll-area products grid" :settings="settings" v-loading="loading" v-if="layout == 'grid'">
+                        <div class="products grid" v-loading="loading" v-if="layout == 'grid'">
                             <div class="product-row recent">
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, f) in recentProducts" :key="'a'+f">
@@ -78,7 +78,7 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                                <img :src="(item.dispensation == 'single') ? '/assets/images/plastic-bottle.png' : (item.dispensation == 'tab') ? '/assets/images/plastic-bottle.png' : '/assets/images/plastic-bottle.png'" 
                                                     alt="" style="width: 65%; margin-top: 10px" v-else
                                                 >
                                             </div>
@@ -96,7 +96,7 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                               <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                               <img :src="(item.dispensation == 'single') ? '/assets/images/plastic.svg' : (item.dispensation == 'tab') ? '/assets/images/plastic-bottle.png' : '/assets/images/plastic-bottle.png'" 
                                                     alt="" style="width: 65%; margin-top: 10px" v-else
                                                 >
                                             </div>
@@ -159,7 +159,7 @@
                                         <div class="category-container">
                                             <div class="category-item" @click="filerByCategory('all', $event)">
                                                 <div class="category-item__icon">
-                                                    <img src="@/assets/images/pills.svg" alt="">
+                                                    <img src="@/assets/images/plastic-bottle.png" alt="">
                                                 </div>
                                                 <div class="category-item__content">All</div>
                                                 <div class="category-item__products"></div>
@@ -167,7 +167,7 @@
                                             <div class="category-item" v-for="(item, i) in categories" :key="i"
                                             @click="filerByCategory(item, $event)">
                                                 <div class="category-item__icon">
-                                                    <img src="@/assets/images/pills.svg" alt="">
+                                                    <img src="@/assets/images/plastic-bottle.png" alt="">
                                                 </div>
                                                 <div class="category-item__content">{{item.name}}</div>
                                                 <div class="category-item__products">{{item.products.length}}</div>
@@ -821,6 +821,7 @@
             },
 
             initScanner(){
+                console.log('Env is ', process.env.VUE_APP_PLATFORM)
                 if(process.env.VUE_APP_PLATFORM === 'local'){
                     this.$store.dispatch('GET_BARCODE')
                     .then(res => {
