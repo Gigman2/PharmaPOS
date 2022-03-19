@@ -267,19 +267,36 @@
             width="30%">
             <div class="form-box">
                 <el-row :gutter="20">
+                    <el-col :span="24" v-if="selectedProduct.pack_q > 1">
+                        <div class="drug-purchase-type">
+                            <div class="purchase-image">
+                                <img src="@/assets/images/beer.png" alt="">
+                            </div>
+                            <div class="purchase-content">
+                                <div class="purchase-content__heading">Indicate number of pieces</div>
+                                <div class="purchase-content__counter">
+                                    <div class="counter" @click="counter('add', selectedIndex, 'loose')"><span class="fe-plus"></span></div>
+                                    <div class="count">
+                                        <input v-model="countWholesale" @keyup="counter(null, selectedIndex)" ref="countWholesale" >
+                                    </div>
+                                    <div class="counter" @click="counter('minus', selectedIndex, 'loose')"><span class="fe-minus"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </el-col>
+
                      <el-col :span="24">
                         <div class="drug-purchase-type">
                             <div class="purchase-image">
-                                <img src="@/assets/images/drugs.svg" alt="" v-if="selectedProduct.dispensation == 'single'">
-                                <img src="@/assets/images/medicine.svg" alt="" v-if="selectedProduct.dispensation == 'strip'">
-                                <img src="@/assets/images/capsule.svg" alt="" v-else-if="selectedProduct.dispensation == 'tab'">
+                                <img src="@/assets/images/plastic-bottle.png" alt="">
                             </div>
                             <div class="purchase-content">
                                 <div class="purchase-content__heading">Indicate quantity to purchase</div>
                                 <div class="purchase-content__counter">
                                     <div class="counter" @click="counter('add', selectedIndex)"><span class="fe-plus"></span></div>
                                     <div class="count">
-                                        <input v-model="countInput" @keyup="counter(null, selectedIndex)" ref="countfield" >
+                                        <input v-model="countRetail" @keyup="counter(null, selectedIndex)" ref="countRetail" >
                                     </div>
                                     <div class="counter" @click="counter('minus', selectedIndex)">
                                         <span class="fe-minus"></span>
@@ -499,9 +516,10 @@
 
 
                 pack: 0,
-                loose: 0,
-                countInput: 0,
-                
+                retail: 0,
+                countWholesale: 0,
+                countRetail: 0,
+
                 q: '',
                 id: null,
                 barcodeScanned: '',
@@ -598,7 +616,6 @@
                 await this.$http.get('product/list?size=all')
                 .then(async res => {
                     let data =  res.body.result
-                    console.log(data)
                     data.map(i => {
                         i.displayPrice = formatMoney(i.price, ',', '.')
                         if(i.expiry != null){
@@ -917,11 +934,11 @@
                 this.selectedIndex = i
                 this.showDrugDialog = true
                 this.$nextTick(() => {
-                    if(this.$refs.countfield){
-                        if(this.countInput == 0){
-                            this.countInput = ''
+                    if(this.$refs.countRetail){
+                        if(this.countRetail == 0){
+                            this.countRetail = ''
                         }
-                        this.$refs.countfield.focus()
+                        this.$refs.countRetail.focus()
                     }
                 })
             },
@@ -967,31 +984,33 @@
                 })
             },
             counter(type, i){
-                let packaging =  (this.orderProducts[i].dispensation == 'single') ? 'quantity' : 'pack' ;
-                if(isNaN(this.countInput)){
-                    this.countInput = (this.orderProducts[i].dispensation == 'single') ? this.orderProducts[i].quantity : this.orderProducts[i].pack ;
+                console.log(this.orderProducts[i])
+                let packaging =  (this.orderProducts[i].pack_q > 1) ? 'quantity' : 'retail' ;
+                if(isNaN(this.countWholesale)){
+                    this.countWholesale = this.orderProducts[i].quantity ;
                 }
 
+                 if(isNaN(this.countRetail)){
+                    this.countRetail = (this.orderProducts[i].pack_q == 1) ? this.orderProducts[i].quantity : this.orderProducts[i].pack ;
+                }
+
+                 let pack_q = this.orderProducts[i].pack_q;
+                let packTotal = (pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l;
                 if(packaging == 'quantity' ){
-                    if(this.countInput > this.orderProducts[i].left){
-                        this.countInput = this.orderProducts[i].left
+                     if(this.countWholesale > packTotal){
+                        this.countWholesale = packTotal
                     }
                 }else{
-                    let pack_q =  (this.orderProducts[i].pack_q == null) ? 1 : this.orderProducts[i].pack_q;
-                    let packTotal = (pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l;
-                    if(this.countInput > packTotal){
-                        this.countInput = packTotal
+                    if(this.countRetail > packTotal){
+                        this.countRetail = packTotal
                     }
                 }
-                let quantity = this.countInput
+                let wQuantity = this.countWholesale
+                let rQuantity = this.countRetail
+
 
                 if(type == 'add'){
-                    if(this.orderProducts[i].dispensation == 'single'){
-                        if(quantity < this.orderProducts[i].left){
-                            quantity++
-                        }
-                    }else if(this.orderProducts[i].dispensation == 'tab' || this.orderProducts[i].dispensation == 'strip'){
-                        let pack_quantity = (this.orderProducts[i].pack_q == null) ? 1 : this.orderProducts[i].pack_q;
+                    if(wQuantity){
                         if(quantity < (pack_quantity * this.orderProducts[i].left) + this.orderProducts[i].pack_l){
                             quantity++
                         }
@@ -1010,18 +1029,17 @@
                 this.updateTotalPrice()
             },
             updateProductTotalPrice(i){
-                let pack = this.orderProducts[i].pack,
-                    quantity = this.orderProducts[i].quantity, 
-                    dispensation = this.orderProducts[i].dispensation,
-                    price = this.orderProducts[i].price;
-                
+                let retail = this.orderProducts[i].retail || 0,
+                    quantity = this.orderProducts[i].quantity || 0, 
+                    price = this.orderProducts[i].price || 0,
+                    wprice = this.orderProducts[i].wprice || 0;
+
                 let productTotalPrice = 0;
-                if(price != '' && !isNaN(price) && price != null){
-                    if(dispensation == 'single'){
-                        productTotalPrice = parseInt(quantity) * parseFloat(price) 
-                    }else{
-                        productTotalPrice = parseInt(pack) * parseFloat(price) 
-                    }
+               if(quantity != 0){
+                    productTotalPrice = parseInt(quantity) * parseFloat(wprice) 
+                }
+                if(retail != 0){
+                    productTotalPrice = productTotalPrice + (parseInt(retail) * parseFloat(price)) 
                 }
 
                 let totalPrice = productTotalPrice;
