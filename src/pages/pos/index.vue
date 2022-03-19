@@ -219,9 +219,9 @@
                                     <tr>
                                         <th width="30px"></th> 
                                         <th>Name</th>
-                                        <th>Rate</th>
-                                        <th>QTY</th>
-                                        <th width="60px">Price</th>
+                                        <th>W/sale</th>
+                                        <th>S/sale</th>
+                                        <th width="60px">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -231,13 +231,19 @@
                                         <td width="45%">
                                             <span class="pointer"  @click="openDrugModal(e, item)">{{item.name}}</span>
                                         </td>
-                                        <td>{{item.price}}</td>
                                         <td>
-                                            <span class="pointer" @click="openDrugModal(e, item)">
-                                                {{(item.dispensation == 'single') ? item.quantity :item.pack}}
+                                            <div class="right">
+                                                <div>{{item.wprice}}</div>
+                                                <div>{{item.quantity}} pcks</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="pull-right">
+                                                <div>{{item.price}}</div>
+                                                <div>{{item.retail}} pcs</div>
                                             </span>
                                         </td>
-                                        <td>{{item.formattedTotal}}</td>
+                                        <td @click="openDrugModal(e, item)">{{item.formattedTotal}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -949,7 +955,8 @@
                 this.cash = '';
                 this.momo = '';
                 this.change = '';
-                this.countInput = 0;
+                this.countWholesale = 0;
+                this.countRetail = 0;
                 this.manualCheckout = false
                 this.updateTotalPrice()
                 localStorage.removeItem('orderProducts')
@@ -968,15 +975,11 @@
                         left: item.product.left,
                         pack_q: item.product.pack_q,
                         price: item.product.price,
+                        wprice: item.product.wprice,
                         selected: false,
-                        dispensation: item.dispensation,
                         saleId: this.id,
-                    }
-
-                    if(item.dispensation == 'single'){
-                        product.quantity = item.quantity
-                    }else if(item.dispensation == 'tab' || item.dispensation == 'strip'){
-                        product.pack = item.quantity
+                        quantity: item.quantity,
+                        retail:  item.retail
                     }
 
                     this.orderProducts.unshift(product)
@@ -985,7 +988,6 @@
             },
             counter(type, i, _package){
                 let packaging =  _package ;
-                console.log(packaging)
                 if(isNaN(this.countWholesale)){
                     this.countWholesale = this.orderProducts[i].quantity ;
                 }
@@ -1266,8 +1268,6 @@
                     this.loading = false
                 }else{
                     this.loading = true
-                    var newData = [];
-                    var index = 0;
                     this.layout = 'grid';
                     this.loading = false
                 }
