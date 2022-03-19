@@ -511,4 +511,10 @@
             cursor: pointer;
         }
     }
+    .font-bold{
+        font-weight: bold;
+    }
+    .font-small{
+        font-size: 13px;
+    }
 </style>

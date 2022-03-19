@@ -204,7 +204,7 @@
                 .then(res => {
                     let data =  res.body.result
                     if(data != null){
-                        this.setData(data)
+                        this.setData(data[0])
                     }
                 })
                 .catch(err => {

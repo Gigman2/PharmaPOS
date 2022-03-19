@@ -233,17 +233,17 @@
                                         </td>
                                         <td>
                                             <div class="right">
-                                                <div>{{item.wprice}}</div>
-                                                <div>{{item.quantity}} pcks</div>
+                                                <div class="font-bold">{{item.wprice}}</div>
+                                                <div class="font-small">{{item.quantity}} pcks</div>
                                             </div>
                                         </td>
                                         <td>
                                             <span class="pull-right">
-                                                <div>{{item.price}}</div>
-                                                <div>{{item.retail}} pcs</div>
+                                                <div class="font-bold">{{item.price}}</div>
+                                                <div class="font-small">{{item.retail}} pcs</div>
                                             </span>
                                         </td>
-                                        <td @click="openDrugModal(e, item)">{{item.formattedTotal}}</td>
+                                        <td @click="openDrugModal(e, item)"><div  class="font-bold">{{item.formattedTotal}}</div></td>
                                     </tr>
                                 </tbody>
                             </table>
