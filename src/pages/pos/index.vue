@@ -974,12 +974,12 @@
                         totalprice: item.total,
                         left: item.product.left,
                         pack_q: item.product.pack_q,
-                        price: item.product.price,
-                        wprice: item.product.wprice,
+                        price: item.price,
+                        wprice: item.wprice,
+                        retail: item.retail,
                         selected: false,
                         saleId: this.id,
                         quantity: item.quantity,
-                        retail:  item.retail
                     }
 
                     this.orderProducts.unshift(product)

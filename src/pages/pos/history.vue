@@ -250,7 +250,6 @@
                 this.transaction = item
             },
             retrieveItem(item){
-                let products = [];
                 localStorage.setItem('retrievedTransaction', JSON.stringify(item))
                 this.$router.push({name: 'pos-home'})
             },
