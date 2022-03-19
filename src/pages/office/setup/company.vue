@@ -67,15 +67,15 @@
                 <el-col :span="10">
                     <div class="preview">
                         <div class="preview-box">
-                            <img :src="bucket+preview" alt="" srcset="">
+                            <img :src="preview" alt="" srcset="">
                         </div>
                     </div>
-                    <div class="information-preview">
-                        <h2 class="mb-2 form-title">{{name}}</h2>
-                        <div class="mb-3">{{manager}}</div>
-                        <div class="mb-3">{{address}}</div>
-                        <div class="mb-3">{{email}}</div>
-                        <div class="mb-3">{{phone}}</div>
+                    <div class="information-preview align-left">
+                        <h2 class="mb-15 form-title">{{name}}</h2>
+                        <div class="mb-10">{{manager}}</div>
+                        <div class="mb-10">{{address}}</div>
+                        <div class="mb-10">{{email}}</div>
+                        <div class="mb-10">{{phone}}</div>
                     </div>
                 </el-col>
             </el-row>
@@ -239,8 +239,19 @@
     }
 
     .preview-box{
-        width: 120px;
+        width: 200px;
+        margin-left: 50px;
+
         height: auto;
     }
-
+    .information-preview{
+        text-align: left;
+        padding: 0 50px;
+        h2{
+            font-size:25px;
+        }
+        div{
+            font-size: 18px;
+        }
+    }
 </style>
