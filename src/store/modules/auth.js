@@ -66,7 +66,6 @@ const getters = {
   },
   PERMISSIONS: () => {
     if(state.permission != null){
-      console.log('Permissions are ',state.permission)
       return state.permission
     }
   }

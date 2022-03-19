@@ -91,7 +91,6 @@
                         delete item.roleId
                         delete item.userId
                         if(item.state === '1' || item.state === 'true'){
-                            console.log('here')
                             item.state = true
                         }else{
                             item.state = false

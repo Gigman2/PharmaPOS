@@ -275,11 +275,11 @@
                             <div class="purchase-content">
                                 <div class="purchase-content__heading">Indicate number of pieces</div>
                                 <div class="purchase-content__counter">
-                                    <div class="counter" @click="counter('add', selectedIndex, 'loose')"><span class="fe-plus"></span></div>
+                                    <div class="counter" @click="counter('add', selectedIndex, 'wholesale')"><span class="fe-plus"></span></div>
                                     <div class="count">
-                                        <input v-model="countWholesale" @keyup="counter(null, selectedIndex)" ref="countWholesale" >
+                                        <input v-model="countWholesale" @keyup="counter(null, selectedIndex, 'wholesale')" ref="countWholesale" >
                                     </div>
-                                    <div class="counter" @click="counter('minus', selectedIndex, 'loose')"><span class="fe-minus"></span></div>
+                                    <div class="counter" @click="counter('minus', selectedIndex, 'wholesale')"><span class="fe-minus"></span></div>
                                 </div>
                             </div>
                         </div>
@@ -294,11 +294,11 @@
                             <div class="purchase-content">
                                 <div class="purchase-content__heading">Indicate quantity to purchase</div>
                                 <div class="purchase-content__counter">
-                                    <div class="counter" @click="counter('add', selectedIndex)"><span class="fe-plus"></span></div>
+                                    <div class="counter" @click="counter('add', selectedIndex,'retail')"><span class="fe-plus"></span></div>
                                     <div class="count">
-                                        <input v-model="countRetail" @keyup="counter(null, selectedIndex)" ref="countRetail" >
+                                        <input v-model="countRetail" @keyup="counter(null, selectedIndex, 'retail')" ref="countRetail" >
                                     </div>
-                                    <div class="counter" @click="counter('minus', selectedIndex)">
+                                    <div class="counter" @click="counter('minus', selectedIndex, 'retail')">
                                         <span class="fe-minus"></span>
                                     </div>
                                 </div>
@@ -838,7 +838,6 @@
             },
 
             initScanner(){
-                console.log('Env is ', process.env.VUE_APP_PLATFORM)
                 if(process.env.VUE_APP_PLATFORM === 'local'){
                     this.$store.dispatch('GET_BARCODE')
                     .then(res => {
@@ -881,7 +880,8 @@
             *     ITEM ORDER FUNCTIONS
             ***************************************/
             addItem(item, retrieved){
-                this.countInput = 0;
+                this.countRetail = 0;
+                this.countWholesale = 0;
                 var orderProducts = [...this.orderProducts]
 
                 var product = {
@@ -889,12 +889,12 @@
                     name: item.name,
                     totalprice: item.totalprice,
                     price: item.price,
+                    wprice: item.wprice,
                     left: item.left,
                     quantity: 0,
                     pack_l: item.pack_l,
                     pack_q: item.pack_q,
-                    dispensation: item.dispensation,
-                    pack: item.pack,
+                    retail: item.retail,
                     selected: false,
                     saleId: null
                 }
@@ -983,24 +983,30 @@
                     this.updateTotalPrice()
                 })
             },
-            counter(type, i){
-                console.log(this.orderProducts[i])
-                let packaging =  (this.orderProducts[i].pack_q > 1) ? 'quantity' : 'retail' ;
+            counter(type, i, _package){
+                let packaging =  _package ;
+                console.log(packaging)
                 if(isNaN(this.countWholesale)){
                     this.countWholesale = this.orderProducts[i].quantity ;
                 }
 
-                 if(isNaN(this.countRetail)){
-                    this.countRetail = (this.orderProducts[i].pack_q == 1) ? this.orderProducts[i].quantity : this.orderProducts[i].pack ;
+                if(isNaN(this.countRetail)){
+                    this.countRetail = this.orderProducts[i].retail ;
                 }
 
-                 let pack_q = this.orderProducts[i].pack_q;
+                let pack_q = this.orderProducts[i].pack_q;
                 let packTotal = (pack_q * this.orderProducts[i].left) + this.orderProducts[i].pack_l;
-                if(packaging == 'quantity' ){
-                     if(this.countWholesale > packTotal){
-                        this.countWholesale = packTotal
+                if(packaging == 'wholesale'){
+                    if(this.countWholesale > this.orderProducts[i].left){
+                        this.countWholesale = this.orderProducts[i].left
                     }
-                }else{
+
+                    if(this.countRetail > packTotal - (this.countWholesale * pack_q)){
+                        this.countRetail = packTotal -  (this.countWholesale * pack_q)
+                    }
+                    
+                }
+                if(packaging == 'retail'){
                     if(this.countRetail > packTotal){
                         this.countRetail = packTotal
                     }
@@ -1010,19 +1016,30 @@
 
 
                 if(type == 'add'){
-                    if(wQuantity){
-                        if(quantity < (pack_quantity * this.orderProducts[i].left) + this.orderProducts[i].pack_l){
-                            quantity++
+                    if(packaging == 'wholesale'){
+                        if(wQuantity < this.orderProducts[i].left){
+                            wQuantity++
+                        }
+                    }
+                     if(packaging == 'retail'){
+                        if(rQuantity < (pack_q * (this.orderProducts[i].left - wQuantity)) + this.orderProducts[i].pack_l){
+                            rQuantity++
                         }
                     }
                 }else if(type == 'minus'){
-                    if(quantity > 0){
-                        quantity--
+                    if(wQuantity > 0){
+                        wQuantity--
+                    }
+                    if(rQuantity > 0){
+                        rQuantity--
                     }
                 }
 
-                this.countInput = quantity
-                this.orderProducts[i][packaging] = quantity
+                this.countWholesale = wQuantity
+                this.countRetail = rQuantity
+                this.orderProducts[i]['retail'] = rQuantity
+                this.orderProducts[i]['quantity'] = wQuantity
+
                 
                 localStorage.setItem('orderProducts', JSON.stringify(this.orderProducts))
                 this.updateProductTotalPrice(i)
@@ -1278,7 +1295,7 @@
                let index = this.selectedIndex;
                 if(this.showDrugDialog){
                     this.$refs.countfield.blur()
-                    this.counter(type, index)
+                    this.counter(type, index, 'retail')
                 }
            }
         },
