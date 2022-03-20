@@ -1162,7 +1162,6 @@
                     }else{
                         transaction.print = false
                     }
-                    console.log(transaction)
                     if(type == 'hold'){
                         transaction.state = 'holding';
                         this.createTransaction(transaction)
@@ -1185,10 +1184,9 @@
                                 type: 'success'
                             });
                         }
-                        if(postData.state == 'processing' && res.data.issuePrint){
-
+                        if(postData.state == 'processing' && res.data.result.issuePrint){
                             if(process.env.VUE_APP_PLATFORM === 'local'){
-                                axios.post('/print',{...res.result})
+                                axios.post('/print',{...res.data.result})
                                 .then(printRes => {
                                     this.$notify({
                                         title: 'Printing',
