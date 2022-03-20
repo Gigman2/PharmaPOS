@@ -486,7 +486,7 @@
     import axios from 'axios'
 
     import {mapGetters} from 'vuex';
-    import { required, helpers, decimal } from 'vuelidate/lib/validators'
+    import { required, decimal } from 'vuelidate/lib/validators'
     import formatMoney from '@/components/formatmoney.js'
 
     export default {
@@ -623,7 +623,7 @@
                 .then(async res => {
                     let data =  res.body.result
                     data.map(i => {
-                        i.displayPrice = formatMoney(i.price, ',', '.')
+                        i.displayPrice = formatMoney(i.price, 2, '.',',')
                         if(i.expiry != null){
                             let expiry = Moment(i.expiry).format('YYYY-MM-DD')
                             let now = Moment().format('YYYY-MM-DD')
@@ -663,7 +663,7 @@
                         });
                         
                         e.map(i => {
-                            i.displayPrice = formatMoney( i.price, ',', '.')
+                            i.displayPrice = formatMoney( i.price, 2, '.',',')
                             
                             if(i.expiry != null){
                                 let expiry = Moment(i.expiry).format('YYYY-MM-DD')
@@ -720,7 +720,6 @@
                 this.setProducts(result)
             },
             setProducts(result){
-                console.log(result)
                 this.recentProducts = []
                 let products = result.map(item => {
                     let product = item.item;
@@ -734,8 +733,6 @@
                     let flattenProducts = products.flat()
                     this.listdata = flattenProducts
                 }
-
-                console.log(this.listdata)
             },
             productSearch(query){
                 this.loading = true
@@ -750,7 +747,7 @@
                     this.products = data;
 
                     this.products.map(i => {
-                        i.displayPrice = formatMoney( i.price, ',', '.')
+                        i.displayPrice = formatMoney( i.price, 2, '.',',')
 
                         if(i.expiry != null){
                             let expiry = Moment(i.expiry).format('YYYY-MM-DD')
@@ -1029,12 +1026,18 @@
                         }
                     }
                 }else if(type == 'minus'){
-                    if(wQuantity > 0){
-                        wQuantity--
+                    if(packaging == 'wholesale'){
+                        if(wQuantity > 0){
+                            wQuantity--
+                        }
                     }
-                    if(rQuantity > 0){
-                        rQuantity--
-                    }
+                    
+                    if(packaging == 'retail'){
+                        if(rQuantity > 0){
+                            rQuantity--
+                        }
+                     }
+
                 }
 
                 this.countWholesale = wQuantity
@@ -1063,7 +1066,7 @@
 
                 let totalPrice = productTotalPrice;
                 this.orderProducts[i].totalprice = totalPrice
-                this.orderProducts[i].formattedTotal = formatMoney(totalPrice, ',','.')
+                this.orderProducts[i].formattedTotal = formatMoney(totalPrice, '.',',')
             },
             updateTotalPrice(){
                 let grosstotal = 0;
@@ -1077,7 +1080,7 @@
                 this.tax = (grosstotal * tax).toFixed(2);
                 this.netTotal = grosstotal - this.tax
                 this.grossTotal = grosstotal
-                this.formattedGrossTotal = formatMoney(grosstotal, ',', '.')
+                this.formattedGrossTotal = formatMoney(grosstotal, '.',',')
             },
             saveCustomer(){
                 let payload = {
@@ -1131,34 +1134,35 @@
                     changeGiven: this.change,
                     id : this.id
                 }
+
+               
+
                 if(this.orderProducts.length > 0){
                     this.orderProducts.forEach(item => {
                         let product = {
                             dispensation: item.dispensation,
                             quantity: item.quantity,
+                            retail: item.retail,
                             price: item.price,
+                            wprice: item.wprice,
                             total: item.totalprice,
                             productId: item.id,
                             id: item.saleId
                         }
 
-                        if(product.dispensation != 'single'){
-                            product.quantity = Number(item.pack)
-                        }
                         if(product.quantity > 0){
                             transaction.products.push(product)
                         }
-                    })  
+                    })
 
                     transaction.itemTotal = transaction.products.length
-
                     if(this.printReceipt){
                         transaction.print = true
                         
                     }else{
                         transaction.print = false
                     }
-                    
+                    console.log(transaction)
                     if(type == 'hold'){
                         transaction.state = 'holding';
                         this.createTransaction(transaction)
@@ -1181,7 +1185,8 @@
                                 type: 'success'
                             });
                         }
-                        if(postData.state == 'processing'){
+                        if(postData.state == 'processing' && res.data.issuePrint){
+
                             if(process.env.VUE_APP_PLATFORM === 'local'){
                                 axios.post('/print',{...res.data})
                                 .then(printRes => {
