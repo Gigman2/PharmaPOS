@@ -1142,12 +1142,12 @@
                         let product = {
                             dispensation: item.dispensation,
                             quantity: item.quantity,
-                            retail: item.retail,
+                            retail: isNaN(item.retail) ? 0 : item.retail,
                             price: item.price,
                             wprice: item.wprice,
                             total: item.totalprice,
                             productId: item.id,
-                            id: item.saleId
+                            id: item.saleId || undefined
                         }
 
                         if(product.quantity > 0){
