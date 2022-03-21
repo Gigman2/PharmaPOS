@@ -521,7 +521,6 @@
                 change: '',
 
 
-                pack: 0,
                 retail: 0,
                 countWholesale: 0,
                 countRetail: 0,
@@ -710,7 +709,6 @@
                 this.loading = true
                 let products = JSON.parse(localStorage.getItem('products'))
 
-                console.log(products)
                 const fuse = new Fuse(products, {
                     keys: ['name']
                 })
@@ -831,7 +829,6 @@
 
                 await this.getAllProducts()
                 .then(e => {
-                    console.log(e)
                     if(q != ''){
                         this.nameSearch({name: q})
                     }else{
@@ -897,12 +894,13 @@
                     quantity: 0,
                     pack_l: item.pack_l,
                     pack_q: item.pack_q,
-                    retail: item.retail,
+                    retail: 0,
                     selected: false,
                     saleId: null
                 }
                 if(retrieved){
                     product.quantity = item.quantity
+                    product.retail = item.retail
                 }
 
                 let existIndex
@@ -1139,12 +1137,13 @@
 
                 if(this.orderProducts.length > 0){
                     this.orderProducts.forEach(item => {
+                        console.log(item)
                         let product = {
                             dispensation: item.dispensation,
                             quantity: item.quantity,
-                            retail: item.retail.length > 0 ? Number(item.retail) : 0,
-                            price: item.price.length > 0 ? Number(item.price) : 0,
-                            wprice:  item.wprice.length > 0 ? Number(item.wprice) : 0,
+                            retail: isNaN(Number(item.retail)) ? 0 : Number(item.retail) ,
+                            price: isNaN(Number(item.price)) ?  0 : Number(item.price),
+                            wprice:  isNaN(Number(item.wprice)) ? 0 : Number(item.wprice) ,
                             total: item.totalprice,
                             productId: item.id,
                             id: item.saleId || undefined
@@ -1158,10 +1157,10 @@
                     transaction.itemTotal = transaction.products.length
                     if(this.printReceipt){
                         transaction.print = true
-                        
                     }else{
                         transaction.print = false
                     }
+                    console.log('Transaction is ', transaction)
                     if(type == 'hold'){
                         transaction.state = 'holding';
                         this.createTransaction(transaction)

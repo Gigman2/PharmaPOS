@@ -417,6 +417,8 @@
                     this.cprice = data.cprice
                     this.wprice = data.wprice
                     this.quantity = data.left
+                    this.pack_l = data.pack_l
+                    this.pack_q = data.pack_q
                     this.restock = data.restock
                     this.variant = data.variant,
                     this.shelf = data.shelf
@@ -437,6 +439,7 @@
                 this.wprice = ''
                 this.quantity = ''
                 this.pack_q = ''
+                this.pack_l = ''
                 this.restock = ''
                 this.shelf = ''
                 this.expiry = ''
