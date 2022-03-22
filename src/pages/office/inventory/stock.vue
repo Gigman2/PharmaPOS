@@ -16,11 +16,15 @@
                 <el-table-column prop="currentStock" label="Current Stock"> </el-table-column>
                 <el-table-column prop="initialStock" label="Initial Number"> </el-table-column>
                 <el-table-column prop="supplier" label="Supplier"> </el-table-column>
+                <el-table-column prop="left" label="Product Type">
+                     <template slot-scope="scope">
+                        <div>{{scope.row.product.pack_q === 1 ? 'Only Retail' : 'Wholesale & Retail'}}</div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="updated" label="Last Updated"> </el-table-column>
                 <el-table-column>
                     <template slot-scope="">
-                            <el-button size="mini">Edit</el-button>
-                            <!-- <el-button size="mini" type="danger" @click="triggerDelete(scope.$index, scope.row.id)">Delete</el-button> -->
+                            
                     </template>
                 </el-table-column>
             </el-table>
