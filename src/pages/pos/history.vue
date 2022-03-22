@@ -91,18 +91,26 @@
                         <thead class="checkout-headings">
                             <tr>
                                 <th>Name</th>
-                                <th>Rate</th>
-                                <th>QTY</th>
-                                <th>Price</th>
+                                <th>W/sale</th>
+                                <th>S/sale</th>
+                                <th width="60px">Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="checkout-item-row" v-for="(item, i) in transaction.products" :key="i">
                                 <td style="text-align: left">{{item.product.name}}</td>
-                                <td>{{item.price}}</td>
                                 <td>
-                                    <span>{{item.quantity}} </span> <strong>{{(item.dispensation == 'tab') ? 'T' : (item.dispensation == 'strip') ? 'S': ''}}</strong>
-
+                                    <div class="right">
+                                        <div class="font-bold">{{item.wprice}}</div>
+                                        <div class="font-small">{{item.quantity}} pack{{item.quantity > 1 ? 's': ''}}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="pull-right">
+                                        <div class="font-bold">{{item.price}}</div>
+                                        <div class="font-small">{{item.retail}} piece{{item.retail > 1 ? 's': ''}}</div>
+                                    </span>
+                                </td>
                                 <td>{{item.total}}</td>
                             </tr>
                         </tbody>

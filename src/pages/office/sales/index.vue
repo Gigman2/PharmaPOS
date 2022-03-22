@@ -66,17 +66,27 @@
                             <thead>
                                 <tr>
                                         <th>Name</th>
-                                        <th>Rate</th>
-                                        <th>Qty</th>
-                                        <th>Price</th>
+                                        <th>W/sale</th>
+                                        <th>S/sale</th>
+                                        <th>Total</th>
                                     </tr>
                             </thead>
                             <tbody>
                                     <tr v-for="(item, i) in selectedTransaction.products" :key="i">
                                         <td>{{item.product.name}}</td>
-                                        <td>{{item.price}}</td>
-                                        <td>{{item.quantity}}</td>
-                                        <td>{{item.total}}</td>
+                                        <td>
+                                            <div class="right">
+                                                <div class="font-bold">{{item.wprice}}</div>
+                                                <div class="font-small">{{item.quantity}} pack{{item.quantity > 1 ? 's': ''}}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="pull-right">
+                                                <div class="font-bold">{{item.price}}</div>
+                                                <div class="font-small">{{item.retail}} piece{{item.retail > 1 ? 's': ''}}</div>
+                                            </span>
+                                        </td>
+                                         <td>{{item.total}}</td>
                                     </tr>
                             </tbody>
                         </table>
@@ -87,10 +97,10 @@
                     </div>
                 </div>
 
-                <div class="drawer-double mt-20">
+                <!-- <div class="drawer-double mt-20">
                     <div class="drawer-item">Tax (inclusive)</div>
                     <div class="drawer-item">Ghc {{selectedTransaction.tax}}</div>
-                </div>
+                </div> -->
 
                 <div class="drawer-double mt-20">
                     <div class="drawer-item">Discount {{selectedTransaction.discount}}</div>

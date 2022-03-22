@@ -232,13 +232,13 @@
                                             <span class="pointer"  @click="openDrugModal(e, item)">{{item.name}}</span>
                                         </td>
                                         <td>
-                                            <div class="right">
+                                            <div class="right"  @click="openDrugModal(e, item)">
                                                 <div class="font-bold">{{item.wprice}}</div>
                                                 <div class="font-small">{{item.quantity}} pcks</div>
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="pull-right">
+                                            <span class="pull-right"  @click="openDrugModal(e, item)">
                                                 <div class="font-bold">{{item.price}}</div>
                                                 <div class="font-small">{{item.retail}} pcs</div>
                                             </span>
@@ -1001,7 +1001,6 @@
                     if(this.countRetail > packTotal - (this.countWholesale * pack_q)){
                         this.countRetail = packTotal -  (this.countWholesale * pack_q)
                     }
-                    
                 }
                 if(packaging == 'retail'){
                     if(this.countRetail > packTotal){
@@ -1133,7 +1132,6 @@
                     id : this.id
                 }
 
-               
 
                 if(this.orderProducts.length > 0){
                     this.orderProducts.forEach(item => {
@@ -1149,7 +1147,7 @@
                             id: item.saleId || undefined
                         }
 
-                        if(product.quantity > 0){
+                        if(product.quantity > 0 || product.retail > 0){
                             transaction.products.push(product)
                         }
                     })
