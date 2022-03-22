@@ -43,7 +43,7 @@
                                 </div>
                             </el-col>
                             <el-col :span="10">
-                                <div class="input-label">Quantity adding to stock</div>
+                                <div class="input-label">How much are you adding to stock</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.quantity.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="0" v-model.trim.lazy="$v.quantity.$model">
@@ -52,22 +52,29 @@
                         </el-row>
 
                         <el-row :gutter="20">
-                            <el-col :span="7">
-                                <div class="input-label">Update Price</div>
+                            <el-col :span="8">
+                                <div class="input-label">Update Selling Price</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="Enter price of item" v-model.trim.lazy="$v.price.$model">
                                 </div>
                             </el-col>
-                             <el-col :span="7">
+                            <el-col :span="8">
                                 <div class="input-label">Update Cost Price</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="Enter cost price" v-model.trim.lazy="$v.cprice.$model">
                                 </div>
                             </el-col>
-                             <el-col :span="10" v-if="dispensation != 'single'">
-                                <div class="input-label">Update Quantity</div>
+                            <el-col :span="8">
+                                <div class="input-label">Update Wholesale Price if any</div>
+                                <div class="input-box" :class="{ 'input-box--error': $v.wprice.$error }">
+                                    <i class="fe-square"></i>
+                                    <input type="text" placeholder="Enter cost price" v-model.trim.lazy="$v.wprice.$model">
+                                </div>
+                            </el-col>
+                            <el-col :span="10">
+                                <div class="input-label">Quantity in pack if any</div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.pack_q.$error }">
                                     <i class="fe-square"></i>
                                     <input type="text" placeholder="Quantity in pack if any" v-model.trim.lazy="$v.pack_q.$model">
@@ -114,6 +121,7 @@
                 supplier: "",
                 price: "",
                 cprice: "",
+                wprice: "",
                 pack_q: "",
                 quantity: "",
                 pquantity: "",
@@ -139,6 +147,7 @@
             },
             price: {},
             cprice: {},
+            wprice: {},
             pack_q: {},
             restock: {},
             shelf: {}
@@ -167,9 +176,14 @@
                     shelf: this.shelf
                 }
 
+                if(this.wprice && Number(this.wprice) > 0){
+                    postdata.wprice = this.wprice
+                }
+
                 postdata.left = postdata.currentStock
                 postdata.quantity = postdata.left
                 
+                console.log(postdata)
                 this.$v.$touch()
                 if (this.$v.$invalid) {
                    this.submitting = false;
@@ -191,7 +205,6 @@
                     }else{
                         this.pquantity  = this.quantity
                         this.quantity = 0
-                        
                     }
                 })
                 .catch((err) => {
@@ -234,7 +247,6 @@
                     if(this.$route.params.id){
                         for (let i = 0; i < data.length; i++) {
                             if(data[i].id == this.$route.params.id){
-                                console.log(data)
                                 this.product = i;
                                 break;
                             }
@@ -250,6 +262,7 @@
                 this.supplier = this.products[this.product].key.supplierId
                 this.price = this.products[this.product].key.price
                 this.cprice = this.products[this.product].key.cprice
+                this.wprice = this.products[this.product].key.wprice
                 this.pack_q = this.products[this.product].key.pack_q
                 this.dispensation = this.products[this.product].key.dispensation
                 this.restock = this.products[this.product].key.restock
@@ -262,6 +275,9 @@
                 this.name = ""
                 this.supplier = ""
                 this.price = ""
+                this.cprice = ""
+                this.wprice = ""
+                this.pack_q = ""
                 this.quantity = ""
                 this.restock = ""
                 this.shelf = ""

@@ -300,7 +300,7 @@
                    variant: this.variant,
                 }       
                                  
-                if(this.pack_q){ 
+                if(this.pack_q  && Number(this.pack_q) > 0){ 
                     postdata.pack_q = this.pack_q 
                 }
 
@@ -308,7 +308,7 @@
                     postdata.pack_l = this.pack_l 
                 }
 
-                if(this.wprice){ 
+                if(this.wprice && Number(this.wprice) > 0){ 
                     postdata.wprice = this.wprice 
                 }
 

@@ -13,8 +13,8 @@
         <div class="dashboard-content mt-10" v-loading="fetching">
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column prop="productName" label="Product Name"></el-table-column>
-                <el-table-column prop="currentStock" label="In Stock"> </el-table-column>
-                <el-table-column prop="shelf" label="Shelf Number"> </el-table-column>
+                <el-table-column prop="currentStock" label="Current Stock"> </el-table-column>
+                <el-table-column prop="initialStock" label="Initial Number"> </el-table-column>
                 <el-table-column prop="supplier" label="Supplier"> </el-table-column>
                 <el-table-column prop="updated" label="Last Updated"> </el-table-column>
                 <el-table-column>
