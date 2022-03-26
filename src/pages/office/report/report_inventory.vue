@@ -17,9 +17,9 @@
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ..." v-model="q" @keyup="getReport">
             </div>
-           <div class="pull-right">
+           <!-- <div class="pull-right">
                 <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')">Export</el-button>
-            </div>
+            </div> -->
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10" v-loading="fetching">
