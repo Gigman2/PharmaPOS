@@ -516,8 +516,8 @@
                     phone: ''
                 },
 
-                cash: '',
-                momo: '',
+                cash: 0,
+                momo: 0,
                 change: '',
 
 

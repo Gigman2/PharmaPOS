@@ -15,8 +15,7 @@
                 <el-table-column prop="name" label="Name"></el-table-column>
                 <el-table-column prop="role" label="Role"></el-table-column>
                 <el-table-column prop="totalSales" label="Sales Made"> </el-table-column>
-                <el-table-column prop="averageCheckin" label="Average checkin"></el-table-column>
-                <el-table-column prop="averageCheckout" label="Average checkout"> </el-table-column>
+                <el-table-column prop="averageTime" label="Total Hours"></el-table-column>
             </el-table>
         </div>
     </div>

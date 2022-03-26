@@ -98,9 +98,10 @@
                 this.$http.post('product/report', postData)
                 .then(res=>{
                     let data = res.body.result
+                    console.log(data)
                     data.map(item => {
                         item.lastTransaction = Moment(item.lastTransaction).format('Do MMM YYYY')
-                        if(item.supplier[0] !== undefined){
+                        if(item.supplier?.length){
                             item.supplier = item.supplier[0].name
                         }else{
                             item.supplier = '--'
@@ -115,6 +116,7 @@
                     this.fetching = false
                 })
                 .catch(err => {
+                    console.log(err)
                     this.fetching = false
                 })
             },
