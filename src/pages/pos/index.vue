@@ -518,7 +518,7 @@
 
                 cash: 0,
                 momo: 0,
-                change: '',
+                change: 0,
 
 
                 retail: 0,

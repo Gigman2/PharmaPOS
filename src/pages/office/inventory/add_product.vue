@@ -106,7 +106,7 @@
                             <el-col :span="8">
                                 <div class="input-label">Wholesale Price <span class="pull-right">optional</span></div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.wprice.$error }">
-                                    <i class="fe-dollar-sign"></i>
+                                     <i>₵</i>
                                     <input type="text" placeholder="How much do you sell it as wholesale" v-model.trim.lazy="$v.wprice.$model">
                                 </div>
                             </el-col>
@@ -130,14 +130,14 @@
                             <el-col :span="8">
                                 <div class="input-label">Cost Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.cprice.$error }">
-                                    <i class="fe-dollar-sign"></i>
+                                     <i>₵</i>
                                     <input type="text" placeholder="Cost price here" v-model.trim.lazy="$v.cprice.$model">
                                 </div>
                             </el-col>
                             <el-col :span="8">
                                 <div class="input-label">Selling Price </div>
                                 <div class="input-box" :class="{ 'input-box--error': $v.price.$error }">
-                                    <i class="fe-dollar-sign"></i>
+                                    <i>₵</i>
                                     <input type="text" placeholder="Enter price here" v-model.trim.lazy="$v.price.$model">
                                 </div>
                             </el-col>

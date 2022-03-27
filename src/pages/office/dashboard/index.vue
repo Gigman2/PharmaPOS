@@ -9,7 +9,7 @@
                         </div>
                         <div class="card-col">
                             <div class="icon-box">
-                                <i class="fe-dollar-sign"></i>
+                                <span>₵</span>
                             </div>
                         </div> 
                     </div>
