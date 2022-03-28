@@ -25,7 +25,7 @@
                                     v-for="(item, f) in recentProducts" :key="'a'+f">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
                                     <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)"
-                                        :class="{'shortage': item.left <= item.restock && item.left > 0}">
+                                        :class="{'shortage': (item.left * item.pack_q) <= item.restock && (item.left * item.pack_q) > 0}">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -35,7 +35,7 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                                <img :src="'/assets/images/plastic-bottle.png'"
                                                     alt="" style="width: 65%; margin-top: 10px" v-else
                                                 >
                                             </div>
@@ -43,7 +43,7 @@
                                         <div class="product-title">{{item.name}}</div>
                                         <div class="product-price">Ghc {{item.displayPrice}}</div>
                                     </div>
-                                    <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
+                                    <div class="product shadow-1 disabled outstock" v-else-if="(item.left * item.pack_q) <= 0">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -53,7 +53,7 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img :src="(item.dispensation == 'single') ? '/assets/images/drugs.svg' : (item.dispensation == 'tab') ? '/assets/images/capsule.svg' : '/assets/images/medicine.svg'" 
+                                                <img :src="'/assets/images/plastic-bottle.png'" 
                                                     alt="" style="width: 65%; margin-top: 10px" v-else
                                                 >
                                             </div>
@@ -68,7 +68,7 @@
                                     v-for="(item, i) in products" :key="'b'+i">
                                     <div slot="content">{{item.name}}</div>
                                     <div class="product shadow-1" v-if="item.left > 0" @click="addItem(item, false)"
-                                         :class="{'shortage': item.left <= item.restock && item.left > 0}">
+                                         :class="{'shortage': (item.left * item.pack_q) <= item.restock && (item.left * item.pack_q) > 0}">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -78,7 +78,7 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                                <img :src="(item.dispensation == 'single') ? '/assets/images/plastic-bottle.png' : (item.dispensation == 'tab') ? '/assets/images/plastic-bottle.png' : '/assets/images/plastic-bottle.png'" 
+                                                <img :src="'/assets/images/plastic-bottle.png'" 
                                                     alt="" style="width: 65%; margin-top: 10px" v-else
                                                 >
                                             </div>
@@ -86,7 +86,7 @@
                                         <div class="product-title">{{item.name}}</div>
                                         <div class="product-price">Ghc {{item.displayPrice}}</div>
                                     </div>
-                                    <div class="product shadow-1 disabled outstock" v-else-if="item.left <= 0">
+                                    <div class="product shadow-1 disabled outstock" v-else-if="(item.left * item.pack_q) <= 0">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -96,7 +96,7 @@
                                         <div class="product-image">
                                             <div class="image">
                                                 <img :src="bucket+item.image" alt="" v-if="item.image">
-                                               <img :src="(item.dispensation == 'single') ? '/assets/images/plastic-bottle.png' : (item.dispensation == 'tab') ? '/assets/images/plastic-bottle.png' : '/assets/images/plastic-bottle.png'" 
+                                               <img :src="'/assets/images/plastic-bottle.png'" 
                                                     alt="" style="width: 65%; margin-top: 10px" v-else
                                                 >
                                             </div>
