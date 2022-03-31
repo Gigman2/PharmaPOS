@@ -43,7 +43,7 @@
                                         <div class="product-title">{{item.name}}</div>
                                         <div class="product-price">Ghc {{item.displayPrice}}</div>
                                     </div>
-                                    <div class="product shadow-1 disabled outstock" v-else-if="(item.left * item.pack_q) <= 0">
+                                    <div class="product shadow-1 disabled outstock" v-else-if="((item.left * item.pack_q) + item.pack_l) <= 0">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -86,7 +86,7 @@
                                         <div class="product-title">{{item.name}}</div>
                                         <div class="product-price">Ghc {{item.displayPrice}}</div>
                                     </div>
-                                    <div class="product shadow-1 disabled outstock" v-else-if="(item.left * item.pack_q) <= 0">
+                                    <div class="product shadow-1 disabled outstock" v-else-if="((item.left * item.pack_q) + item.pack_l) <= 0">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -118,21 +118,21 @@
                                 width="250"
                                 >
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
+                                        <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="price"
                                 label="Price">
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' ">{{scope.row.price}}</div>
+                                        <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' ">{{scope.row.price}}</div>
                                     </template>
                                 </el-table-column>
                                  <el-table-column
                                 prop="expiration"
                                 label="Expired">
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' " 
+                                        <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' " 
                                             :class="{
                                                 'text-red': scope.row.expiration == 'expired', 
                                                 'text-green': scope.row.expiration == 'good',
@@ -144,7 +144,7 @@
                                 prop="left"
                                 label="Left" width="50">
                                     <template slot-scope="scope">
-                                        <div @click="(scope.row.left > 0) ? addItem(scope.row, false) : '' " :class="{'text-red': scope.row.left <= 0}">{{scope.row.left}}</div>
+                                        <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' " :class="{'text-red': scope.row.left <= 0}">{{scope.row.left}}</div>
                                     </template>
                                 </el-table-column>
                             </el-table>
