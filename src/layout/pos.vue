@@ -389,7 +389,7 @@
 
         .checkout-table-wrapper{
             height: calc(100vh - 332px);
-            overflow: hidden;
+            overflow-y: scroll;
         }
         .checkout-table{
             text-align: left;
