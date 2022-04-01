@@ -170,7 +170,7 @@
                                                     <img src="@/assets/images/plastic-bottle.png" alt="">
                                                 </div>
                                                 <div class="category-item__content">{{item.name}}</div>
-                                                <div class="category-item__products">{{item.products.length}}</div>
+                                                <div class="category-item__products">{{item.products.length}}</div>  
                                             </div>
                                         </div>
                                     </div>
