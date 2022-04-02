@@ -101,6 +101,7 @@
                 .then(res=>{
                     let data = res.body.result
                     data.map(item => {
+                        console.log(item.closing_cash)
                         this.total = this.total + (item.grossTotal).toFixed(2)
                         item.lastTransaction = Moment(item.lastTransaction).format('Do MMM YYYY')
                         item.closing_cash = formatMoney(item.closing_cash, ',', '.')
