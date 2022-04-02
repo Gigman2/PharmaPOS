@@ -118,7 +118,6 @@
                                 width="250"
                                 >
                                     <template slot-scope="scope">
-                                        {{scope.row.left}} {{scope.row.pack_q}}
                                         <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
                                     </template>
                                 </el-table-column>
@@ -1127,16 +1126,16 @@
                     customerId: this.customer,
                     discountId: this.discountId,
                     products: [],
-                    cashAmount: this.cash,
-                    momoAmount: this.momo,
+                    cashAmount:( this.cash === '') ? 0: this.cash,
+                    momoAmount: (this.momo === '') ? 0 : this.momo,
                     changeGiven: this.change,
                     id : this.id
                 }
+                
 
 
                 if(this.orderProducts.length > 0){
                     this.orderProducts.forEach(item => {
-                        console.log(item)
                         let product = {
                             dispensation: item.dispensation,
                             quantity: item.quantity,
@@ -1159,7 +1158,6 @@
                     }else{
                         transaction.print = false
                     }
-                    console.log('Transaction is ', transaction)
                     if(type == 'hold'){
                         transaction.state = 'holding';
                         this.createTransaction(transaction)
