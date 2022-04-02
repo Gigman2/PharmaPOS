@@ -101,12 +101,12 @@
                 .then(res=>{
                     let data = res.body.result
                     data.map(item => {
+                        this.total = this.total + item.grossTotal
                         item.lastTransaction = Moment(item.lastTransaction).format('Do MMM YYYY')
                         item.closing_cash = formatMoney(item.closing_cash, ',', '.')
                         item.stockWorth = formatMoney(item.stockWorth, ',', '.')
                         item.cash = formatMoney(item.cash, ',', '.')
                         item.momo = formatMoney(item.momo, ',', '.')
-                        this.total = this.total + item.grossTotal
                     })
                     this.fetching = false
                     this.result = data
