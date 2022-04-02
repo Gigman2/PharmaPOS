@@ -14,7 +14,7 @@
                 @change="getReport">
             </el-date-picker>
             <div class="pull-right">
-                <el-button round type="success" size="medium" icon="el-icon-document" @click="download('excel')">Export</el-button>
+                <h3>{{total}}</h3>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -84,6 +84,7 @@
                 to: '',
                 from: '',
                 result: [],
+                total: 0,
                 fetching: false
             }
         },
@@ -105,6 +106,7 @@
                         item.stockWorth = formatMoney(item.stockWorth, ',', '.')
                         item.cash = formatMoney(item.cash, ',', '.')
                         item.momo = formatMoney(item.momo, ',', '.')
+                        this.total = this.total + item.grossTotal
                     })
                     this.fetching = false
                     this.result = data
