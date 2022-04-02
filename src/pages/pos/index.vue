@@ -118,6 +118,7 @@
                                 width="250"
                                 >
                                     <template slot-scope="scope">
+                                        {{scope.row.left}} {{scope.row.pack_q}}
                                         <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
                                     </template>
                                 </el-table-column>
