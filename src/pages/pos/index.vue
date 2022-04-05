@@ -22,7 +22,7 @@
                         <div class="products grid" v-loading="loading" v-if="layout == 'grid'">
                             <div class="product-row recent">
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
-                                    v-for="(item, f) in recentProducts" :key="'a'+f">
+                                   v-for="(item, f) in recentProducts" :key="'a'+f">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
                                     <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)"
                                         :class="{'shortage': (item.left * item.pack_q) <= item.restock && (item.left * item.pack_q) > 0}">
@@ -118,21 +118,21 @@
                                 width="250"
                                 >
                                     <template slot-scope="scope">
-                                        <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
+                                        <div @click="((scope.row.left * scope.row.pack_q) + item.pack_l > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="price"
                                 label="Price">
                                     <template slot-scope="scope">
-                                        <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' ">{{scope.row.price}}</div>
+                                        <div @click="((scope.row.left * scope.row.pack_q) + item.pack_l > 0) ? addItem(scope.row, false) : '' ">{{scope.row.price}}</div>
                                     </template>
                                 </el-table-column>
                                  <el-table-column
                                 prop="expiration"
                                 label="Expired">
                                     <template slot-scope="scope">
-                                        <div @click="((scope.row.left * scope.row.pack_q) > 0) ? addItem(scope.row, false) : '' " 
+                                        <div @click="((scope.row.left * scope.row.pack_q) + item.pack_l > 0) ? addItem(scope.row, false) : '' " 
                                             :class="{
                                                 'text-red': scope.row.expiration == 'expired', 
                                                 'text-green': scope.row.expiration == 'good',
@@ -934,6 +934,8 @@
                 this.selectedProduct = item
                 this.selectedIndex = i
                 this.showDrugDialog = true
+                this.countRetail = item.retail
+                this.countWholesale = item.quantity
                 this.$nextTick(() => {
                     if(this.$refs.countRetail){
                         if(this.countRetail == 0){
