@@ -14,7 +14,7 @@
                 @change="getReport">
             </el-date-picker>
             <div class="pull-right">
-                <h3>{{total}}</h3>
+                <h3>{{total.toFixed(2)}}</h3>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -101,7 +101,8 @@
                 .then(res=>{
                     let data = res.body.result
                     data.map(item => {
-                        this.total = this.total + item.grossTotal
+                        this.total = this.total + parseFloat(item.closing_cash)
+                        // this.total = this.total.toFixed(2)
                         item.lastTransaction = Moment(item.lastTransaction).format('Do MMM YYYY')
                         item.closing_cash = formatMoney(item.closing_cash, ',', '.')
                         item.stockWorth = formatMoney(item.stockWorth, ',', '.')
