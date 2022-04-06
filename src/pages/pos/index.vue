@@ -118,14 +118,14 @@
                                 width="250"
                                 >
                                     <template slot-scope="scope">
-                                        <div @click="((scope.row.left * scope.row.pack_q) + item.pack_l > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
+                                        <div @click="((scope.row.left * scope.row.pack_q) + scope.row.pack_l > 0) ? addItem(scope.row, false) : '' " >{{scope.row.name}}</div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                 prop="price"
                                 label="Price">
                                     <template slot-scope="scope">
-                                        <div @click="((scope.row.left * scope.row.pack_q) + item.pack_l > 0) ? addItem(scope.row, false) : '' ">{{scope.row.price}}</div>
+                                        <div @click="((scope.row.left * scope.row.pack_q) + scope.row.pack_l > 0) ? addItem(scope.row, false) : '' ">{{scope.row.price}}</div>
                                     </template>
                                 </el-table-column>
                                  <el-table-column
@@ -1278,7 +1278,7 @@
                     return 'row recent-row';
                 } 
 
-                if(row.left <= 0){
+                if((row.left * row.pack_q) + row.pack_l <= 0){
                     return 'disabled'
                 }
                 return 'row';
