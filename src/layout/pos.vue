@@ -269,6 +269,12 @@
     }
     .products-box{
         padding: 15px 20px 0 20px;
+        .total{
+            font-weight: 600;
+            text-align: left;
+            margin-left: 10px;
+            color: #2c3e50
+        }
         .products-title{
             text-align: left;
             font-family: 'Open sans';

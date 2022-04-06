@@ -11,6 +11,7 @@
                 <div class="clearfix"></div>
 
                 <div class="products-box">
+                    <div class="total">Total: {{total.toFixed(2)}}</div>
                     <div class="scroll-area products" :settings="settings">
                         <el-table :data="tableData"
                             style="width: 100%">
@@ -211,6 +212,7 @@
                 },
                 customers: [],
                 customer: null,
+                total: 0
             }
         },
         computed: {
@@ -239,6 +241,7 @@
                 .then(res => {
                    this.tableData = res.body.result
                    this.tableData.map(item => {
+                       this.total = this.total + parseFloat(item.grossTotal)
                        item.date = Moment(item.createdAt).format('MMMM Do YYYY');
                        if(item.products.lengths > 0){
                            item.first = item.products[0]

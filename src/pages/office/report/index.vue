@@ -102,8 +102,7 @@
                     let data = res.body.result
                     data.map(item => {
                         this.total = this.total + parseFloat(item.closing_cash)
-                        // this.total = this.total.toFixed(2)
-                        item.lastTransaction = Moment(item.lastTransaction).format('Do MMM YYYY')
+                        item.lastTransaction = Moment(item.date).format('Do MMM YYYY')
                         item.closing_cash = formatMoney(item.closing_cash, ',', '.')
                         item.stockWorth = formatMoney(item.stockWorth, ',', '.')
                         item.cash = formatMoney(item.cash, ',', '.')
