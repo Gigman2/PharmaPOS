@@ -90,6 +90,7 @@
         },
         methods: {
             getReport(payload){
+                this.total = 0
                 this.fetching = true
                 var postData = {
                     'from': Moment(payload[0]).format('YYYY-MM-DD'),
