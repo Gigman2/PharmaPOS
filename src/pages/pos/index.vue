@@ -1278,7 +1278,7 @@
                     return 'row recent-row';
                 } 
 
-                if((row.left * row.pack_q) + row.pack_l <= 0){
+                if(((row.left * row.pack_q) + row.pack_l) <= 0){
                     return 'disabled'
                 }
                 return 'row';
