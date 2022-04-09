@@ -1183,7 +1183,7 @@
                         }
                         if(postData.state == 'processing' && res.data.result.issuePrint){
                             if(process.env.VUE_APP_PLATFORM === 'local'){
-                                axios.post('/print',{...res.data.result})
+                                axios.post('/print',{...res.data.result, print: postData.print})
                                 .then(printRes => {
                                     this.$notify({
                                         title: 'Printing',
