@@ -49,6 +49,10 @@
             font-size: 1.4em;
             text-decoration: none;
         }
+        .total{
+            font-weight: bold;
+            float: right;
+        }
     }
     .dashboard-navbar{
         height: 55px;

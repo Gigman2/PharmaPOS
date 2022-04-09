@@ -4,7 +4,7 @@
             <div class="search-box pull-left" v-if="userPermission && userPermission[3] && userPermission[3].state"> 
                 <i class="fe-search"></i>
                 <input type="text" placeholder="Search ..." v-model="q" @keyup="search()">
-            </div>
+            </div><div class="total">Total: {{total.toFixed(2)}}</div>
         </div>
         <div class="clearfix"></div>
         <div class="dashboard-content mt-10">
@@ -155,7 +155,8 @@
                 q: '',
                 loading: '',
                 drawer: false,
-                selectedTransaction: {}
+                selectedTransaction: {},
+                total: 0
             }
         },
         computed: {
@@ -163,7 +164,9 @@
         },
         methods:{
             setData(data){
+                this.total = 0
                 data.map(item => {
+                    this.total = this.total + parseFloat(item.grossTotal)
                     item.date = Moment(item.createdAt).format('D MMM YYYY h:mm a')
                     if(item.soldby){
                         item.by = item.soldby.firstname+' '+item.soldby.lastname

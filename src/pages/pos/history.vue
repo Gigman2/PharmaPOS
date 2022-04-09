@@ -237,6 +237,7 @@
 
             },
             getTransaction(){
+                this.total = 0
                 this.$http.get('product/transaction/list')
                 .then(res => {
                    this.tableData = res.body.result

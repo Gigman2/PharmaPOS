@@ -24,8 +24,8 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                    v-for="(item, f) in recentProducts" :key="'a'+f">
                                     <div slot="content">{{item.name}} <br/> {{(item.manufacturer !== 'null')? item.manufacturer : ''}}</div>
-                                    <div class="product shadow-1" v-if="item.left > item.restock" @click="addItem(item, false)"
-                                        :class="{'shortage': (item.left * item.pack_q) <= item.restock && (item.left * item.pack_q) > 0}">
+                                    <div class="product shadow-1" v-if="((item.left * item.pack_q) + item.pack_l) > item.restock" @click="addItem(item, false)"
+                                        :class="{'shortage': ((item.left * item.pack_q) + item.pack_l) <= item.restock && ((item.left * item.pack_q) + item.pack_l) > 0}">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -67,8 +67,8 @@
                                 <el-tooltip class="item" effect="dark" placement="bottom-end"
                                     v-for="(item, i) in products" :key="'b'+i">
                                     <div slot="content">{{item.name}}</div>
-                                    <div class="product shadow-1" v-if="item.left > 0" @click="addItem(item, false)"
-                                         :class="{'shortage': (item.left * item.pack_q) <= item.restock && (item.left * item.pack_q) > 0}">
+                                    <div class="product shadow-1" v-if="((item.left * item.pack_q) + item.pack_l) > 0" @click="addItem(item, false)"
+                                         :class="{'shortage': ((item.left * item.pack_q) + item.pack_l) <= item.restock && ((item.left * item.pack_q) + item.pack_l) > 0}">
                                         <div class="expiration-box"  
                                                 :class="{'red': item.expiration == 'expired',
                                                 'orange': item.expiration == 'expiring'}"
@@ -714,7 +714,6 @@
                 })
 
                 let result = fuse.search(query.name, {limit: 100})
-
                 this.setProducts(result)
             },
             setProducts(result){
