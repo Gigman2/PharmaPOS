@@ -1,0 +1,231 @@
+$screen-sm:     768px !default;
+$screen-md:     992px !default;
+$screen-lg:     1200px !default;
+
+$screen-xs-max: ($screen-sm - 1) !default;
+$screen-sm-max: ($screen-md - 1) !default;
+$screen-md-max: ($screen-lg - 1) !default;
+
+$default-margin: 15px !default;
+$margin-types: (
+  xs round($default-margin / 4),
+  sm round($default-margin / 2),
+  lg round($default-margin * 2),
+  xl round($default-margin * 4)
+) !default;
+
+$default-padding: $default-margin !default;
+$padding-types: (
+  xs round($default-padding / 4),
+  sm round($default-padding / 2),
+  lg round($default-padding * 2),
+  xl round($default-padding * 4)
+) !default;
+
+@mixin margins($size: '', $value: $default-margin, $screen: '') {
+    @if $size != '' {
+      $size: '-' + $size;
+    }
+  
+    @if $screen != '' {
+      $screen: '-' + $screen;
+    }
+  
+    @if $size == '' {
+      .m#{$screen}-0 {
+        margin: 0;
+      }
+  
+      .m#{$screen}-0-auto {
+        margin: 0 auto;
+      }
+  
+      .m#{$screen}-t-0 {
+        margin-top: 0;
+      }
+  
+      .m#{$screen}-b-0 {
+        margin-bottom: 0;
+      }
+  
+      .m#{$screen}-t-b-0 {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+  
+      .m#{$screen}-r-0 {
+        margin-right: 0;
+      }
+  
+      .m#{$screen}-l-0 {
+        margin-left: 0;
+      }
+  
+      .m#{$screen}-r-l-0 {
+        margin-right: 0;
+        margin-left: 0;
+      }
+    }
+  
+    .m#{$screen}-t#{$size} {
+      margin-top: $value;
+    }
+  
+    .m#{$screen}-b#{$size} {
+      margin-bottom: $value;
+    }
+  
+    .m#{$screen}-t-b#{$size} {
+      margin-top: $value;
+      margin-bottom: $value;
+    }
+  
+    .m#{$screen}-r#{$size} {
+      margin-right: $value;
+    }
+  
+    .m#{$screen}-l#{$size} {
+      margin-left: $value;
+    }
+  
+    .m#{$screen}-r-l#{$size} {
+      margin-right: $value;
+      margin-left: $value;
+    }
+  
+    .m#{$screen}-a#{$size} {
+      margin: $value;
+    }
+  }
+  
+@mixin paddings($size: '', $value: $default-padding, $screen: '') {
+@if $size != '' {
+    $size: '-' + $size;
+}
+
+@if $screen != '' {
+    $screen: '-' + $screen;
+}
+
+@if $size == '' {
+    .p#{$screen}-0 {
+    padding: 0;
+    }
+
+    .p#{$screen}-t-0 {
+    padding-top: 0;
+    }
+
+    .p#{$screen}-b-0 {
+    padding-bottom: 0;
+    }
+
+    .p#{$screen}-t-b-0 {
+    padding-top: 0;
+    padding-bottom: 0;
+    }
+
+    .p#{$screen}-r-0 {
+    padding-right: 0;
+    }
+
+    .p#{$screen}-l-0 {
+    padding-left: 0;
+    }
+
+    .p#{$screen}-r-l-0 {
+    padding-right: 0;
+    padding-left: 0;
+    }
+}
+
+.p#{$screen}-t#{$size} {
+    padding-top: $value;
+}
+
+.p#{$screen}-b#{$size} {
+    padding-bottom: $value;
+}
+
+.p#{$screen}-t-b#{$size} {
+    padding-top: $value;
+    padding-bottom: $value;
+}
+
+.p#{$screen}-r#{$size} {
+    padding-right: $value;
+}
+
+.p#{$screen}-l#{$size} {
+    padding-left: $value;
+}
+
+.p#{$screen}-r-l#{$size} {
+    padding-right: $value;
+    padding-left: $value;
+}
+
+.p#{$screen}-a#{$size} {
+    padding: $value;
+}
+}
+
+@include paddings();
+
+@each $types in $margin-types {
+  @include paddings(nth($types, 1), nth($types, 2));
+}
+
+@media (max-width: $screen-md-max) {
+  @include paddings('', $default-padding, 'md');
+
+  @each $types in $margin-types {
+    @include paddings(nth($types, 1), nth($types, 2), 'md');
+  }
+}
+
+@media (max-width: $screen-sm-max) {
+  @include paddings('', $default-padding, 'sm');
+
+  @each $types in $margin-types {
+    @include paddings(nth($types, 1), nth($types, 2), 'sm');
+  }
+}
+
+@media (max-width: $screen-xs-max) {
+  @include paddings('', $default-padding, 'xs');
+
+  @each $types in $margin-types {
+    @include paddings(nth($types, 1), nth($types, 2), 'xs');
+  }
+}
+
+@include margins();
+
+@each $types in $margin-types {
+  @include margins(nth($types, 1), nth($types, 2));
+}
+
+@media (max-width: $screen-md-max) {
+  @include margins('', $default-margin, 'md');
+
+  @each $types in $margin-types {
+    @include margins(nth($types, 1), nth($types, 2), 'md');
+  }
+}
+
+@media (max-width: $screen-sm-max) {
+  @include margins('', $default-margin, 'sm');
+
+  @each $types in $margin-types {
+    @include margins(nth($types, 1), nth($types, 2), 'sm');
+  }
+}
+
+@media (max-width: $screen-xs-max) {
+  @include margins('', $default-margin, 'xs');
+
+  @each $types in $margin-types {
+    @include margins(nth($types, 1), nth($types, 2), 'xs');
+  }
+}

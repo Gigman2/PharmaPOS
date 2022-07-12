@@ -1,0 +1,19 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = https://github.com/Sluxify/PharmaPOS.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+[remote "rainmike-online-portal"]
+	url = https://github.com/blaqsudo/rainmike-online-portal.git
+	fetch = +refs/heads/*:refs/remotes/rainmike-online-portal/*
